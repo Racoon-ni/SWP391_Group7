@@ -6,9 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DBConnect {
- private static final String URL = "jdbc:sqlserver://localhost:1500;databaseName=BookReadingWed2;encrypt=true;trustServerCertificate=true;";
+ private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=CPCC;encrypt=true;trustServerCertificate=true;";
     private static final String USER = "sa";
-    private static final String PASSWORD = "1";
+    private static final String PASSWORD = "123";
 
 
     // Kết nối đến database
