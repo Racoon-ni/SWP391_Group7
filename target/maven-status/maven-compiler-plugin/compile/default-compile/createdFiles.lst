@@ -1,4 +1,5 @@
 config\DBConnect.class
+controller\DashBoardServlet.class
 controller\HomeServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
