@@ -5,10 +5,10 @@
 --%>
 
 <!-- Chat Icon -->
-<div style="position: fixed; bottom: 10px; right: 10px;">
-    <a href="#"><img src="${pageContext.request.contextPath}/assets/images/icons8-zalo-100.png" alt="Chat Zalo" style="width: 80px;"></a>
+<div style="position: fixed; bottom: 15px; right: 25px;">
+    <a href="#"><img src="${pageContext.request.contextPath}/assets/images/icon-zalo.png" alt="Chat Zalo" style="width: 80px;"></a>
 </div>
-
+    <%@include file="../include/pop-up-chat.jsp" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
