@@ -52,7 +52,7 @@
     
 </style>
 
-<form action="${pageContext.request.contextPath}/filter" method="GET">
+    
     <hr>
     <button type="button" class="accordion">
         <span class="title">Thương hiệu</span>
@@ -221,10 +221,7 @@
         <label><input type="checkbox" name="os" value="MacOS"> MacOS</label>
     </div>
     
-    <hr>
-        <button type="submit" class="btn btn-primary">Lọc</button>
 
-</form>
 <script>
     const accordions = document.querySelectorAll(".accordion");
 
