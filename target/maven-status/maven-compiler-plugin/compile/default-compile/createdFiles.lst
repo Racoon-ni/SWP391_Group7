@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 dao\WishlistDAO.class
 controller\ViewVoucherServlet.class
 model\Voucher.class
@@ -5,6 +6,13 @@ model\WishlistItem.class
 config\DBConnect.class
 controller\ViewWishlistServlet.class
 dao\VoucherDAO.class
+=======
+controller\DashBoardServlet.class
+controller\ProductListServlet.class
+controller\AccessDeniedServlet.class
+config\DBConnect.class
+controller\Handle404Servlet.class
+>>>>>>> 60dfc900e0bbfec4199f6efa5a0ec3e76f77cab7
 controller\HomeServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
