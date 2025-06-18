@@ -1,5 +1,9 @@
 config\DBConnect.class
+<<<<<<< HEAD
 controller\DashBoardServlet.class
+=======
+controller\Handle404Servlet.class
+>>>>>>> dev
 controller\HomeServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
