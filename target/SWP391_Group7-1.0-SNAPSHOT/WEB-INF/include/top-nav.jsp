@@ -24,11 +24,11 @@
     /* Modal Content */
     .modal-content {
         background-color: #fefefe;
-        margin-left: 162px;
-        padding: 20px 20px 20px 31px;
+        margin-left: 210px;
+        padding: 20px 20px 20px 32px;
         border: 2px solid black;
         max-width: 240px;
-        border-radius: 67px;
+        border-radius: 14px;
     }
 
     /* The Close Button */
