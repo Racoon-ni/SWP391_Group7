@@ -1,2 +1,4 @@
-controller\HomeServlet.class
 config\DBConnect.class
+controller\HomeServlet.class
+controller\OrderDetailsServlet.class
+controller\MyOrderServlet.class

@@ -8,20 +8,20 @@
 <style>
     .sidebar {
         max-width: 300px;
-        background-color: #f8f9fa;
         padding: 8px;
-        border-style: solid;
+        border: 2px solid #333;
         border-radius: 20px;
-        height: 46.5rem;
+        height: fit-content;           
         margin-left: 15px;
+        background-color: white;
     }
 </style>
 
 <!-- Sidebar Filters -->
-<div class="col-md-3 sidebar ">
+<div class="col-md-3 sidebar  ">
     <h6>Khoảng giá</h6>
     <%@include file="/WEB-INF/include/price-slider.jsp" %>
-    
+
     <div>
         <%@include file="/WEB-INF/include/drop-down.jsp" %>
     </div>
