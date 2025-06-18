@@ -1,2 +1,10 @@
+dao\WishlistDAO.class
+controller\ViewVoucherServlet.class
+model\Voucher.class
+model\WishlistItem.class
 config\DBConnect.class
+controller\ViewWishlistServlet.class
+dao\VoucherDAO.class
 controller\HomeServlet.class
+controller\OrderDetailsServlet.class
+controller\MyOrderServlet.class
