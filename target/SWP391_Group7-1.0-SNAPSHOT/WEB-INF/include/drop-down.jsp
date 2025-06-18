@@ -6,7 +6,7 @@
 
 <%@ page pageEncoding="UTF-8" %>
 <style>
- 
+
 
     .custom-dropdown {
         position: relative;
@@ -21,16 +21,21 @@
         display: flex;
         justify-content: space-between; /* Center content horizontally */
         align-items: center;
-       
+
     }
 
-    .arrow-down {
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 6px solid #333;
+    .arrow {
+        border: solid black;
+        border-width: 0 3px 3px 0;
         display: inline-block;
+        padding: 3px;
+        margin-bottom: 5px;
+    }
+
+
+    .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
     }
 
     .dropdown-menu {
@@ -54,14 +59,14 @@
         background-color: #f0f0f0;
     }
 
-    input[type="radio"] {
+    input[type="checkbox"] {
         margin-right: 8px;
     }
 
     .custom-dropdown.open .dropdown-menu {
         display: flex;
     }
-    
+
     .category-title {
         margin-left: -46px;
     }
@@ -71,11 +76,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Thương hiệu</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="brand" value="apple"> Apple</label>
-        <label><input type="radio" name="brand" value="samsung"> Samsung</label>
+        <label><input type="checkbox" name="brand" value="apple"> Apple</label>
+        <label><input type="checkbox" name="brand" value="samsung"> Samsung</label>
     </div>
 </div>
 
@@ -83,11 +88,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Loại hàng</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -95,11 +100,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Series</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -107,11 +112,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Nhu cầu</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label class="category-title"><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -119,11 +124,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">PC Segment</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label class="category-title"><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -131,11 +136,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Series CPU</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label class="category-title"><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -143,11 +148,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Thế hệ</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -155,11 +160,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">RAM</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -167,11 +172,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Đồ họa rời</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -179,11 +184,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Dung lượng SSD</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 
@@ -191,11 +196,11 @@
 <div class="custom-dropdown">
     <div class="dropdown-button" onclick="toggleDropdown(this)">
         <span class="category-title">Hệ điều hành</span>
-        <span class="arrow-down"></span>
+        <span class="arrow down"></span>
     </div>
     <div class="dropdown-menu">
-        <label><input type="radio" name="type" value="laptop"> Laptop</label>
-        <label><input type="radio" name="type" value="tablet"> Tablet</label>
+        <label><input type="checkbox" name="type" value="laptop"> Laptop</label>
+        <label><input type="checkbox" name="type" value="tablet"> Tablet</label>
     </div>
 </div>
 <script>
