@@ -21,24 +21,21 @@
             .product-card img {
                 max-width: 100%;
             }
-            .pc-bestseller {
-                padding: 5px 15px;
-                overflow: auto;
-            }
             .shadowed-navbar {
                 border-bottom: 2px solid black; /* Solid black line */
                 box-shadow: 0px 8px 8px -4px rgba(0, 0, 0, 0.4); /* Dark shadow */
                 z-index: 1030; /* Keeps it on top */
+                padding: 0 10px;
                 margin-bottom: 20px;
             }
             .annie-use-your-telescope {
                 font-family: "Annie Use Your Telescope", cursive;
             }
-
+            
         </style>
     </head>
     <body>
-       <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar ">
+       <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold annie-use-your-telescope" 
                    href="${pageContext.request.contextPath}/home" 
@@ -46,11 +43,8 @@
                     <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <form action="/search" method="GET" class="w-50">
+                   <%@include file="../WEB-INF/include/top-nav.jsp" %>
+                <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
                     <div class="position-relative">
                         <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">
                         <button type="submit" class="btn position-absolute top-50 end-0 translate-middle-y pe-3 border-0 bg-transparent">
@@ -64,10 +58,10 @@
                     <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
                     <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
                     <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                 </div>
             </div>
         </nav>
-
         <!-- US-11: View Components (Bootstrap version) -->
         <section class="container py-4">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
