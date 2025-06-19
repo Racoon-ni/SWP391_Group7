@@ -16,14 +16,14 @@ public class AccessDeniedServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession(false);
-        String role = "guest";
-
-        if (session != null && session.getAttribute("role") != null) {
-            role = session.getAttribute("role").toString(); // admin / customer
-        }
-
-        req.setAttribute("userRole", role);
-        req.getRequestDispatcher("/WEB-INF/include/access-denied.jsp").forward(req, resp);
+//        HttpSession session = req.getSession(false);
+//        String role = "guest";
+//
+//        if (session != null && session.getAttribute("role") != null) {
+//            role = session.getAttribute("role").toString(); // admin / customer
+//        }
+//
+//        req.setAttribute("userRole", role);
+//        req.getRequestDispatcher("/WEB-INF/include/access-denied.jsp").forward(req, resp);
     }
 }

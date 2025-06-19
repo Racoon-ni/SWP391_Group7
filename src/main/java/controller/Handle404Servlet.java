@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
+/**
+ *
+ * @author nguyen Tan Phat - CE171269
+ */
 @WebServlet("/handle404")
 public class Handle404Servlet extends HttpServlet {
     @Override
