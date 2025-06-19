@@ -13,7 +13,7 @@
         <%@include file="/WEB-INF/include/side-bar.jsp" %>
 
         <!-- Main Panel -->
-        <div class="col-md-9">
+        <div class="col-md-9 mt-5">
             <!-- Carousel -->
             <%@include file="/WEB-INF/include/carousel.jsp" %>
 
