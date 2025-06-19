@@ -1,8 +1,10 @@
+controller\PCListServlet.class
 controller\DashBoardServlet.class
 controller\ProductListServlet.class
+model\Product.class
 controller\AccessDeniedServlet.class
 config\DBConnect.class
-controller\Handle404Servlet.class
+dao\ProductDAO.class
 controller\HomeServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class

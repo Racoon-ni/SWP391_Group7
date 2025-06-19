@@ -19,6 +19,7 @@
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
+    
 <error-page>
     <error-code>404</error-code>
     <location>/handle404</location>

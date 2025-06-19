@@ -2,7 +2,9 @@ C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\HomeServl
 C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\config\DBConnect.java
 C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\ProductListServlet.java
 C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\PCListServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\model\Product.java
 C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
 C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
-C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\Handle404Servlet.java
 C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\dao\ProductDAO.java
