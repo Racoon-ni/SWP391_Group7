@@ -1,5 +1,15 @@
+controller\DashBoardServlet.class
+controller\AccessDeniedServlet.class
 config\DBConnect.class
-controller\Handle404Servlet.class
-controller\HomeServlet.class
+controller\AdminStaffOrderServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
+model\AdminStaffOrder.class
+controller\ProductListServlet.class
+controller\CustomerViewProfileServlet.class
+repository\AdminStaffOrderDAO.class
+controller\Handle404Servlet.class
+repository\CustomerDAO.class
+model\Customer.class
+controller\DashboardAccessFilterServlet.class
+controller\HomeServlet.class

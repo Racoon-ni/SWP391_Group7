@@ -1,5 +1,15 @@
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
 C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
 C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\HomeServlet.java
-C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\Handle404Servlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\DashboardAccessFilterServlet.java
 C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\config\DBConnect.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\AdminStaffOrderServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\CustomerViewProfileServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\repository\CustomerDAO.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\model\Customer.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\repository\AdminStaffOrderDAO.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\Handle404Servlet.java
 C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\model\AdminStaffOrder.java

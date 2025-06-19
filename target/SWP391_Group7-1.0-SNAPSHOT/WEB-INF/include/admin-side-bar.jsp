@@ -125,7 +125,7 @@
         <i class="fas fa-users"></i> Quản lý thể loại
     </a>
     
-    <a href="#">
+    <a href="${pageContext.request.contextPath}/manage-orders">
         <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
     </a>
     
