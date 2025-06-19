@@ -1,12 +1,17 @@
+controller\PCListServlet.class
 controller\DashBoardServlet.class
 controller\AccessDeniedServlet.class
 dao\WishlistDAO.class
 controller\ViewVoucherServlet.class
+DAO\WishlistDAO.class
 model\WishlistItem.class
 config\DBConnect.class
 controller\OrderDetailsServlet.class
+model\Order.class
 controller\MyOrderServlet.class
 controller\ProductListServlet.class
+model\Product.class
+DAO\VoucherDAO.class
 model\Voucher.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
