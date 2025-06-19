@@ -1,4 +1,10 @@
+model\ShippingInfo.class
+model\OrderDetail.class
+controller\DashBoardServlet.class
+controller\ProductListServlet.class
 config\DBConnect.class
+repository\orderDAO.class
 controller\HomeServlet.class
 controller\OrderDetailsServlet.class
+model\Order.class
 controller\MyOrderServlet.class

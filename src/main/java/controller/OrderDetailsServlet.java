@@ -1,30 +1,40 @@
 package controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.annotation.*;
+import model.OrderDetail;
+import model.Order;
+import model.ShippingInfo;
+import repository.orderDAO;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "OrderDetailsServlet", urlPatterns = {"/order-details"})
+@WebServlet(name="OrderDetailsServlet", urlPatterns={"/order-details"})
 public class OrderDetailsServlet extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        // Gửi về trang chi tiết đơn hàng trong WEB-INF
+        String orderIdStr = request.getParameter("order_id");
+        if (orderIdStr == null) {
+            response.sendRedirect("my-orders"); // sửa lại đường dẫn
+            return;
+        }
+        int orderId = Integer.parseInt(orderIdStr);
+
+        orderDAO dao = new orderDAO();
+
+        // Lấy từng thông tin cần thiết
+        List<OrderDetail> details = dao.getOrderDetails(orderId);
+        Order order = dao.getOrderById(orderId);
+        ShippingInfo shippingInfo = dao.getShippingInfoByOrderId(orderId);
+
+        // Đưa lên request cho JSP
+        request.setAttribute("orderDetails", details);
+        request.setAttribute("order", order);
+        request.setAttribute("shippingInfo", shippingInfo);
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/include/orderDetails.jsp");
         rd.forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        doGet(request, response); // Dùng chung xử lý với GET
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Hiển thị chi tiết đơn hàng";
     }
 }

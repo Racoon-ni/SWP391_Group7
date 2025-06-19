@@ -1,4 +1,11 @@
-C:\Users\DELL\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
-C:\Users\DELL\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
-C:\Users\DELL\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\HomeServlet.java
-C:\Users\DELL\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\config\DBConnect.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\HomeServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\UploadProductImageServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\model\ShippingInfo.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\model\Order.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\repository\orderDAO.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\config\DBConnect.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\model\OrderDetail.java
