@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.*;
 import model.OrderDetail;
 import model.Order;
 import model.ShippingInfo;
-import repository.orderDAO;
+import DAO.orderDAO;
 import java.io.IOException;
 import java.util.List;
 
