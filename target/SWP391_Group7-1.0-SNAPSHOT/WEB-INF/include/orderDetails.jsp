@@ -1,6 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,23 +17,15 @@
 </head>
 <body>
     <div class="container mt-5 mb-5">
-        <h2 class="mb-4"><i class="fas fa-box"></i> Chi tiết đơn hàng #${order.orderId}</h2>
+        <h2 class="mb-4"><i class="fas fa-box"></i> Chi tiết đơn hàng #1001</h2>
 
         <div class="mb-4">
-            <p><strong>Ngày đặt:</strong> <fmt:formatDate value="${order.createdAt}" pattern="yyyy-MM-dd" /></p>
-            <p><strong>Người nhận:</strong> ${shippingInfo.receiverName}</p>
-            <p><strong>Số điện thoại:</strong> ${shippingInfo.phone}</p>
-            <p><strong>Địa chỉ giao hàng:</strong> ${shippingInfo.shippingAddress}</p>
-            <p><strong>Phương thức thanh toán:</strong> ${shippingInfo.paymentMethod}</p>
-            <p><strong>Trạng thái thanh toán:</strong>
-                <span class="badge ${shippingInfo.paymentStatus == 'Paid' ? 'bg-success' : 'bg-warning'}">
-                    <c:choose>
-                        <c:when test="${shippingInfo.paymentStatus == 'Paid'}">Đã thanh toán</c:when>
-                        <c:when test="${shippingInfo.paymentStatus == 'Unpaid'}">Chưa thanh toán</c:when>
-                        <c:otherwise>Thất bại</c:otherwise>
-                    </c:choose>
-                </span>
-            </p>
+            <p><strong>Ngày đặt:</strong> 2025-06-15</p>
+            <p><strong>Người nhận:</strong> Nguyễn Văn A</p>
+            <p><strong>Số điện thoại:</strong> 0909123456</p>
+            <p><strong>Địa chỉ giao hàng:</strong> 123 Đường Lê Lợi, Quận 1, TP.HCM</p>
+            <p><strong>Phương thức thanh toán:</strong> COD</p>
+            <p><strong>Trạng thái thanh toán:</strong> <span class="badge bg-success">Đã thanh toán</span></p>
         </div>
 
         <table class="table table-bordered text-center align-middle">
@@ -49,28 +39,21 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="item" items="${orderDetails}">
-                    <tr>
-                        <td>
-                            <img class="product-img" src="${item.imageUrl}" alt="${item.productName}" />
-                        </td>
-                        <td>${item.productName}</td>
-                        <td>${item.quantity}</td>
-                        <td>
-                            <fmt:formatNumber value="${item.unitPrice}" type="currency" currencySymbol="₫"/>
-                        </td>
-                        <td>
-                            <fmt:formatNumber value="${item.unitPrice * item.quantity}" type="currency" currencySymbol="₫"/>
-                        </td>
-                    </tr>
-                </c:forEach>
+                <tr>
+                    <td>
+                        <img class="product-img" src="https://product.hstatic.net/200000722513/product/pc_gaming_gvn_infinity_rtx4060_e4d91d5e69a14e0a9c4b7ffb1e1dd05e.jpg" alt="PC RTX 4060">
+                    </td>
+                    <td>PC Gaming Infinity RTX 4060</td>
+                    <td>1</td>
+                    <td>15.000.000đ</td>
+                    <td>15.000.000đ</td>
+                </tr>
+                <!-- Thêm sản phẩm khác nếu cần -->
             </tbody>
         </table>
 
         <div class="text-end mt-3">
-            <h5><strong>Tổng tiền đơn hàng:</strong>
-                <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫"/>
-            </h5>
+            <h5><strong>Tổng tiền đơn hàng:</strong> 15.000.000đ</h5>
         </div>
 
         <a href="${pageContext.request.contextPath}/my-orders" class="btn btn-secondary mt-3">
