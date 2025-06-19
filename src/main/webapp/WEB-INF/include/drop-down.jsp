@@ -68,7 +68,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
+=======
+    <button type="button" class="accordion">
+>>>>>>> 16423cf09a3b253921d543fc95af56a145a141fb
         <span class="title">Loại hàng</span>
         <span class="arrow"></span>
     </button>
@@ -221,11 +225,6 @@
         <label><input type="checkbox" name="os" value="MacOS"> MacOS</label>
     </div>
     
-    <hr>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Lọc</button>
-    </div>
-</form>
 <script>
     const accordions = document.querySelectorAll(".accordion");
 

@@ -109,8 +109,8 @@
         <div class="range-slider">
             <div class="slider-track"></div>
             <div class="slider-range" id="slider-range"></div>
-            <input type="range" id="range-min" min="0" max="190000000" value="0" step="500000">
-            <input type="range" id="range-max" min="0" max="190000000" value="190000000" step="500000">
+            <input type="range" name="range-min" id="range-min" min="0" max="190000000" value="0" step="500000">
+            <input type="range" name="range-max" id="range-max" min="0" max="190000000" value="190000000" step="500000">
 
         </div>
     </div>
