@@ -38,7 +38,7 @@
                     <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
                 </a>
 
-                   <%@include file="../WEB-INF/include/top-nav.jsp" %>
+                   <%@include file="../include/top-nav.jsp" %>
                 <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
                     <div class="position-relative">
                         <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">

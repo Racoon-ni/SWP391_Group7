@@ -9,7 +9,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@WebServlet("/view-vouchers")
+@WebServlet("/vouchers-list")
 public class ViewVoucherServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -21,6 +21,6 @@ public class ViewVoucherServlet extends HttpServlet {
 
         // Gửi sang view
         req.setAttribute("voucherList", vouchers);
-        req.getRequestDispatcher("voucher-list.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/include/voucherlist.jsp").forward(req, resp);
     }
 }
