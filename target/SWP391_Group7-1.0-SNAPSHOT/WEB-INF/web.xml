@@ -11,6 +11,16 @@
     </welcome-file-list>
     
     <!-- Cấu hình HomeServlet -->
+<servlet>
+    <servlet-name>viewComponentServlet</servlet-name>
+    <servlet-class>controller.viewComponentServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>viewComponentServlet</servlet-name>
+    <url-pattern>/viewComponent</url-pattern>
+</servlet-mapping>
+
+    <!-- Cấu hình HomeServlet -->
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>controller.HomeServlet</servlet-class>

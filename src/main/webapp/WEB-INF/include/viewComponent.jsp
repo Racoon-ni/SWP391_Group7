@@ -2,116 +2,92 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
- <head>
-        <meta charset="UTF-8">
-        <title>PC Store</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>PC Store - Linh kiện</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .sidebar {
+            min-width: 230px;
+            max-width: 250px;
+            background: #f6f6f6;
+            border-right: 1px solid #ddd;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 70px;
+        }
+        .sidebar a, .sidebar .nav-link {
+            display: block;
+            padding: 10px 18px;
+            color: #333;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid #e2e2e2;
+        }
+        .sidebar a.active, .sidebar a:hover {
+            background: #c5a992;
+            color: #fff;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 24px 32px;
+        }
+        .card .card-img-top {
+            height: 170px;
+            object-fit: cover;
+        }
+        @media (max-width: 900px) {
+            .sidebar { position: static; width: 100%; min-width: 0; max-width: none; height: auto; padding-top: 0;}
+            .main-content { margin-left: 0; padding: 16px;}
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar bộ lọc -->
+    <div class="sidebar">
+        <a href="${pageContext.request.contextPath}/viewComponent?category=SSD" class="nav-link ${param.category eq 'SSD' ? 'active' : ''}">SSD</a>
+        <a href="${pageContext.request.contextPath}/viewComponent?category=HDD" class="nav-link ${param.category eq 'HDD' ? 'active' : ''}">HDD</a>
+        <a href="${pageContext.request.contextPath}/viewComponent?category=RAM" class="nav-link ${param.category eq 'RAM' ? 'active' : ''}">RAM</a>
+        <a href="${pageContext.request.contextPath}/viewComponent?category=CPU" class="nav-link ${param.category eq 'CPU' ? 'active' : ''}">CPU</a>
+        <a href="${pageContext.request.contextPath}/viewComponent?category=VGA" class="nav-link ${param.category eq 'VGA' ? 'active' : ''}">VGA (Card màn hình)</a>
+        <!-- Thêm các loại linh kiện khác nếu muốn -->
+    </div>
+    <div class="main-content">
+        <h2 class="fw-bold mb-4" style="color: #c5a992;">${param.category != null ? param.category : "Tất cả"} linh kiện</h2>
 
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .product-card img {
-                max-width: 100%;
-            }
-            .shadowed-navbar {
-                border-bottom: 2px solid black; /* Solid black line */
-                box-shadow: 0px 8px 8px -4px rgba(0, 0, 0, 0.4); /* Dark shadow */
-                z-index: 1030; /* Keeps it on top */
-                padding: 0 10px;
-                margin-bottom: 20px;
-            }
-            .annie-use-your-telescope {
-                font-family: "Annie Use Your Telescope", cursive;
-            }
-            
-        </style>
-    </head>
-    <body>
-       <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold annie-use-your-telescope" 
-                   href="${pageContext.request.contextPath}/home" 
-                   style="font-size: 4rem;">
-                    <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
-                </a>
-
-                   <%@include file="../include/top-nav.jsp" %>
-                <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
-                    <div class="position-relative">
-                        <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">
-                        <button type="submit" class="btn position-absolute top-50 end-0 translate-middle-y pe-3 border-0 bg-transparent">
-                            <i class="fas fa-search text-muted"></i>
-                        </button>
-                    </div>
-                </form>
-
-
-                <div class="d-flex gap-5">    
-                    <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
-                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
-                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
-                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
-                </div>
-            </div>
-        </nav>
-        <!-- US-11: View Components (Bootstrap version) -->
-        <section class="container py-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-uppercase fw-bold mb-0" style="color: #c5a992;">Linh kiện máy tính</h2>
-                <div class="d-flex flex-wrap gap-2">
-                    <select class="form-select">
-                        <option selected>Loại</option>
-                        <option>CPU</option>
-                        <option>RAM</option>
-                        <option>VGA</option>
-                        <option>SSD</option>
-                    </select>
-                    <select class="form-select">
-                        <option selected>Hãng</option>
-                        <option>Intel</option>
-                        <option>AMD</option>
-                        <option>Kingston</option>
-                    </select>
-                    <select class="form-select">
-                        <option selected>Giá</option>
-                        <option>0-2tr</option>
-                        <option>2-5tr</option>
-                        <option>5-10tr</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <c:forEach var="i" begin="1" end="10">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm">
-                            <img src="cpu.jpg" class="card-img-top" alt="CPU" style="height: 180px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-semibold">Intel Core i7</h5>
-                                <p class="fw-bold mb-2" style="color: #c5a992;">6.500.000₫</p>
-                                <a href="#" class="btn btn-sm mt-auto text-white" style="background-color: #c5a992;">Xem chi tiết</a>
+        <div class="row g-4">
+            <c:choose>
+                <c:when test="${not empty componentList}">
+                    <c:forEach var="product" items="${componentList}">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="card h-100 shadow-sm">
+                                <img src="${pageContext.request.contextPath}/images/${product.imageUrl}" class="card-img-top" alt="${product.name}">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title fw-semibold">${product.name}</h5>
+                                    <c:if test="${not empty product.description}">
+                                        <p class="text-muted small">${product.description}</p>
+                                    </c:if>
+                                    <p class="fw-bold mb-2" style="color: #c5a992;">${product.price}₫</p>
+                                    <div class="mt-auto">
+                                        <a href="${pageContext.request.contextPath}/viewComponentDetail.jsp?id=${product.productId}" class="btn btn-sm text-white" style="background-color: #c5a992;">Xem chi tiết</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="col-12 text-center text-muted">
+                        Không tìm thấy sản phẩm nào!
                     </div>
-                </c:forEach>
-            </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
 
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link">Trang trước</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Trang sau</a></li>
-                </ul>
-            </nav>
-        </section>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
-
-
