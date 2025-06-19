@@ -4,7 +4,10 @@
  */
 package DAO;
 
-
+/**
+ *
+ * @author ThinhLVCE181726 <your.name at your.org>
+ */
 import config.DBConnect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,29 +16,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Product;
+import java.sql.*;
+import java.util.*;
 
 public class ProductDAO {
-
-    // Lấy tất cả sản phẩm và số lượng tồn kho
-    public ArrayList<Product> getAllProducts() {
-        ArrayList<Product> products = new ArrayList<>();
-        String query = "SELECT product_id, name, stock FROM Products";
-
-        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(query);  ResultSet rs = ps.executeQuery()) {
-
+    public List<Product> getAllPCs() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
+        try (
+            Connection conn = DBConnect.connect();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+        ) {
             while (rs.next()) {
-                Product product = new Product(
-                        rs.getInt("product_id"),
-                        rs.getString("name"),
-                        rs.getInt("stock")
-                );
-                products.add(product);
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setProductType(rs.getString("product_type"));
+                p.setCategoryId(rs.getInt("category_id"));
+                p.setStatus(rs.getBoolean("status"));
+                list.add(p);
             }
-        } catch (SQLException e) {
+            System.out.println("DEBUG: Số lượng PC lấy được: " + list.size());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return products;
+        return list;
     }
 
     public List<Product> getProductsByCategoryName(String categoryName) {

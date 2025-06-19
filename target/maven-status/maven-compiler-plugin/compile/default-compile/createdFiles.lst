@@ -1,15 +1,27 @@
+<<<<<<< HEAD
+=======
+controller\PCListServlet.class
+>>>>>>> dev
 controller\DashBoardServlet.class
-controller\ProductServlet.class
 controller\AccessDeniedServlet.class
 dao\WishlistDAO.class
 controller\ViewVoucherServlet.class
+<<<<<<< HEAD
+=======
+DAO\WishlistDAO.class
+>>>>>>> dev
 model\WishlistItem.class
 config\DBConnect.class
 controller\OrderDetailsServlet.class
+model\Order.class
 controller\MyOrderServlet.class
 controller\ProductListServlet.class
 model\Product.class
+<<<<<<< HEAD
 controller\viewComponentServlet.class
+=======
+DAO\VoucherDAO.class
+>>>>>>> dev
 model\Voucher.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class

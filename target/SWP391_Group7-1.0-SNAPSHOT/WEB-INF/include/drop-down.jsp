@@ -52,10 +52,16 @@
     
 </style>
 
+<<<<<<< HEAD
 
     
     <hr>
     <button type="button" class="accordion">
+=======
+<form action="${pageContext.request.contextPath}/home" method="GET">
+    <hr>
+    <button class="accordion">
+>>>>>>> dev
         <span class="title">Thương hiệu</span>
         <span class="arrow"></span>
     </button>
@@ -83,7 +89,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Series</span>
         <span class="arrow"></span>
     </button>
@@ -104,7 +113,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Nhu cầu</span>
         <span class="arrow"></span>
     </button>
@@ -116,7 +128,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">PC Segment</span>
         <span class="arrow"></span>
     </button>
@@ -129,7 +144,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Series CPU</span>
         <span class="arrow"></span>
     </button>
@@ -148,7 +166,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Thế hệ CPU</span>
         <span class="arrow"></span>
     </button>
@@ -169,7 +190,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">RAM</span>
         <span class="arrow"></span>
     </button>
@@ -183,7 +207,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Đồ họa rời</span>
         <span class="arrow"></span>
     </button>
@@ -209,7 +236,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Dung lượng SSD</span>
         <span class="arrow"></span>
     </button>
@@ -223,7 +253,10 @@
 
     <hr>
     <button class="accordion">
+<<<<<<< HEAD
     <button type="button" class="accordion">
+=======
+>>>>>>> dev
         <span class="title">Hệ điều hành</span>
         <span class="arrow"></span>
     </button>
@@ -232,7 +265,10 @@
         <label><input type="checkbox" name="os" value="MacOS"> MacOS</label>
     </div>
     
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
 <script>
     const accordions = document.querySelectorAll(".accordion");
 
