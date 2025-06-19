@@ -26,8 +26,8 @@
                  alt="Banner2" class="d-block" style="width:100%">
         </div>
         <div class="carousel-item">
-            <img src="${pageContext.request.contextPath}/assets/images/banner1.webp" 
-                 alt="Banner3" class="d-block" style="width:100%;">
+            <img src="${pageContext.request.contextPath}/assets/images/pc-3.jpg" 
+                 alt="Banner3" class="d-block" style="width: 97.6%;">
         </div>
     </div>
 
