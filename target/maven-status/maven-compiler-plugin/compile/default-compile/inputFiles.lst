@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\Model\WishlistItem.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\ProductServlet.java
@@ -15,3 +16,13 @@ C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\Hand
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\DAO\VoucherDAO.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\DAO\WishlistDAO.java
+=======
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\HomeServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\config\DBConnect.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\ProductListServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\Handle404Servlet.java
+C:\Users\kokes\OneDrive\Desktop\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
+>>>>>>> fc6d159604d9fd288fd62116850b9ef4c359fb6e
