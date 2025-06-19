@@ -1,7 +1,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
     .user-ma{
@@ -86,49 +86,42 @@
     }
 </style>
 
-<%
-    String pageSelected = (String) request.getAttribute("pageSelected");
-%>  
-
-
 <!-- Sidebar -->
 <div class="sidebar">
     <h4 class="sidebar-title">Dashboard</h4> 
-    
+
     <a href="#">
         <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
     </a>
-    
-    <a href="#">
-        <i class="fas fa-box"></i> Quản lý PC
+
+    <a href="${pageContext.request.contextPath}/manage-pc">
+        <i class="fa-solid fa-computer"></i>Quản lý PC
     </a>
-    
+
+    <a href="#">
+        <i class="fas fa-users"></i> Quản lý linh kiện
+    </a>
+
     <a href="#">
         <i class="fas fa-users"></i> Quản lý nhân viên
     </a>
-    
+
     <a href="#">
         <i class="fas fa-users"></i> Quản lý khách hàng
     </a>
-    
-   
-    
-     <a href="#">
-        <i class="fas fa-users"></i> Quản lý linh kiện
-    </a>
-    
-     <a href="#">
+
+    <a href="#">
         <i class="fas fa-users"></i> Quản lý phản hồi
     </a>
-    
-     <a href="#">
+
+    <a href="#">
         <i class="fas fa-users"></i> Quản lý thể loại
     </a>
-    
+
     <a href="#">
         <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
     </a>
-    
+
     <a href="#">
         <i class="fas fa-shopping-cart"></i> Quản lý Voucher
     </a>
@@ -163,7 +156,8 @@
 </div>
 
 <!-- Bootstrap Bundle (gồm Popper) -->
-<script src="<%= request.getContextPath()%>/assets/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <!-- Fix lỗi modal bị đen màn hình -->
 <script>
