@@ -23,6 +23,23 @@ public class DBConnect {
         return conn.prepareStatement(query); // Trả về một PreparedStatement thực tế
     }
 
+    /**
+     * Phương thức static dùng để tạo và trả về kết nối (Connection) tới cơ sở
+     * dữ liệu.
+     *
+     * @return Connection - đối tượng kết nối tới SQL Server hoặc null nếu lỗi
+     */
+    public static Connection getConnection() {
+        Connection conn = null;
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Lỗi kết nối DB: " + e.getMessage());
+        }
+        return conn;
+    }
+
     // Phương thức kiểm tra kết nối
     public void testConnection() {
         try ( Connection conn = connect()) {
