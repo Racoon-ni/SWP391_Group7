@@ -1,9 +1,13 @@
-config\DBConnect.class
-<<<<<<< HEAD
+controller\LoginServlet.class
 controller\DashBoardServlet.class
-=======
-controller\Handle404Servlet.class
->>>>>>> dev
-controller\HomeServlet.class
+model\PC.class
+controller\AccessDeniedServlet.class
+config\DBConnect.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
+controller\ProductListServlet.class
+model\Category.class
+controller\ManagePCServlet.class
+controller\Handle404Servlet.class
+controller\RegisterServlet.class
+controller\HomeServlet.class
