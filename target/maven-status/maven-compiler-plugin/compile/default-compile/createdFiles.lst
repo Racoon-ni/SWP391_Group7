@@ -9,10 +9,6 @@ repository\orderDAO.class
 controller\OrderDetailsServlet.class
 model\Order.class
 controller\MyOrderServlet.class
-<<<<<<< HEAD
-=======
-DAO\ProductDAO.class
->>>>>>> 9d230b4d988c145e659bab1366f773cf8f1a45bd
 model\ShippingInfo.class
 controller\ProductListServlet.class
 model\Product.class

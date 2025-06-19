@@ -28,14 +28,10 @@
     <servlet-name>ViewVoucherServlet</servlet-name>
     <servlet-class>controller.ViewVoucherServlet</servlet-class>
 </servlet>
-
+    
 <servlet-mapping>
     <servlet-name>ViewVoucherServlet</servlet-name>
     <url-pattern>/viewVoucher</url-pattern>
 </servlet-mapping>
-
-
-    
-    
 
 </web-app>
