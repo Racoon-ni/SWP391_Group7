@@ -6,6 +6,7 @@ DAO\WishlistDAO.class
 model\WishlistItem.class
 config\DBConnect.class
 controller\OrderDetailsServlet.class
+model\Order.class
 controller\MyOrderServlet.class
 DAO\ProductDAO.class
 controller\ProductListServlet.class
