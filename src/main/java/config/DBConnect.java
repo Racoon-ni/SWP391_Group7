@@ -39,7 +39,6 @@ public class DBConnect {
         }
         return conn;
     }
-
     // Phương thức kiểm tra kết nối
     public void testConnection() {
         try ( Connection conn = connect()) {
