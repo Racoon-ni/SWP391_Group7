@@ -14,14 +14,12 @@ import java.sql.*;
 import java.util.*;
 
 public class ProductDAO {
+
     public List<Product> getAllPCs() {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
         try (
-            Connection conn = DBConnect.connect();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-        ) {
+                 Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
             while (rs.next()) {
                 Product p = new Product();
                 p.setProductId(rs.getInt("product_id"));
@@ -41,16 +39,15 @@ public class ProductDAO {
         }
         return list;
     }
-    
+
     // lấy sản phẩm bằng ID 
     public Product getProductById(int productId) {
         Product product = null;
         String sql = "SELECT * FROM Products WHERE product_id = ?";
-        try (Connection conn = DBConnect.getConnection(); 
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 product = new Product();
                 product.setProductId(rs.getInt("product_id"));
@@ -67,5 +64,34 @@ public class ProductDAO {
             e.printStackTrace();
         }
         return product;
+    }
+
+    public List<Product> getProductByCategoryId(int categoryId) throws SQLException {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE category_id = ? AND status = 1";
+
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Product(
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("image_url"),
+                        rs.getString("product_type"),
+                        rs.getInt("category_id"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Ném lại ngoại lệ để servlet xử lý
+        }
+
+        return list;
     }
 }
