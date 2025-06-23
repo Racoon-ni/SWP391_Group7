@@ -23,8 +23,7 @@
     <error-code>404</error-code>
     <location>/handle404</location>
 </error-page>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 <servlet>
     <servlet-name>ViewVoucherServlet</servlet-name>
@@ -36,8 +35,9 @@
     <url-pattern>/viewVoucher</url-pattern>
 </servlet-mapping>
 
-=======
-<servlet>
+</web-app>
+
+<servlet>           
     <servlet-name>MyOrderServlet</servlet-name>
     <servlet-class>controller.MyOrderServlet</servlet-class>
 </servlet>
@@ -49,8 +49,4 @@
 
     
 
->>>>>>> 8c50108191b9923638f0291417d5115f75faece8
 </web-app>
-=======
-</web-app>
->>>>>>> 2287eab3d8813077e5044af138bd69e8080d242c
