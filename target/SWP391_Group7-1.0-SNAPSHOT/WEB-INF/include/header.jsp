@@ -4,7 +4,7 @@
     Author     : Huynh Trong Nguyen - CE190356
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -44,7 +44,7 @@
                     <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
                 </a>
 
-                   <%@include file="../include/top-nav.jsp" %>
+                <%@include file="../include/top-nav.jsp" %>
                 <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
                     <div class="position-relative">
                         <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">
@@ -54,9 +54,8 @@
                     </div>
                 </form>
 
-
                 <div class="d-flex gap-5">    
-                    <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/login"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
                     <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
                     <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
                     <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
