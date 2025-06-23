@@ -1,49 +1,49 @@
-controller\DashBoardServlet.class
-controller\AccessDeniedServlet.class
 model\OrderDetail.class
 config\DBConnect.class
+controller\AdminStaffOrderServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
 controller\ProductDetailServlet.class
 DAO\ProductDAO.class
+model\AdminStaffOrder.class
 model\Product.class
-model\Voucher.class
+controller\CustomerViewProfileServlet.class
+DAO\CategoriesDAO.class
+repository\CustomerDAO.class
+model\Customer.class
+controller\DashboardAccessFilterServlet.class
 DAO\pcDAO.class
 controller\LoginServlet.class
 controller\PCListServlet.class
 controller\DashBoardServlet.class
 model\PC.class
 controller\AccessDeniedServlet.class
+<<<<<<< HEAD
+DAO\WishlistDAO.class
+=======
 dao\WishlistDAO.class
+controller\ViewVoucherServlet.class
+>>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
 model\WishlistItem.class
-config\DBConnect.class
-controller\AdminStaffOrderServlet.class
-controller\OrderDetailsServlet.class
-controller\MyOrderServlet.class
-DAO\ProductDAO.class
 model\Order.class
-controller\MyOrderServlet.class
+<<<<<<< HEAD
 model\ShippingInfo.class
 controller\ProductListServlet.class
-model\Product.class
 model\Category.class
 DAO\orderDAO.class
-DAO\VoucherDAO.class
+repository\AdminStaffOrderDAO.class
 controller\ManagePCServlet.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
-<<<<<<< HEAD
-dao\ProductDAO.class
-=======
-controller\HomeServlet.class
-model\AdminStaffOrder.class
-controller\ProductListServlet.class
-controller\CustomerViewProfileServlet.class
-repository\AdminStaffOrderDAO.class
-controller\Handle404Servlet.class
-repository\CustomerDAO.class
-model\Customer.class
-controller\DashboardAccessFilterServlet.class
->>>>>>> 8c50108191b9923638f0291417d5115f75faece8
 controller\RegisterServlet.class
+=======
+controller\MyOrderServlet.class
+controller\ProductListServlet.class
+model\Product.class
+model\Voucher.class
+controller\Handle404Servlet.class
+controller\ViewWishlistServlet.class
+dao\VoucherDAO.class
+dao\ProductDAO.class
+>>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
 controller\HomeServlet.class
