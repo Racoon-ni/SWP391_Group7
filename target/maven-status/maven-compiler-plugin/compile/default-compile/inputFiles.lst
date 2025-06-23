@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\Model\WishlistItem.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
@@ -18,7 +19,27 @@ C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\controller\PCLi
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\DAO\WishlistDAO.java
 C:\Users\Admin\Desktop\SWP931_Group7\SWP391_Group7\src\main\java\Model\ShippingInfo.java
 =======
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\HomeServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\DashboardAccessFilterServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\config\DBConnect.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\AdminStaffOrderServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\CustomerViewProfileServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\repository\CustomerDAO.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\model\Customer.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\repository\AdminStaffOrderDAO.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\Handle404Servlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
+C:\Users\ADMIN\Desktop\SWP391-Group7\SWP391_Group7\src\main\java\model\AdminStaffOrder.java
+C:\Users\kokes\OneDrive\Desktop\SPW391_Group7\SWP391_Group7\src\main\java\controller\ViewVoucherServlet.java
+C:\Users\kokes\OneDrive\Desktop\SPW391_Group7\SWP391_Group7\src\main\java\model\WishlistItem.java
+>>>>>>> 8c50108191b9923638f0291417d5115f75faece8
+=======
 C:\Users\kokes\OneDrive\Desktop\SPW391_Group7\SWP391_Group7\src\main\java\model\PC.java
+>>>>>>> 30d2a86739095afc9b78b20c94f6aa7f24d784fc
 C:\Users\kokes\OneDrive\Desktop\SPW391_Group7\SWP391_Group7\src\main\java\DAO\ProductDAO.java
 C:\Users\kokes\OneDrive\Desktop\SPW391_Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
 C:\Users\kokes\OneDrive\Desktop\SPW391_Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
