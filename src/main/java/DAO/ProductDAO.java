@@ -41,4 +41,31 @@ public class ProductDAO {
         }
         return list;
     }
+    
+    // lấy sản phẩm bằng ID 
+    public Product getProductById(int productId) {
+        Product product = null;
+        String sql = "SELECT * FROM Products WHERE product_id = ?";
+        try (Connection conn = DBConnect.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                product = new Product();
+                product.setProductId(rs.getInt("product_id"));
+                product.setName(rs.getString("name"));
+                product.setDescription(rs.getString("description"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+                product.setImageUrl(rs.getString("image_url"));
+                product.setProductType(rs.getString("product_type"));
+                product.setCategoryId(rs.getInt("category_id"));
+                product.setStatus(rs.getBoolean("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
+    }
 }
