@@ -3,7 +3,7 @@
     Created on : Jun 20, 2025, 12:05:21 AM
     Author     : ThinhLVCE181726 <your.name at your.org>
 --%>
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Product" %>
 <!DOCTYPE html>
