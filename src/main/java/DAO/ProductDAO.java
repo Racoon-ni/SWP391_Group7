@@ -47,30 +47,64 @@ public class ProductDAO {
         }
         return list;
     }
-
-    public List<Product> getProductsByCategoryName(String categoryName) {
-    List<Product> list = new ArrayList<>();
-    String sql = "SELECT p.* FROM Products p "
-               + "JOIN Categories c ON p.category_id = c.category_id "
-               + "WHERE c.name LIKE ? AND p.status = 1";
-    try (Connection conn = DBConnect.connect();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, "%" + categoryName + "%"); // Tìm mọi category chứa "RAM"
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            list.add(new Product(
-                rs.getInt("product_id"),
-                rs.getString("name"),
-                rs.getString("description"),
-                rs.getDouble("price"),
-                rs.getInt("stock"),
-                rs.getString("image_url")
-            ));
+   // Lấy tất cả các linh kiện
+    public List<Product> getAllComponents() throws ClassNotFoundException {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products p JOIN Categories c ON p.category_id = c.category_id WHERE p.product_type = 'Component' AND p.status = 1";
+        
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+             
+            while (rs.next()) {
+                list.add(new Product(
+                    rs.getInt("product_id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getDouble("price"),
+                    rs.getInt("stock"),
+                    rs.getString("image_url"),
+                    rs.getString("product_type"),
+                    rs.getInt("category_id"),
+                    rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
 
-}
+    // Lấy sản phẩm theo category (ví dụ: RAM, CPU, Series)
+    public List<Product> getProductsByCategory(String category) throws ClassNotFoundException {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products p JOIN Categories c ON p.category_id = c.category_id WHERE c.name = ? AND p.status = 1";
+
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, category);  // Set category name (RAM, CPU, etc.)
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Product(
+                    rs.getInt("product_id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getDouble("price"),
+                    rs.getInt("stock"),
+                    rs.getString("image_url"),
+                    rs.getString("product_type"),
+                    rs.getInt("category_id"),
+                    rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    }
+
+   
+    
+
