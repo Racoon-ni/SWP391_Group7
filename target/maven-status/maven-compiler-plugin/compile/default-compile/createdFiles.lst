@@ -1,3 +1,5 @@
+controller\DashBoardServlet.class
+controller\AccessDeniedServlet.class
 model\OrderDetail.class
 config\DBConnect.class
 controller\OrderDetailsServlet.class
@@ -15,6 +17,11 @@ controller\AccessDeniedServlet.class
 controller\ViewVoucherServlet.class
 DAO\WishlistDAO.class
 model\WishlistItem.class
+config\DBConnect.class
+controller\AdminStaffOrderServlet.class
+controller\OrderDetailsServlet.class
+controller\MyOrderServlet.class
+DAO\ProductDAO.class
 model\Order.class
 model\ShippingInfo.class
 controller\ProductListServlet.class
@@ -24,5 +31,14 @@ DAO\VoucherDAO.class
 controller\ManagePCServlet.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
+controller\HomeServlet.class
+model\AdminStaffOrder.class
+controller\ProductListServlet.class
+controller\CustomerViewProfileServlet.class
+repository\AdminStaffOrderDAO.class
+controller\Handle404Servlet.class
+repository\CustomerDAO.class
+model\Customer.class
+controller\DashboardAccessFilterServlet.class
 controller\RegisterServlet.class
 controller\HomeServlet.class

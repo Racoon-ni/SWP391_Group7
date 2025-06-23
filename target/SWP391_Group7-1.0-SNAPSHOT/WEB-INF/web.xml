@@ -23,4 +23,16 @@
     <error-code>404</error-code>
     <location>/handle404</location>
 </error-page>
+<servlet>
+    <servlet-name>MyOrderServlet</servlet-name>
+    <servlet-class>controller.MyOrderServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>MyOrderServlet</servlet-name>
+    <url-pattern>/my-orders</url-pattern>
+</servlet-mapping>
+
+
+    
+
 </web-app>
