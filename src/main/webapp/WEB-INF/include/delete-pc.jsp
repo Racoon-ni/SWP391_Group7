@@ -5,38 +5,40 @@
 --%>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<%@ page pageEncoding="UTF-8" %>
 
-<div class="container mt-3">
-    <h3>Modal Example</h3>
-    <p>Click on the button to open the modal.</p>
-
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-        Open modal
-    </button>
-</div>
-
-<!-- The Modal -->
-<div class="modal" id="myModal">
+<!-- Modal HTML -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Modal Heading</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <form method="post" action="manage-pc">
+            <input type="hidden" name="id" id="id">
+            <input type="hidden" name="action" value="delete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this PC?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
             </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-                Modal body..
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            </div>
-
-        </div>
+        </form>
     </div>
 </div>
+
+<!-- JavaScript to pass ID to modal -->
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const pcId = button.getAttribute('data-pcid');
+        const input = deleteModal.querySelector('#id');
+        input.value = pcId;
+    });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
