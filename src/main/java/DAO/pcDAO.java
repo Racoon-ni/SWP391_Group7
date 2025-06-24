@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Category;
 import model.PC;
 
 /**
@@ -37,10 +38,9 @@ public class pcDAO extends DBConnect {
                 int stock = rs.getInt("stock");
                 String imageUrl = rs.getString("image");
                 boolean status = rs.getBoolean("status");
-                String statusName = status ? "Còn hàng" : "Hết hàng";
-                String categoryName = rs.getString("cate_name");
+                Category category = new Category(0, 0, rs.getString("cate_name"), "");
 
-                PC pc = new PC(id, name, description, price, stock, imageUrl, categoryName, statusName);
+                PC pc = new PC(id, name, description, price, stock, imageUrl, category, status);
                 pcList.add(pc);
             }
 
@@ -54,7 +54,7 @@ public class pcDAO extends DBConnect {
     public PC getPCById(int id) {
 
         String sql = "SELECT p.product_id as p_id, p.name as p_name, p.description, p.price, p.stock,"
-                + "p.image_url as image, p.status, c.name as cate_name "
+                + "p.image_url as image, p.status, c.category_id as c_id, c.name as cate_name "
                 + "FROM Products p "
                 + "JOIN Categories c on p.category_id = c.category_id "
                 + "WHERE p.product_id = ?";
@@ -71,10 +71,9 @@ public class pcDAO extends DBConnect {
                     int stock = rs.getInt("stock");
                     String imageUrl = rs.getString("image");
                     boolean status = rs.getBoolean("status");
-                    String statusName = status ? "Còn bán" : "Hết hàng";
-                    String categoryName = rs.getString("cate_name");
+                    Category category = new Category(rs.getInt("c_id"), 0, rs.getString("cate_name"), "");
 
-                    return new PC(id, name, description, price, stock, imageUrl, categoryName, statusName);
+                    return new PC(id, name, description, price, stock, imageUrl, category, status);
                 }
             }
 
@@ -83,6 +82,63 @@ public class pcDAO extends DBConnect {
         }
 
         return null;
+    }
+
+    public int addPC(PC pc) {
+
+        String sql = "INSERT INTO Products (name, description, price, stock, image_url, product_type, category_id) "
+                + "VALUES (?, ?, ?, ?, null, 'PC', ?)";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, pc.getName());
+            ps.setString(2, pc.getDescription());
+            ps.setDouble(3, pc.getPrice());
+            ps.setInt(4, pc.getStock());
+            ps.setInt(5, pc.getCategory().getCategoryId());
+
+            return ps.executeUpdate(); // returns 1 if success
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return 0;
+
+    }
+
+    public int updatePC(PC pc) {
+
+        String sql = "Update Products SET name = ?, description = ?, price = ?,\n"
+                    + "stock = ?, category_id = ?, status = ?\n"
+                    + "WHERE product_id = ? ";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, pc.getName());
+            ps.setString(2, pc.getDescription());
+            ps.setDouble(3, pc.getPrice());
+            ps.setInt(4, pc.getStock());
+            ps.setInt(5, pc.getCategory().getCategoryId());
+            ps.setBoolean(6, pc.isStatus());
+            ps.setInt(7, pc.getId());
+
+            return ps.executeUpdate(); // returns 1 if success
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return 0;
+
+    }
+
+    public int delete(int id) {
+        String query = "DELETE FROM Products WHERE product_id = ?";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(query)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
     }
 
 }

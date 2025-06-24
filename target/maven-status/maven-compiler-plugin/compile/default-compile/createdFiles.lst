@@ -1,5 +1,25 @@
 model\OrderDetail.class
 config\DBConnect.class
+<<<<<<< HEAD
+controller\AdminStaffOrderServlet.class
+=======
+DAO\CategoryDAO.class
+>>>>>>> f9875336ffd14efb75e036231d2951528e2f838a
+controller\OrderDetailsServlet.class
+controller\MyOrderServlet.class
+controller\ProductDetailServlet.class
+DAO\ProductDAO.class
+model\AdminStaffOrder.class
+model\Product.class
+<<<<<<< HEAD
+controller\CustomerViewProfileServlet.class
+=======
+model\Voucher.class
+DAO\UserDAO.class
+model\User.class
+DAO\pcDAO.class
+model\OrderDetail.class
+config\DBConnect.class
 controller\AdminStaffOrderServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
@@ -8,6 +28,8 @@ DAO\ProductDAO.class
 model\AdminStaffOrder.class
 model\Product.class
 controller\CustomerViewProfileServlet.class
+DAO\CategoriesDAO.class
+>>>>>>> f9875336ffd14efb75e036231d2951528e2f838a
 repository\CustomerDAO.class
 model\Customer.class
 controller\DashboardAccessFilterServlet.class
@@ -17,9 +39,21 @@ controller\PCListServlet.class
 controller\DashBoardServlet.class
 model\PC.class
 controller\AccessDeniedServlet.class
+<<<<<<< HEAD
 DAO\WishlistDAO.class
 model\WishlistItem.class
 model\Order.class
+=======
+<<<<<<< HEAD
+DAO\WishlistDAO.class
+=======
+dao\WishlistDAO.class
+controller\ViewVoucherServlet.class
+>>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
+model\WishlistItem.class
+model\Order.class
+<<<<<<< HEAD
+>>>>>>> f9875336ffd14efb75e036231d2951528e2f838a
 model\ShippingInfo.class
 controller\ProductListServlet.class
 model\Category.class
@@ -29,4 +63,15 @@ controller\ManagePCServlet.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
 controller\RegisterServlet.class
+=======
+controller\MyOrderServlet.class
+controller\ProductListServlet.class
+model\Category.class
+controller\ManagePCServlet.class
+controller\Handle404Servlet.class
+controller\ViewWishlistServlet.class
+controller\RegisterServlet.class
+dao\VoucherDAO.class
+dao\ProductDAO.class
+>>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
 controller\HomeServlet.class

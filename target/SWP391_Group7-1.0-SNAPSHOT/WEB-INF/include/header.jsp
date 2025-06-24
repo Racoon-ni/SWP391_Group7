@@ -4,7 +4,9 @@
     Author     : Huynh Trong Nguyen - CE190356
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="model.User"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -31,10 +33,12 @@
             .annie-use-your-telescope {
                 font-family: "Annie Use Your Telescope", cursive;
             }
-            
+
         </style>
     </head>
+
     <body>
+        <% User user = (User) request.getAttribute("user");%>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
             <div class="container-fluid">
@@ -55,7 +59,20 @@
                 </form>
 
                 <div class="d-flex gap-5">    
-                    <a class="nav-link" href="${pageContext.request.contextPath}/login"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
+                    <c:if test="${not empty user}">
+                        <div class="dropdown">
+                            <a class="nav-link"  href="${pageContext.request.contextPath}/profile" data-bs-toggle="dropdown">Chào, ${user.username}
+                                <i class="fa-regular fa-circle-user" 
+                                   style="font-size: large"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng Xuất</a></li>
+                            </ul>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty user}">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/login"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
+                    </c:if>
                     <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
                     <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
                     <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
