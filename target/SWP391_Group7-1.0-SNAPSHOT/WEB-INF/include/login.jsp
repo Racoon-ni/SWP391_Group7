@@ -99,12 +99,16 @@
         color: #333;
     }
 </style>
+
+<c:if test="${not empty error}">
+    <%@include file="toast.jsp" %>
+</c:if>
 <div style="display: flex; justify-content: center; align-items: center;">
     <div class="login-container">
         <h2>Đăng Nhập</h2>
 
         <form method="POST" action="${pageContext.request.contextPath}/login">
-            <input type="text" name="username" placeholder="Tên người dùng" required />
+            <input type="text" name="username" value="${username}" placeholder="Tên người dùng" required />
             <div class="password-wrapper">
                 <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
                 <i class="fa-solid fa-eye toggle-password" id="togglePassword" onclick="togglePassword()"></i>

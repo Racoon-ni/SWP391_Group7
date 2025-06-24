@@ -1,6 +1,6 @@
 <%-- 
-    Document   : add-pc
-    Created on : Jun 20, 2025, 12:50:00 AM
+    Document   : add-user
+    Created on : Jun 24, 2025, 10:30:21 PM
     Author     : Huynh Trong Nguyen - CE190356
 --%>
 
@@ -15,17 +15,17 @@
         <input type="hidden" name="action" value="create" />        
 
         <div class="form-group">
-            <label>Tên:</label>
+            <label>Tên tài khoản:</label>
             <input type="text" name="name" class="form-control" required>
         </div>
         <br/>
         <div class="form-group">
-            <label>Mô tả:</label>
+            <label>Email:</label>
             <textarea name="description" class="form-control" required></textarea>
         </div>
         <br/>
         <div class="form-group">
-            <label>Giá:</label>
+            <label>Mật :</label>
             <input type="number" step="0.01" name="price" class="form-control" required>
         </div>
         <br/>

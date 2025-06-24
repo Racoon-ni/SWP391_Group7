@@ -1,6 +1,6 @@
 <%-- 
-    Document   : delete-pc
-    Created on : Jun 20, 2025, 4:32:30 AM
+    Document   : delete-component
+    Created on : Jun 24, 2025, 8:33:01 PM
     Author     : Huynh Trong Nguyen - CE190356
 --%>
 
@@ -10,7 +10,7 @@
 <!-- Modal HTML -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
-        <form method="post" action="manage-pc">
+        <form method="post" action="manage-component">
             <input type="hidden" name="id" id="id">
             <input type="hidden" name="action" value="delete">
             <div class="modal-content">
@@ -19,7 +19,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    Bạn có chắc muốn xóa PC này? 
+                    Bạn có chắc muốn xóa linh kiện này? 
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Xóa</button>

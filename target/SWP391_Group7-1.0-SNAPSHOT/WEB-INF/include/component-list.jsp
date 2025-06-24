@@ -4,7 +4,7 @@
     Author     : Huynh Trong Nguyen - CE190356
 --%>
 
-<%@page import="model.PC"%>
+<%@page import="model.Component"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@include file="../include/admin-side-bar.jsp" %>
@@ -13,16 +13,16 @@
 <title>PCs List</title>
 
 <%
-    ArrayList<PC> pcList = (ArrayList<PC>) request.getAttribute("pcList");
+    ArrayList<Component> componentList = (ArrayList<Component>) request.getAttribute("componentList");
 %>
 <div class="main-content">
     <div class="d-flex justify-content-end">
-        <a href="${pageContext.request.contextPath}/manage-pc?view=add" class="btn btn-success">
-            <i class="fa-solid fa-square-plus"></i> Thêm PC
+        <a href="${pageContext.request.contextPath}/manage-component?view=add" class="btn btn-success">
+            <i class="fa-solid fa-square-plus"></i> Thêm Linh Kiện
         </a>
     </div>
     <%
-        if (!pcList.isEmpty() && pcList != null) {
+        if (!componentList.isEmpty() && componentList != null) {
     %>
     <table class="table table-bordered">
         <thead>
@@ -40,32 +40,32 @@
         </thead>
         <tbody class="table-group-divider">
             <%
-                for (PC pc : pcList) {
+                for (Component comp : componentList) {
             %>
             <tr>
-                <th scope="row" style="text-align: center"><%= pc.getId()%></th>
-                <td scope="row"><%= pc.getName()%></td>
-                <td><%= pc.getDescription()%></td>
-                <td><%= pc.getPrice()%></td>
-                <td><%= pc.getPrice()%></td>
-                <td><%= pc.getImageUrl()%></td>
-                <td><%= pc.isStatus() ? "Còn bán" : "Hết hàng"%></td>
-                <td><%= pc.getCategory().getName()%></td>
+                <th scope="row" style="text-align: center"><%= comp.getId()%></th>
+                <td scope="row"><%= comp.getName()%></td>
+                <td><%= comp.getDescription()%></td>
+                <td><%= comp.getPrice()%></td>
+                <td><%= comp.getStock()%></td>
+                <td><%= comp.getImageUrl()%></td>
+                <td><%= comp.isStatus() ? "Còn bán" : "Hết hàng"%></td>
+                <td><%= comp.getCategory().getName()%></td>
                 <td class="d-flex justify-content-center gap-2" style="text-align: center">
 
-                    <a href="${pageContext.request.contextPath}/manage-pc?view=edit&id=<%= pc.getId()%>" class="btn btn-warning">
+                    <a href="${pageContext.request.contextPath}/manage-component?view=edit&id=<%= comp.getId()%>" class="btn btn-warning">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
 
                     <!-- Delete button for each PC -->
                     <a href="#" class="btn btn-danger" data-bs-toggle="modal"
                        data-bs-target="#deleteModal"
-                       data-pcid="<%= pc.getId()%>">
+                       data-pcid="<%= comp.getId()%>">
                         <i class="fa-solid fa-trash"></i>
                     </a>
 
                     <!-- One shared modal -->
-                    <%@ include file="delete-pc.jsp" %>
+                    <%@ include file="delete-component.jsp" %>
 
                 </td>
 
