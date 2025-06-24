@@ -3,7 +3,7 @@
     Created on : Jun 17, 2025, 7:44:28 AM
     Author     : Huynh Trong Nguyen - CE190356
 --%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page pageEncoding="UTF-8" %>
 
 <style>
     .sidebar {
