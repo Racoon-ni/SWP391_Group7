@@ -12,20 +12,21 @@
     <h3 class="mb-4 text-primary">Danh sách loại: ${category}</h3>
 
     <div class="row">
-        <c:forEach var="cat" items="${componentList}">
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">${cat.name}</h5>
-                        <p class="card-text">Mã danh mục: ${cat.categoryId}</p>
-                        <p class="card-text">Loại: ${cat.categoryType}</p>
-                        <a href="ViewComponentDetail?id=${cat.categoryId}" class="btn btn-primary mt-auto">
-                            Xem chi tiết
-                        </a>
-                    </div>
-                </div>
+       <c:forEach var="product" items="${componentList}">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm h-100">
+            <img src="${product.imageUrl}" class="card-img-top" alt="Product image">
+            <div class="card-body d-flex flex-column">
+                <!-- Hiển thị thông tin sản phẩm thay vì danh mục -->
+                <h5 class="card-title">${product.name}</h5>
+                <!-- Các thuộc tính khác của product -->
+                <a href="ViewProductDetail?id=${product.id}" class="btn btn-primary mt-auto">
+                    Xem chi tiết
+                </a>
             </div>
-        </c:forEach>
+        </div>
+    </div>
+</c:forEach>
     </div>
 </div>
 </body>

@@ -100,8 +100,6 @@ public class ProductDAO {
 
         return list;
     }
-}
-
    // Lấy tất cả các linh kiện
     public List<Product> getAllComponents() throws ClassNotFoundException {
         List<Product> list = new ArrayList<>();

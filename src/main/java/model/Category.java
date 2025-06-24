@@ -21,6 +21,11 @@ public class Category {
         this.categoryType = categoryType;
     }
 
+    public Category() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+
     public int getCategoryId() {
         return categoryId;
     }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\DAO\CategoriesDAO.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\repository\CustomerDAO.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\PC.java
@@ -9,8 +8,10 @@ C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\Mana
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\Customer.java
+C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewComponentServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\DAO\ProductDAO.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\DAO\WishlistDAO.java
+C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewComponentDetailServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\RegisterServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewWishlistServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\WishlistItem.java
@@ -23,34 +24,12 @@ C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\MyOr
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\DashboardAccessFilterServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\Category.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\repository\AdminStaffOrderDAO.java
-=======
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\WishlistItem.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewVoucherServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\HomeServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\Order.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\config\DBConnect.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\DAO\VoucherDAO.java
->>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\Product.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\Handle404Servlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\ShippingInfo.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
-<<<<<<< HEAD
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ProductDetailServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\PCListServlet.java
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\AdminStaffOrder.java
-=======
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\OrderDetailsServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewComponentServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\DAO\ProductDAO.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\Voucher.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\PCListServlet.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\DAO\WishlistDAO.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\repository\orderDAO.java
-C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewWishlistServlet.java
->>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
 C:\Users\ADMIN\Desktop\SWP391_Group7\SWP391_Group7\src\main\java\Model\OrderDetail.java
