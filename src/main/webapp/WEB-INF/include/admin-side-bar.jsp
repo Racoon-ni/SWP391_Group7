@@ -122,7 +122,7 @@
         <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
     </a>
 
-    <a href="#">
+    <a href="${pageContext.request.contextPath}/manage-vouchers">
         <i class="fas fa-shopping-cart"></i> Quản lý Voucher
     </a>
 

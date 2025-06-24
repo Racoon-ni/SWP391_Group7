@@ -24,7 +24,8 @@ public class Handle404Servlet extends HttpServlet {
 
         if (session != null && session.getAttribute("role") != null) {
             role = session.getAttribute("role").toString(); // admin / customer
-        }
+        } 
+        
 
         // Đẩy role qua view
         req.setAttribute("userRole", role);

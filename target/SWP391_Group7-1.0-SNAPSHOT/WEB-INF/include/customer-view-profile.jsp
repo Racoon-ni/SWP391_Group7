@@ -5,6 +5,7 @@
     Customer customer = (Customer) request.getAttribute("customer");
 %>
 <title>Thông tin khách hàng</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -204,7 +205,6 @@
 <!-- Header Section -->
 <div class="header">
     <div class="logo">PC Store</div>
-    <input type="text" class="search-bar" placeholder="Tìm kiếm...">
     <div class="user-info">
         <span>Chào bạn Long</span>
     </div>
@@ -225,6 +225,30 @@
 <div class="main-content">
     <div class="container">
         <h2>Thông tin khách hàng</h2>
+        <!-- Thông báo sau khi cập nhật -->
+        <div id="successMessage" style="display:none; color: green; text-align: center; font-weight: bold; margin-bottom: 15px;"></div>
+
+
+        <!-- Đặt script cuối trang -->
+        <script>
+            document.getElementById("saveEdit").addEventListener("click", function () {
+                const newName = document.getElementById("editFullName").value;
+                const newEmail = document.getElementById("editEmail").value;
+
+                document.getElementById("fullName").value = newName;
+                document.getElementById("email").value = newEmail;
+
+                document.getElementById("editModal").style.display = "none";
+
+                const successMsg = document.getElementById("successMessage");
+                successMsg.style.display = "block";
+                successMsg.innerText = "Cập nhật thành công!";
+
+                setTimeout(() => {
+                    successMsg.style.display = "none";
+                }, 3000);
+            });
+        </script>
 
         <div class="form-field">
             <label>Họ tên</label>
@@ -239,7 +263,7 @@
 
         <button class="update-btn" id="editBtn">Chỉnh sửa</button>
 
- 
+
     </div>
 </div>
 
@@ -280,7 +304,14 @@
     // Sự kiện cập nhật thông tin
     document.getElementById('editForm').onsubmit = function (event) {
         event.preventDefault();
-        alert('Thông tin đã được cập nhật');
+        const successMsg = document.getElementById("successMessage");
+        successMsg.style.display = "block";
+        successMsg.innerText = "Cập nhật thành công!";
+
+        setTimeout(() => {
+            successMsg.style.display = "none";
+        }, 3000);
+
         document.getElementById('editModal').style.display = 'none';
     };
 </script>
