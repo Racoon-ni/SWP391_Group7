@@ -1,117 +1,120 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ include file="/WEB-INF/include/header.jsp" %>
+
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
- <head>
-        <meta charset="UTF-8">
-        <title>PC Store</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet">
 
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .product-card img {
-                max-width: 100%;
-            }
-            .shadowed-navbar {
-                border-bottom: 2px solid black; /* Solid black line */
-                box-shadow: 0px 8px 8px -4px rgba(0, 0, 0, 0.4); /* Dark shadow */
-                z-index: 1030; /* Keeps it on top */
-                padding: 0 10px;
-                margin-bottom: 20px;
-            }
-            .annie-use-your-telescope {
-                font-family: "Annie Use Your Telescope", cursive;
-            }
-            
-        </style>
-    </head>
-    <body>
-       <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold annie-use-your-telescope" 
-                   href="${pageContext.request.contextPath}/home" 
-                   style="font-size: 4rem;">
-                    <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
-                </a>
-
-                   <%@include file="../include/top-nav.jsp" %>
-                <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
-                    <div class="position-relative">
-                        <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">
-                        <button type="submit" class="btn position-absolute top-50 end-0 translate-middle-y pe-3 border-0 bg-transparent">
-                            <i class="fas fa-search text-muted"></i>
-                        </button>
-                    </div>
-                </form>
-
-
-                <div class="d-flex gap-5">    
-                    <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
-                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
-                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
-                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
-                </div>
+    <title>Danh sách linh kiện - ${category}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .component-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .error-message {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+   
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">${category}</h1>
+        <c:if test="${not empty errorMessage}">
+            <div class="error-message bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg text-center">
+                ${errorMessage}
             </div>
-        </nav>
-        <!-- US-11: View Components (Bootstrap version) -->
-        <section class="container py-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-uppercase fw-bold mb-0" style="color: #c5a992;">Linh kiện máy tính</h2>
-                <div class="d-flex flex-wrap gap-2">
-                    <select class="form-select">
-                        <option selected>Loại</option>
-                        <option>CPU</option>
-                        <option>RAM</option>
-                        <option>VGA</option>
-                        <option>SSD</option>
-                    </select>
-                    <select class="form-select">
-                        <option selected>Hãng</option>
-                        <option>Intel</option>
-                        <option>AMD</option>
-                        <option>Kingston</option>
-                    </select>
-                    <select class="form-select">
-                        <option selected>Giá</option>
-                        <option>0-2tr</option>
-                        <option>2-5tr</option>
-                        <option>5-10tr</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <c:forEach var="i" begin="1" end="10">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm">
-                            <img src="cpu.jpg" class="card-img-top" alt="CPU" style="height: 180px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-semibold">Intel Core i7</h5>
-                                <p class="fw-bold mb-2" style="color: #c5a992;">6.500.000₫</p>
-                                <a href="#" class="btn btn-sm mt-auto text-white" style="background-color: #c5a992;">Xem chi tiết</a>
+        </c:if>
+        <c:choose>
+            <c:when test="${not empty componentList}">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <c:forEach var="product" items="${componentList}">
+                        <div class="component-card bg-white rounded-lg shadow-md overflow-hidden">
+                            <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-contain p-4"/>
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold text-gray-800 truncate">${product.name}</h3>
+                                <p class="text-gray-600 text-sm mt-2 h-12 overflow-hidden">${product.description}</p>
+                                <p class="text-pink-600 font-bold text-lg mt-2">${product.price} USD</p>
+                                <p class="text-gray-500 text-sm mt-1">Tồn kho: ${product.stock}</p>
+                                <div class="mt-4 flex space-x-2">
+                                    <a href="${pageContext.request.contextPath}/ViewComponentDetail?productId=${product.productId}" 
+                                       class="btn flex-1 bg-blue-600 text-white py-2 rounded-md text-center hover:bg-blue-700">
+                                        Xem chi tiết
+                                    </a>
+                                    <button onclick="addToCart(${product.productId})" 
+                                            class="btn flex-1 bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
+                                        Thêm vào giỏ
+                                    </button>
+                                    <button onclick="addToWishlist(${product.productId})" 
+                                            class="btn bg-red-100 text-red-600 p-2 rounded-md hover:bg-red-200">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </c:forEach>
-            </div>
+                    </c:forEach>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="no-components bg-white p-8 rounded-lg shadow-md text-center text-gray-600 text-lg">
+                    Không có linh kiện nào trong danh mục này.
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link">Trang trước</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Trang sau</a></li>
-                </ul>
-            </nav>
-        </section>
+    <script>
+        function addToCart(productId) {
+            fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Lỗi khi thêm vào giỏ hàng: ' + error);
+            });
+        }
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    </body>
+        function addToWishlist(productId) {
+            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã thêm sản phẩm vào danh sách yêu thích!');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
+            });
+        }
+    </script>
+ 
+</body>
 </html>
-
-

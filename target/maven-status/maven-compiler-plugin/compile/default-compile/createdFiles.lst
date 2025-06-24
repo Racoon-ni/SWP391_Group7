@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 model\OrderDetail.class
 repository\AdminStaffVoucherDAO.class
 config\DBConnect.class
@@ -37,3 +38,5 @@ controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
 controller\RegisterServlet.class
 controller\HomeServlet.class
+=======
+>>>>>>> dev

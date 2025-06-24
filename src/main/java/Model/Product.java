@@ -9,6 +9,7 @@ package model;
  * @author ThinhLVCE181726 <your.name at your.org>
  */
 public class Product {
+
     private int productId;
     private String name;
     private String description;
@@ -18,8 +19,10 @@ public class Product {
     private String productType;
     private int categoryId;
     private boolean status;
+    private Category category;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(int productId, String name, String description, double price, int stock, String imageUrl, String productType, int categoryId, boolean status) {
         this.productId = productId;
@@ -32,8 +35,15 @@ public class Product {
         this.categoryId = categoryId;
         this.status = status;
     }
+    
+    public Category getCategory() {
+        return category;
+    }
 
     // Getter & Setter đầy đủ ở đây (bạn có thể sinh bằng IDE)
+    public void setCategory(Category category) {    
+        this.category = category;
+    }
 
     public int getProductId() {
         return productId;
@@ -106,5 +116,5 @@ public class Product {
     public void setStatus(boolean status) {
         this.status = status;
     }
-    
+
 }
