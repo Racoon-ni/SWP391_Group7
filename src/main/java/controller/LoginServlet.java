@@ -4,6 +4,7 @@
  */
 package controller;
 
+import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.User;
 
 /**
  *
@@ -57,14 +59,25 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        response.setContentType("text/plain");
+        UserDAO uDAO = new UserDAO();
 
-        // Example login check
-        if ("admin".equals(username) && "123456".equals(password)) {
-            response.getWriter().write("success");
+        User user = uDAO.getUser(username, password);
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
         } else {
-            response.getWriter().write("Sai tên người dùng hoặc mật khẩu!");
+            request.setAttribute("user", user);
+
+            if (uDAO.login(user) && user.getRole().equalsIgnoreCase("Customer")) {
+                request.getRequestDispatcher("/home.jsp").forward(request, response);
+            } else if (uDAO.login(user) && (user.getRole().equalsIgnoreCase("Admin")
+                    || user.getRole().equalsIgnoreCase("Staff"))) {
+                response.sendRedirect(request.getContextPath() + "/dash-board");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/login");
+            }
+
         }
+
     }
 
     /**

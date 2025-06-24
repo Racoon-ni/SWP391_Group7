@@ -15,20 +15,20 @@ public class PC {
     private double price;
     private int stock;
     private String imageUrl;
-    private String categoryName;
-    private String status;
+    private Category category;
+    private boolean status;
 
     public PC() {
     }
 
-    public PC(int id, String name, String description, double price, int stock, String imageUrl, String categoryName, String status) {
+    public PC(int id, String name, String description, double price, int stock, String imageUrl, Category category, boolean status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.imageUrl = imageUrl;
-        this.categoryName = categoryName;
+        this.category = category;
         this.status = status;
     }
 
@@ -80,22 +80,20 @@ public class PC {
         this.imageUrl = imageUrl;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public String getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
-    
-   
-    
+
 }

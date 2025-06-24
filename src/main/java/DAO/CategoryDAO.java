@@ -4,33 +4,70 @@
  */
 package DAO;
 
+import config.DBConnect;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Category;
+
 /**
  *
- * @author ThinhLVCE181726 <your.name at your.org>
+ * @author Huynh Trong Nguyen - CE190356
  */
-import config.DBConnect;
-import model.Category;
-import java.sql.*;
-import java.util.*;
+public class CategoryDAO extends DBConnect {
 
-public class CategoryDAO {
-    public List<Category> getAllParentCategories() {
-        List<Category> list = new ArrayList<>();
-        String sql = "SELECT * FROM Categories WHERE parent_id IS NULL";
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    public ArrayList<Category> getAllCategories() {
+
+        ArrayList<Category> cateList = new ArrayList<>();
+        String sql = "SELECT c.category_id as cate_id, c.parent_id, \n"
+                + "c.name as cate_name, c.category_type as cate_type\n"
+                + "FROM Categories c ";
+
+        try (
+                 PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
             while (rs.next()) {
-                Category c = new Category();
-                c.setCategoryId(rs.getInt("category_id"));
-                c.setParentId(null); // Vì là cha
-                c.setName(rs.getString("name"));
-                c.setCategoryType(rs.getString("category_type"));
-                list.add(c);
+                int id = rs.getInt("cate_id");
+                int parentId = rs.getInt("parent_id");
+                String name = rs.getString("cate_name");
+                String type = rs.getString("cate_type");
+
+                Category category = new Category(id, parentId, name, type);
+                cateList.add(category);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return list;
+
+        return cateList;
+    }
+
+    public Category getCategoryById(int id) {
+
+        String sql = "SELECT c.category_id, c.parent_id, c.name, c.category_type\n"
+                + "From Categories c \n"
+                + "WHERE c.category_id = ?";
+
+        try (
+                 PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int cateId = rs.getInt("category_id");
+                    int pId = rs.getInt("parent_id");
+                    String name = rs.getString("name");
+                    String cType = rs.getString("category_type");
+                    return new Category(cateId, pId, name, cType);
+                }
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
 }

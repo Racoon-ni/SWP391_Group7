@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <!-- Cấu hình trang chủ mặc định -->
+    <welcome-file-list>
+        <welcome-file>home.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <!-- Cấu hình HomeServlet -->
+<servlet>
+    <servlet-name>viewComponentServlet</servlet-name>
+    <servlet-class>controller.viewComponentServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>viewComponentServlet</servlet-name>
+    <url-pattern>/viewComponent</url-pattern>
+</servlet-mapping>
+
+    <!-- Cấu hình HomeServlet -->
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>controller.HomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <!-- Trang lỗi 404 -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/handle404</location>
+    </error-page>
+
+    <!-- ViewVoucherServlet -->
+    <servlet>
+        <servlet-name>ViewVoucherServlet</servlet-name>
+        <servlet-class>controller.ViewVoucherServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewVoucherServlet</servlet-name>
+        <url-pattern>/viewVoucher</url-pattern>
+    </servlet-mapping>
+
+    <!-- MyOrderServlet -->
+    <servlet>
+        <servlet-name>MyOrderServlet</servlet-name>
+        <servlet-class>controller.MyOrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MyOrderServlet</servlet-name>
+        <url-pattern>/my-orders</url-pattern>
+    </servlet-mapping>
+
+</web-app>
