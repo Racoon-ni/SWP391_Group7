@@ -103,10 +103,10 @@
     <div class="login-container">
         <h2>Đăng Nhập</h2>
 
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Tên người dùng" required />
+        <form method="POST" action="${pageContext.request.contextPath}/login">
+            <input type="text" name="username" placeholder="Tên người dùng" required />
             <div class="password-wrapper">
-                <input type="password" id="password" placeholder="Mật khẩu" required />
+                <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
                 <i class="fa-solid fa-eye toggle-password" id="togglePassword" onclick="togglePassword()"></i>
             </div>
 
@@ -130,32 +130,6 @@
         icon.classList.toggle("fa-eye");
         icon.classList.toggle("fa-eye-slash");
     }
-
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent form from submitting normally
-
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        fetch("${pageContext.request.contextPath}/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password)
-        })
-                .then(response => response.text())
-                .then(data => {
-                    if (data.trim() === "success") {
-                        window.location.href = "${pageContext.request.contextPath}/home";
-                    } else {
-                        document.getElementById("error-message").textContent = data;
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                });
-    });
 </script>
 
 

@@ -11,7 +11,9 @@
 <div class="container">
     <h1>Add new PC</h1>
 
-    <form method="POST" action="/manage-flowers?action=create">
+    <form method="POST" action="${pageContext.request.contextPath}/manage-pc">
+        <input type="hidden" name="action" value="create" />        
+
         <div class="form-group">
             <label>Name:</label>
             <input type="text" name="name" class="form-control" required>
@@ -29,23 +31,26 @@
         <br/>
         <div class="form-group">
             <label>Stock</label>
-            <input type="text" name="stock" class="form-control" required>
+            <input type="number" name="stock" class="form-control" required>
         </div>
-        
-        <br/>
-        <div class="form-group">
-            <label>Product Type</label>
-            <input type="text" name="stock" class="form-control" required>
-        </div>
-        
+
         <br/>
         <div class="form-group">
             <label>Category name</label>
-            <input type="text" name="stock" class="form-control" required>
+            <select name="cateId" class="form-control">
+                <c:if test="${not empty cateList}">
+                    <c:forEach items="${cateList}" var="cate">
+                        <c:if test="${cate.categoryType == 'PC'}">
+                            <option value="${cate.categoryId}">
+                                ${cate.name}
+                            </option>
+                        </c:if>
+                    </c:forEach>
+                </c:if>
+            </select>   
         </div>
 
-
         <br/>
-        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="submit" class="btn btn-primary">Thêm PC</button>
     </form>
 </div>

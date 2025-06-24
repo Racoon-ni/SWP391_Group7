@@ -1,5 +1,17 @@
 model\OrderDetail.class
 config\DBConnect.class
+DAO\CategoryDAO.class
+controller\OrderDetailsServlet.class
+controller\MyOrderServlet.class
+controller\ProductDetailServlet.class
+DAO\ProductDAO.class
+model\Product.class
+model\Voucher.class
+DAO\UserDAO.class
+model\User.class
+DAO\pcDAO.class
+model\OrderDetail.class
+config\DBConnect.class
 controller\AdminStaffOrderServlet.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
@@ -39,10 +51,11 @@ controller\RegisterServlet.class
 =======
 controller\MyOrderServlet.class
 controller\ProductListServlet.class
-model\Product.class
-model\Voucher.class
+model\Category.class
+controller\ManagePCServlet.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
+controller\RegisterServlet.class
 dao\VoucherDAO.class
 dao\ProductDAO.class
 >>>>>>> ad0c584bab092b354abccf54e4e7c53925b75eaa
