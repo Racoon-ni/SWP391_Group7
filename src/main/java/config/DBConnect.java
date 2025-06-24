@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class DBConnect {
 
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=CPCC;encrypt=true;trustServerCertificate=true;";
+    private static final String URL = "jdbc:sqlserver://127.0.0.1:1433;databaseName=CPCC;encrypt=true;trustServerCertificate=true;";
     private static final String USER = "sa";
     private static final String PASSWORD = "123";
 
@@ -39,7 +39,6 @@ public class DBConnect {
         }
         return conn;
     }
-
     // Phương thức kiểm tra kết nối
     public void testConnection() {
         try ( Connection conn = connect()) {
@@ -55,7 +54,8 @@ public class DBConnect {
     }
 
     public static void main(String[] args) {
-        DBConnect db = new DBConnect();
-        db.testConnection();
+//        DBConnect db = new DBConnect();
+//        db.testConnection();
+
     }
 }

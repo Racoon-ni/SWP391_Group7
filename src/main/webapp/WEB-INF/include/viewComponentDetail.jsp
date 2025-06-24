@@ -1,125 +1,118 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/include/header.jsp" %>
+
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-     <head>
-        <meta charset="UTF-8">
-        <title>PC Store</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet">
 
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .product-card img {
-                max-width: 100%;
-            }
-            .shadowed-navbar {
-                border-bottom: 2px solid black; /* Solid black line */
-                box-shadow: 0px 8px 8px -4px rgba(0, 0, 0, 0.4); /* Dark shadow */
-                z-index: 1030; /* Keeps it on top */
-                padding: 0 10px;
-                margin-bottom: 20px;
-            }
-            .annie-use-your-telescope {
-                font-family: "Annie Use Your Telescope", cursive;
-            }
-            
-        </style>
-    </head>
-    <body>
-       <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold annie-use-your-telescope" 
-                   href="${pageContext.request.contextPath}/home" 
-                   style="font-size: 4rem;">
-                    <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
-                </a>
-
-                   <%@include file="../include/top-nav.jsp" %>
-                <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
-                    <div class="position-relative">
-                        <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">
-                        <button type="submit" class="btn position-absolute top-50 end-0 translate-middle-y pe-3 border-0 bg-transparent">
-                            <i class="fas fa-search text-muted"></i>
-                        </button>
-                    </div>
-                </form>
-
-
-                <div class="d-flex gap-5">    
-                    <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
-                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
-                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
-                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
-                </div>
+    <title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm"/></title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .btn {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .error-message {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .product-image {
+            max-height: 400px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    
+    <div class="container mx-auto px-4 py-8">
+        <c:if test="${not empty errorMessage}">
+            <div class="error-message bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg text-center">
+                <c:out value="${errorMessage}"/>
             </div>
-        </nav>
-        <div class="container py-5">
-            <div class="row">
-                <!-- Ảnh sản phẩm và ảnh nhỏ -->
-                <div class="col-md-5 text-center">
-                    <img src="${product.imageUrl}" class="img-fluid mb-3" alt="${product.name}" style="max-height: 250px; object-fit: cover;">
-                    <div class="d-flex justify-content-center gap-2">
-                        <img src="${product.imageUrl}" class="thumbnail-img" alt="">
-                        <img src="img/ssd_other1.jpg" class="thumbnail-img" alt="">
+        </c:if>
+        <c:choose>
+            <c:when test="${not empty product}">
+                <div class="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="flex justify-center">
+                            <img src="${product.imageUrl}" alt="${product.name}" class="product-image w-full rounded-lg"/>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800 mb-4"><c:out value="${product.name}"/></h1>
+                            <p class="text-gray-600 text-lg mb-4"><c:out value="${product.description}" default="Không có mô tả"/></p>
+                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/> USD</p>
+                            <p class="text-gray-500 mb-4">Tồn kho: <c:out value="${product.stock}"/></p>
+                            <p class="text-gray-500 mb-4">Loại sản phẩm: <c:out value="${product.productType}" default="Không xác định"/></p>
+                            <p class="text-gray-500 mb-4">Danh mục ID: <c:out value="${product.categoryId}"/></p>
+                            <div class="flex space-x-4">
+                                <button onclick="addToCart(${product.productId})" 
+                                        class="btn bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700">
+                                    Thêm vào giỏ
+                                </button>
+                                         <!-- Mua ngay button -->
+                                <a href="${pageContext.request.contextPath}/checkout?productId=${product.productId}" 
+                                   class="btn bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700">
+                                    Mua ngay
+                                </a>
+                                <button onclick="addToWishlist(${product.productId})" 
+                                        class="btn bg-red-100 text-red-600 py-3 px-4 rounded-md hover:bg-red-200">
+                                    <svg class="w-6 h-6 inline-block" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Yêu thích
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Thông tin sản phẩm -->
-                <div class="col-md-7">
-                    <h4 class="fw-bold">${product.name}</h4>
-                    <p>Thương hiệu: <strong>Kingston</strong> | Mã sản phẩm: <strong>SNV3S/500G</strong></p>
-
-                    <!-- Giá -->
-                    <div class="mb-2">
-                        <span class="price">${product.price}</span>
-                        <span class="old-price">1.440.000₫</span>
-                        <span class="text-danger">-25%</span>
-                    </div>
-
-                    <!-- Dung lượng -->
-                    <div class="mb-3">
-                        <label class="fw-bold">Dung lượng:</label><br>
-                        <button class="btn btn-outline-secondary btn-sm">2TB</button>
-                        <button class="btn btn-outline-secondary btn-sm active">500GB</button>
-                        <button class="btn btn-outline-secondary btn-sm">1TB</button>
-                    </div>
-
-                    <!-- Khuyến mãi -->
-                    <div class="promo-box mb-3">
-                        <p class="mb-1"><strong>🎁 Giảm 100.000₫</strong> (áp dụng trực tiếp vào giá sản phẩm)</p>
-                        <small>HSD: 10/07/2025</small>
-                    </div>
-
-                    <!-- Nút hành động (có thêm Yêu thích) -->
-                    <div class="d-flex gap-3">
-                        <button class="btn btn-primary px-4">MUA NGAY</button>
-                        <button class="btn btn-outline-secondary px-4">THÊM VÀO GIỎ HÀNG</button>
-                        <button class="btn btn-outline-danger px-3">
-                            <i class="fas fa-heart"></i> Yêu thích
-                        </button>
-                    </div>
-
+            </c:when>
+            <c:otherwise>
+                <div class="bg-white p-8 rounded-lg shadow-md text-center text-gray-600 text-lg">
+                    Không tìm thấy sản phẩm.
                 </div>
-            </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 
-            <!-- Thông số kỹ thuật -->
-            <div class="row mt-5">
-                <div class="col-md-6">
-                    <h5 class="fw-bold mb-3">Thông số kỹ thuật</h5>
-                    <ul class="list-unstyled specs">
-                        <li><strong>Dung lượng:</strong> 500GB</li>
-                        <li><strong>Kích thước:</strong> M.2 2280</li>
-                        <li><strong>Kết nối:</strong> M.2 NVMe</li>
-                        <li><strong>NAND:</strong> 3D-NAND</li>
-                        <li><strong>Tốc độ đọc/ghi:</strong> 5000MB/s | 3000MB/s</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <script>
+        function addToCart(productId) {
+            fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Lỗi khi thêm vào giỏ hàng: ' + error);
+            });
+        }
 
-    </body>
+        function addToWishlist(productId) {
+            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã thêm sản phẩm vào danh sách yêu thích!');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
+            });
+        }
+    </script>
+</body>
 </html>

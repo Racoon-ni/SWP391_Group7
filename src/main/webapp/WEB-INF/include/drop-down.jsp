@@ -52,11 +52,15 @@
     
 </style>
 
+<<<<<<< HEAD
 
     <hr>
     <button class="accordion">
     
 
+=======
+    <hr>
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Thương hiệu</span>
         <span class="arrow"></span>
@@ -71,10 +75,7 @@
     </div>
 
     <hr>
-    <button class="accordion">
-
     <button type="button" class="accordion">
-
         <span class="title">Loại hàng</span>
         <span class="arrow"></span>
     </button>
@@ -86,8 +87,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Series</span>
         <span class="arrow"></span>
@@ -108,8 +112,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Nhu cầu</span>
         <span class="arrow"></span>
@@ -121,8 +128,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">PC Segment</span>
         <span class="arrow"></span>
@@ -135,8 +145,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Series CPU</span>
         <span class="arrow"></span>
@@ -155,8 +168,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Thế hệ CPU</span>
         <span class="arrow"></span>
@@ -177,10 +193,14 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
     <button type="button" class="accordion">
 
+=======
+    <button type="button" class="accordion">
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
         <span class="title">RAM</span>
         <span class="arrow"></span>
     </button>
@@ -193,8 +213,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Đồ họa rời</span>
         <span class="arrow"></span>
@@ -220,8 +243,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Dung lượng SSD</span>
         <span class="arrow"></span>
@@ -235,8 +261,11 @@
     </div>
 
     <hr>
+<<<<<<< HEAD
     <button class="accordion">
 
+=======
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
     <button type="button" class="accordion">
         <span class="title">Hệ điều hành</span>
         <span class="arrow"></span>
@@ -245,9 +274,14 @@
         <label><input type="checkbox" name="os" value="Window"> Window</label><br>
         <label><input type="checkbox" name="os" value="MacOS"> MacOS</label>
     </div>
+<<<<<<< HEAD
     
  
 
+=======
+
+
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
 <script>
     const accordions = document.querySelectorAll(".accordion");
 

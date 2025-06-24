@@ -5,7 +5,6 @@
 --%>
 
 <%@include file="WEB-INF/include/header.jsp" %>
-<%@ page pageEncoding="UTF-8" %>
 <!-- Main Content -->
 <div class="container-fluid">
     <div class="row">
