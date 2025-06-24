@@ -62,6 +62,10 @@
                 </form>
 
                 <div class="d-flex gap-5">    
+<<<<<<< HEAD
+                    <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
+                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> Build PC</a>
+=======
                     <c:if test="${not empty user}">
                         <div class="dropdown">
                             <a class="nav-link"  href="${pageContext.request.contextPath}/profile" data-bs-toggle="dropdown">Chào, ${user.username}
@@ -77,6 +81,7 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/login"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
                     </c:if>
                     <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
+>>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
                     <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
                     <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                 </div>
