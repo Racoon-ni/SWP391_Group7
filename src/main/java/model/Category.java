@@ -14,6 +14,10 @@ public class Category {
     private String name;
     private String categoryType;
 
+    public Category() {
+    }
+    
+
     public Category(int categoryId, int parentId, String name, String categoryType) {
         this.categoryId = categoryId;
         this.parentId = parentId;
