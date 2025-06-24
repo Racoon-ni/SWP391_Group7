@@ -37,8 +37,11 @@
         </style>
     </head>
 
+    <c:if test="${not empty success}">
+        <%@include file="toast.jsp" %>
+    </c:if>
+
     <body>
-        <% User user = (User) request.getAttribute("user");%>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
             <div class="container-fluid">

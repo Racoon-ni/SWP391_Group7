@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <title>PCs List</title>
 
-<%    ArrayList<PC> pcList = (ArrayList<PC>) request.getAttribute("pcList");
+<%
+    ArrayList<PC> pcList = (ArrayList<PC>) request.getAttribute("pcList");
 %>
 <div class="main-content">
     <div class="d-flex justify-content-end">
@@ -20,23 +21,26 @@
             <i class="fa-solid fa-square-plus"></i> Thêm PC
         </a>
     </div>
-
+    <%
+        if (!pcList.isEmpty() && pcList != null) {
+    %>
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col" style="text-align: center">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Price</th>
-                <th scope="col">Stock</th>
-                <th scope="col">Image</th>
-                <th scope="col">Status</th>
-                <th scope="col">Category Name</th>
-                <th scope="col" style="text-align: center">Action</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Mô tả</th>
+                <th scope="col">Giá</th>
+                <th scope="col">Tồn kho</th>
+                <th scope="col">Ảnh</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Thể loại</th>
+                <th scope="col" style="text-align: center">Chức năng</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            <%      for (PC pc : pcList) {
+            <%
+                for (PC pc : pcList) {
             %>
             <tr>
                 <th scope="row" style="text-align: center"><%= pc.getId()%></th>
@@ -68,7 +72,12 @@
             </tr>
             <%
                 }
+            } else {
             %>
         </tbody>
     </table>
+    <p>Không có PC nào trong danh sách này</p>
+    <%
+        }
+    %>
 </div>

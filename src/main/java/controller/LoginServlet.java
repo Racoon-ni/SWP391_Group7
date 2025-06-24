@@ -6,12 +6,12 @@ package controller;
 
 import DAO.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 
 /**
@@ -58,22 +58,33 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        HttpSession session = request.getSession(false);
 
         UserDAO uDAO = new UserDAO();
 
         User user = uDAO.getUser(username, password);
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+           request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
+                request.getRequestDispatcher("/WEB-INF/include/login.jsp").forward(request, response);
         } else {
-            request.setAttribute("user", user);
+            session.setAttribute("user", user);
 
             if (uDAO.login(user) && user.getRole().equalsIgnoreCase("Customer")) {
+                
+                request.setAttribute("success", "Đăng nhập thành công");
+                session.setAttribute("logged", true);
                 request.getRequestDispatcher("/home.jsp").forward(request, response);
+                
             } else if (uDAO.login(user) && (user.getRole().equalsIgnoreCase("Admin")
                     || user.getRole().equalsIgnoreCase("Staff"))) {
-                response.sendRedirect(request.getContextPath() + "/dash-board");
+                
+                request.setAttribute("success", "Đăng nhập thành công");
+                session.setAttribute("logged", true);
+                request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
+                
             } else {
-                response.sendRedirect(request.getContextPath() + "/login");
+                request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
+                request.getRequestDispatcher("/WEB-INF/include/login.jsp").forward(request, response);
             }
 
         }
