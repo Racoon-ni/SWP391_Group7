@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 model\OrderDetail.class
 config\DBConnect.class
 controller\AdminStaffOrderServlet.class
@@ -41,5 +40,3 @@ controller\ViewWishlistServlet.class
 model\Component.class
 controller\RegisterServlet.class
 controller\HomeServlet.class
-=======
->>>>>>> 9605672f0518a9533ab87b248398815871a59f48
