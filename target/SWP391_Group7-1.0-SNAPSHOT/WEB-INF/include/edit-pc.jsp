@@ -10,37 +10,37 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <title>Edit PC</title>
 <div class="container">
-    <h1>Edit PC</h1>
+    <h1>Sửa PC</h1>
 
     <form method="POST" action="${pageContext.request.contextPath}/manage-pc">
         <input type="hidden" name="action" value="edit" />        
         <input type="hidden" name="id" value="${requestScope.pc.id}" />        
 
         <div class="form-group">
-            <label>Name:</label>
+            <label>Tên:</label>
             <input type="text" name="name" value="${requestScope.pc.name}" class="form-control" required>
         </div>
         <br/>
         <div class="form-group">
-            <label>Description:</label>
+            <label>Mô tả:</label>
             <textarea name="description"  class="form-control" required>${requestScope.pc.description}</textarea>
         </div>
 
         <br/>
         <div class="form-group">
-            <label>Price:</label>
+            <label>Giá:</label>
             <input type="number" step="0.01" name="price" value="${requestScope.pc.price}" class="form-control" required>
         </div>
 
         <br/>
         <div class="form-group">
-            <label>Stock:</label>
+            <label>Tồn kho:</label>
             <input type="number" name="stock" value="${requestScope.pc.stock}" class="form-control" required>
         </div>
 
         <br/>
         <div class="form-group">
-            <label>Category name</label>
+            <label>Thể loại:</label>
             <select name="cateId" class="form-control">
                 <c:if test="${not empty cateList}">
                     <c:forEach items="${cateList}" var="cate">
@@ -57,14 +57,20 @@
 
         <br/>
         <div class="form-group">
-            <label>Status</label>
+            <label>Trạng thái:</label>
             <select name="status" class="form-control">
-                <option value ="true" <c:if test="${not empty pc && pc.status == true}">selected</c:if>>
-                    Còn bán
-                </option>
-                <option value ="false" <c:if test="${not empty pc && pc.status == false}">selected</c:if>>
-                    Hết hàng
-                </option>
+                <c:choose>
+                    <c:when test="${not empty pc && pc.status == true}">
+                        <option value ="true" selected> Còn bán </option>
+                        <option value ="false">Hết hàng</option>
+                    </c:when>
+                    <c:otherwise>
+                        <option value ="true"> Còn bán </option>
+                        <option value ="false" selected>Hết hàng</option>
+                    </c:otherwise>
+                </c:choose>
+
+
             </select>   
         </div>
 
@@ -72,3 +78,4 @@
         <button type="submit" class="btn btn-primary">Cập Nhật</button>
     </form>
 </div>
+        

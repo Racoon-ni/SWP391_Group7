@@ -138,12 +138,15 @@
 
 </style>
 
+<c:if test="${not empty error}">
+    <%@include file="toast.jsp" %>
+</c:if>
 <div style="display: flex; justify-content: center; align-items: center;">
     <div class="login-container">
         <h2>Đăng Ký</h2>
 
         <form action="${pageContext.request.contextPath}/register" method="POST">
-            <input type="text" name="username" placeholder="Tên Người Dùng" required />
+            <input type="text" name="username" value="${username}" placeholder="Tên Người Dùng" required />
 
             <div class="password-wrapper">
                 <input type="password" id="psw" name="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
@@ -152,13 +155,18 @@
                 <i class="fa-solid fa-eye toggle-password" onclick="togglePassword(this)"></i>
             </div>
 
+            <!-- Re-enter password field -->
             <div class="password-wrapper">
-                <input type="password" name="valid_password" placeholder="Nhập Lại Mật khẩu" required />
+                <input type="password" id="confirm_password" name="valid_password" placeholder="Nhập Lại Mật khẩu" required />
                 <i class="fa-solid fa-eye toggle-password" onclick="togglePassword(this)"></i>
             </div>
 
+
+
             <button type="submit" class="login-btn">Đăng Ký</button>
         </form>
+        <!-- Message or validation indicator -->
+        <p id="matchMessage" style="color: red; display: none;">Mật khẩu không khớp</p>
     </div>
     <div id="message" style="padding: 20px">
         <h5>Password must contain the following:</h5>
@@ -180,65 +188,86 @@
         icon.classList.toggle("fa-eye");
         icon.classList.toggle("fa-eye-slash");
     }
-    var myInput = document.getElementById("psw");
-    var letter = document.getElementById("letter");
-    var capital = document.getElementById("capital");
-    var number = document.getElementById("number");
-    var length = document.getElementById("length");
 
-// When the user clicks on the password field, show the message box
+    const myInput = document.getElementById("psw");
+    const confirmPassword = document.getElementById("confirm_password");
+    const letter = document.getElementById("letter");
+    const capital = document.getElementById("capital");
+    const number = document.getElementById("number");
+    const length = document.getElementById("length");
+    const matchMessage = document.getElementById("matchMessage");
+    const messageBox = document.getElementById("message");
+
+    // When the user clicks on the password field, show the message box
     myInput.onfocus = function () {
         document.getElementById("message").style.display = "block";
     };
 
-
-
-// When the user starts to type something inside the password field
+// Password strength check
     myInput.onkeyup = function () {
-        // Validate lowercase letters
-        var lowerCaseLetters = /[a-z]/g;
-        if (myInput.value.match(lowerCaseLetters)) {
-            letter.classList.remove("invalid");
+        // Lowercase letters
+        if (/[a-z]/.test(myInput.value)) {
             letter.classList.add("valid");
+            letter.classList.remove("invalid");
         } else {
             letter.classList.remove("valid");
             letter.classList.add("invalid");
         }
 
-        // Validate capital letters
-        var upperCaseLetters = /[A-Z]/g;
-        if (myInput.value.match(upperCaseLetters)) {
-            capital.classList.remove("invalid");
+        // Uppercase letters
+        if (/[A-Z]/.test(myInput.value)) {
             capital.classList.add("valid");
+            capital.classList.remove("invalid");
         } else {
             capital.classList.remove("valid");
             capital.classList.add("invalid");
         }
 
-        // Validate numbers
-        var numbers = /[0-9]/g;
-        if (myInput.value.match(numbers)) {
-            number.classList.remove("invalid");
+        // Numbers
+        if (/\d/.test(myInput.value)) {
             number.classList.add("valid");
+            number.classList.remove("invalid");
         } else {
             number.classList.remove("valid");
             number.classList.add("invalid");
         }
 
-        // Validate length
+        // Length
         if (myInput.value.length >= 8) {
-            length.classList.remove("invalid");
             length.classList.add("valid");
+            length.classList.remove("invalid");
         } else {
             length.classList.remove("valid");
             length.classList.add("invalid");
         }
-        ;
+
+        // Hide message box if all valid
+        if (
+                letter.classList.contains("valid") &&
+                capital.classList.contains("valid") &&
+                number.classList.contains("valid") &&
+                length.classList.contains("valid")
+                ) {
+            messageBox.style.display = "none";
+        } else {
+            messageBox.style.display = "block";
+        }
     };
-    // When the user clicks outside of the password field, hide the message box
-//    myInput.onblur = function () {
-//        document.getElementById("message").style.display = "none";
-//    };
+
+// Match check on typing
+    confirmPassword.onkeyup = function () {
+        if (confirmPassword.value === myInput.value) {
+            matchMessage.style.display = "none";
+            confirmPassword.classList.remove("invalid");
+            confirmPassword.classList.add("valid");
+        } else {
+            matchMessage.style.display = "block";
+            matchMessage.textContent = "Mật khẩu không khớp";
+            confirmPassword.classList.remove("valid");
+            confirmPassword.classList.add("invalid");
+        }
+    };
+
 </script>
 
 <%@include file="/WEB-INF/include/footer.jsp" %>
