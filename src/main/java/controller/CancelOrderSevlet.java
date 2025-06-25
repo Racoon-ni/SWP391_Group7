@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import model.User;
 
 @WebServlet(name="CancelOrderSevlet", urlPatterns={"/CancelOrderSevlet"})
 public class CancelOrderSevlet extends HttpServlet {
@@ -17,13 +18,14 @@ public class CancelOrderSevlet extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         // Kiểm tra người dùng đã đăng nhập hay chưa
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect("login.jsp?msg=not_login");
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login?msg=not_login");
             return;
         }
 
         // Lấy userId từ session (đã đăng nhập)
-        int userId = (int) session.getAttribute("userId");
+        User user = (User) session.getAttribute("user");
+        int userId = user.getId() ;
 
         // Lấy orderId từ request
         String orderIdRaw = request.getParameter("orderId");

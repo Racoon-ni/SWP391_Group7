@@ -202,13 +202,6 @@
     }
 </style>
 
-<!-- Header Section -->
-<div class="header">
-    <div class="logo">PC Store</div>
-    <div class="user-info">
-        <span>Chào bạn Long</span>
-    </div>
-</div>
 
 <!-- Sidebar Section -->
 <div class="sidebar">

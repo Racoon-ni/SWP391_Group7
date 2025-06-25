@@ -91,25 +91,10 @@
 <!-- Sidebar -->
 <div class="sidebar">
     <h4 class="sidebar-title">Dashboard</h4> 
-    
-<<<<<<< HEAD
-    <a href="${pageContext.request.contextPath}/manage-orders">
-        <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
-    </a>
 
-    <a href="${pageContext.request.contextPath}/manage-vouchers">
-        <i class="fas fa-shopping-cart"></i> Quản lý Voucher
-    </a>
-
-    <!-- Logout button -->
-    <div class="logout-container">
-        <a href="#" class="logout-btn" id="logoutButton">
-            <i class="fas fa-sign-out-alt"></i> Đăng xuất
-=======
     <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role == 'Admin'}">--%>
         <a href="#">
             <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
->>>>>>> 74e88b5823d6f4ab96566ea876b8d84c38d4ad23
         </a>
 
         <a href="${pageContext.request.contextPath}/manage-pc">
