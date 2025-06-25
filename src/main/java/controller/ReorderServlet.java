@@ -10,6 +10,7 @@ import java.util.List;
 import model.Order;
 import model.OrderDetail;
 import model.ShippingInfo;
+import model.User;
 
 @WebServlet("/reorder")
 public class ReorderServlet extends HttpServlet {
@@ -19,8 +20,8 @@ public class ReorderServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect("login.jsp?msg=not_login");
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login?msg=not_login");
             return;
         }
 
@@ -48,12 +49,13 @@ public class ReorderServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect("login.jsp?msg=not_login");
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login?msg=not_login");
             return;
         }
-
-        int userId = (int) session.getAttribute("userId");
+        
+        User user = (User) session.getAttribute("user");
+        int userId = user.getId();
 
         try {
             int orderId = Integer.parseInt(request.getParameter("orderId"));

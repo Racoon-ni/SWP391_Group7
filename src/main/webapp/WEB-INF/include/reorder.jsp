@@ -17,6 +17,7 @@
                 <input type="hidden" name="orderId" value="${order.orderId}" />
 
                 <!-- Thông tin giao hàng -->
+
                 <div class="mb-3">
                     <label for="phone" class="form-label">Số điện thoại:</label>
                     <input type="text" class="form-control" name="phone" value="${shippingInfo.phone}" required />
@@ -77,43 +78,61 @@
             </form>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
         <script>
-            document.querySelectorAll('.qty-input').forEach(function (input) {
-                input.addEventListener('input', function () {
-                    const row = input.closest('tr');
-                    const unitPrice = parseFloat(row.querySelector('td[data-price]').dataset.price);
-                    let quantity = parseInt(input.value);
-                    if (isNaN(quantity) || quantity <= 0) {
-                        quantity = 1;
-                        input.value = 1;
-                    }
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateTotal() {
+            let totalPrice = 0;
+            document.querySelectorAll('tr').forEach(function (row) {
+                const priceEl = row.querySelector('td[data-price]');
+                const qtyInput = row.querySelector('.qty-input');
 
-                    // Tính thành tiền
-                    const itemTotal = unitPrice * quantity;
+                if (!priceEl || !qtyInput) return;
 
-                    // Cập nhật thành tiền
-                    row.querySelector('.item-total').textContent = itemTotal.toLocaleString('vi-VN', {
+                const price = parseFloat(priceEl.dataset.price);
+                let qty = parseInt(qtyInput.value);
+
+                if (isNaN(qty) || qty <= 0) {
+                    qty = 1;
+                    qtyInput.value = 1;
+                }
+
+                const itemTotal = price * qty;
+
+                // Cập nhật thành tiền cho từng dòng
+                const itemTotalEl = row.querySelector('.item-total');
+                if (itemTotalEl) {
+                    itemTotalEl.textContent = itemTotal.toLocaleString('vi-VN', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     }) + ' ₫';
+                }
 
-                    // Tính tổng tiền
-                    let totalPrice = 0;
-                    document.querySelectorAll('.item-total').forEach(function (el) {
-                        const value = parseFloat(el.textContent.replace(/[₫\s]/g, '').replace(/\./g, '').replace(',', '.'));
-                        if (!isNaN(value)) {
-                            totalPrice += value;
-                        }
-                    });
-
-                    // Cập nhật tổng tiền
-                    document.getElementById('reorderTotal').value = totalPrice.toLocaleString('vi-VN', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }) + ' ₫';
-                });
+                totalPrice += itemTotal;
             });
-        </script>
+
+            // Cập nhật tổng tiền
+            const totalField = document.getElementById('reorderTotal');
+            if (totalField) {
+                totalField.value = totalPrice.toLocaleString('vi-VN', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' ₫';
+            }
+        }
+
+        // Gắn sự kiện sau khi DOM đã sẵn sàng
+        document.querySelectorAll('.qty-input').forEach(function (input) {
+            ['input', 'change'].forEach(function (eventType) {
+                input.addEventListener(eventType, updateTotal);
+            });
+        });
+
+        // Cập nhật lần đầu khi trang load
+        updateTotal();
+    });
+</script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

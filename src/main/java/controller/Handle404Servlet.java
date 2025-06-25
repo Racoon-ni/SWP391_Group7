@@ -22,19 +22,19 @@ public class Handle404Servlet extends HttpServlet {
     //    HttpSession session = req.getSession(false);
      //   String role = "guest";
 
-<<<<<<< HEAD
-        if (session != null && session.getAttribute("role") != null) {
-            role = session.getAttribute("role").toString(); // admin / customer
-        } 
-        
-=======
-     //   if (session != null && session.getAttribute("role") != null) {
-     //       role = session.getAttribute("role").toString(); // admin / customer
-     //   }
->>>>>>> dev
-
-        // Đẩy role qua view
-     //   req.setAttribute("userRole", role);
+//<<<<<<< HEAD
+//        if (session != null && session.getAttribute("role") != null) {
+//            role = session.getAttribute("role").toString(); // admin / customer
+//        } 
+//        
+//=======
+//     //   if (session != null && session.getAttribute("role") != null) {
+//     //       role = session.getAttribute("role").toString(); // admin / customer
+//     //   }
+//>>>>>>> dev
+//
+//        // Đẩy role qua view
+//     //   req.setAttribute("userRole", role);
 
         // Forward tới View
       //  req.getRequestDispatcher("/WEB-INF/include/404.jsp").forward(req, resp);

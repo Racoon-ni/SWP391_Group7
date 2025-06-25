@@ -1,15 +1,11 @@
-<<<<<<< HEAD
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-=======
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     if (session.getAttribute("user") == null) {
         response.sendRedirect(request.getContextPath() + "/login");
     }
 %>
->>>>>>> a34aa2aa0a008f7a437c09b28940238d4f6657ea
 <!DOCTYPE html>
 <html>
     <head>
@@ -48,11 +44,19 @@
     <body>
         <div class="container mt-5">
             <h2 class="mb-4" style="font-weight:700"><i class="fas fa-receipt"></i> Đơn hàng của tôi</h2>
+
+            <!-- Thông báo kết quả thao tác -->
             <c:if test="${param.msg == 'reorder_success'}">
-                <div class="alert alert-success mb-3">Đặt lại đơn hàng thành công! Đơn hàng mới đã được tạo.</div>
+                <div class="alert alert-success mb-3 auto-dismiss">Đặt lại đơn hàng thành công! Đơn hàng mới đã được tạo.</div>
             </c:if>
             <c:if test="${param.msg == 'reorder_fail'}">
-                <div class="alert alert-danger mb-3">Không thể đặt lại đơn hàng. Vui lòng thử lại.</div>
+                <div class="alert alert-danger mb-3 auto-dismiss">Không thể đặt lại đơn hàng. Vui lòng thử lại.</div>
+            </c:if>
+            <c:if test="${param.msg == 'cancel_success'}">
+                <div class="alert alert-warning mb-3 auto-dismiss">Đơn hàng đã được hủy thành công.</div>
+            </c:if>
+            <c:if test="${param.msg == 'cancel_fail'}">
+                <div class="alert alert-danger mb-3 auto-dismiss">Không thể hủy đơn hàng. Vui lòng thử lại.</div>
             </c:if>
 
             <table class="table table-bordered text-center align-middle">
@@ -120,8 +124,6 @@
                                             </button>
                                         </form>
                                     </c:when>
-
-
                                     <c:otherwise>
                                         <span class="text-muted" style="font-size:0.95em;">—</span>
                                     </c:otherwise>
@@ -157,41 +159,6 @@
             </div>
         </div>
 
-        <!-- Modal Mua lại: Chỉnh sửa số điện thoại, địa chỉ, thanh toán -->
-        <div class="modal fade" id="reorderEditModal" tabindex="-1" aria-labelledby="reorderEditModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <form id="reorderForm" action="ReorderServlet" method="post" class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="reorderEditModalLabel"><i class="fas fa-redo text-success"></i> Đặt lại đơn hàng</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="orderId" id="modalReorderOrderId">
-                        <div class="mb-3">
-                            <label for="modalReorderPhone" class="form-label">Số điện thoại:</label>
-                            <input type="text" class="form-control" name="phone" id="modalReorderPhone" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modalReorderAddress" class="form-label">Địa chỉ giao hàng:</label>
-                            <input type="text" class="form-control" name="address" id="modalReorderAddress" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modalReorderPayment" class="form-label">Phương thức thanh toán:</label>
-                            <select class="form-select" name="paymentMethod" id="modalReorderPayment" required>
-                                <option value="COD">COD (Thanh toán khi nhận)</option>
-                                <option value="Card">Card</option>
-                                <option value="E-Wallet">Ví điện tử</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // Cho nút Hủy
@@ -202,6 +169,14 @@
                 document.getElementById('modalOrderId').value = orderId;
             });
 
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                document.querySelectorAll('.auto-dismiss').forEach(alert => {
+                    alert.style.transition = "opacity 0.5s ease";
+                    alert.style.opacity = 0;
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 5000);
         </script>
     </body>
 </html>
