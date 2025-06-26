@@ -56,4 +56,13 @@
         <url-pattern>/my-orders</url-pattern>
     </servlet-mapping>
 
+<servlet>
+    <servlet-name>MyCartServlet</servlet-name>
+    <servlet-class>controller.MyCartServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>MyCartServlet</servlet-name>
+    <url-pattern>/my-carts</url-pattern>
+</servlet-mapping>
 </web-app>
