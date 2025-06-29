@@ -10,7 +10,6 @@ public class DBConnect {
     private static final String URL = "jdbc:sqlserver://127.0.0.1:1433;databaseName=CPPC10;encrypt=true;trustServerCertificate=true;";
     private static final String USER = "sa";
     private static final String PASSWORD = "123";
-
     // Kết nối đến database
     public static Connection connect() throws ClassNotFoundException, SQLException {
         //Khai bao driver
@@ -54,8 +53,8 @@ public class DBConnect {
     }
 
     public static void main(String[] args) {
-//        DBConnect db = new DBConnect();
-//        db.testConnection();
+        DBConnect db = new DBConnect();
+        db.testConnection();
 
     }
 }

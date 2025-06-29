@@ -4,7 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Customer;
-import repository.CustomerDAO;
+import DAO.CustomerDAO;
 
 import java.io.IOException;
 

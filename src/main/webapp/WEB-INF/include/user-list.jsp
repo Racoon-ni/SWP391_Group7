@@ -28,7 +28,8 @@
     }
 
     .password-wrapper i {
-        font-size: 14px;  adjust size 
+        font-size: 14px;  
+        adjust: size;
         color: #444;
     }
 </style>
@@ -68,7 +69,9 @@
                 <td><%= user.getEmail()%></td>
                 <td scope="row" style="text-align: center">
                     <div class="password-wrapper">
-                        <span id="<%= spanId%>">**********************</span>
+                        <span>
+                            id="<%= spanId%>"
+                        </span>
                         <button onclick="togglePwd('<%= spanId%>', this, '<%= user.getPassword()%>')" style="background:none; border:none; cursor:pointer;">
                             <i class="fa fa-eye"></i>
                         </button>
