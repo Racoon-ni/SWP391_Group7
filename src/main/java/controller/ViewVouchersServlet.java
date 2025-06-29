@@ -4,24 +4,27 @@
  */
 package controller;
 
-import DAO.WishlistDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import DAO.VoucherDAO;
+import model.Voucher;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.sql.*;
 import java.util.List;
-import jakarta.servlet.http.HttpSession;
-import model.User;
-import model.Wishlist;
 
 /**
  *
  * @author Long
  */
-@WebServlet(name = "ViewWishlistServlet", urlPatterns = {"/ViewWishlist"})
-public class ViewWishlistServlet extends HttpServlet {
+@WebServlet(name = "ViewVouchersServlet", urlPatterns = {"/ViewVouchers"})
+public class ViewVouchersServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,26 +50,18 @@ public class ViewWishlistServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    // Xử lý GET request
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = (HttpSession) request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang login
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
+        throws ServletException, IOException {
+        try {
+            VoucherDAO voucherDAO = new VoucherDAO();
+            List<Voucher> voucherList = voucherDAO.getAvailableVouchers();
+            request.setAttribute("voucherList", voucherList);
+            request.getRequestDispatcher("WEB-INF/include/viewvoucher.jsp").forward(request, response);
+        } catch (SQLException ex) {
+            request.setAttribute("error", "Không thể lấy danh sách voucher: " + ex.getMessage());
+            request.getRequestDispatcher("home.jsp").forward(request, response);
         }
-
-        // Lấy danh sách sản phẩm yêu thích từ WishlistDAO
-        WishlistDAO wishlistDAO = new WishlistDAO();
-        List<Wishlist> wishlistProducts = wishlistDAO.getWishlistByUserId(user.getId()); // Sử dụng getId() thay vì getUserId()
-
-        // Truyền danh sách sản phẩm vào JSP
-        request.setAttribute("wishlist", wishlistProducts);
-        request.getRequestDispatcher("WEB-INF/include/wishlist.jsp").forward(request, response);
     }
 
     /**

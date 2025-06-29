@@ -1,11 +1,18 @@
-<%@include file="../include/header.jsp" %>
-<%@ page pageEncoding="UTF-8"%>
-<%@ page import="model.Customer" %>
-<%
-    Customer customer = (Customer) request.getAttribute("customer");
-%>
-<title>Thông tin khách hàng</title>
+<%-- 
+    Document   : viewvoucher
+    Created on : 25-06-2025, 04:37:08
+    Author     : Long
+--%>
 
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Voucher" %>
+<%@include file="header.jsp" %>
+<%
+    // Lấy danh sách voucher từ request
+    List<Voucher> voucherList = (List<Voucher>) request.getAttribute("voucherList");
+    String error = (String) request.getAttribute("error");
+%>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -202,8 +209,8 @@
     }
 </style>
 
-
-<!-- Sidebar Section -->
+<html>
+    <!-- Sidebar Section -->
 <div class="sidebar">
     <a href="view-profile">Thông tin tài khoản</a>
     <a href="#">Quản lý đơn hàng</a>
@@ -212,102 +219,68 @@
     <a href="#">Điểm thành viên</a>
     <!-- Thêm mục Kho voucher -->
     <a href="ViewVouchers">Kho voucher</a>
-    <a href="ViewWishlist">Danh sách yêu thích</a>
 </div>
+    <head>
+        <title>Danh sách mã giảm giá</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 80%;
+                margin: 20px 0;
+            }
+            th, td {
+                border: 1px solid #888;
+                padding: 8px 12px;
+                text-align: center;
+            }
+            th {
+                background: #eee;
+            }
+            .expired {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Danh sách mã giảm giá</h2>
 
-<!-- Main Content Section -->
-<div class="main-content">
-    <div class="container">
-        <h2>Thông tin khách hàng</h2>
-        <!-- Thông báo sau khi cập nhật -->
-        <div id="successMessage" style="display:none; color: green; text-align: center; font-weight: bold; margin-bottom: 15px;"></div>
+        <% if (error != null) {%>
+        <div style="color:red"><%= error%></div>
+        <% } %>
 
-
-        <!-- Đặt script cuối trang -->
-        <script>
-            document.getElementById("saveEdit").addEventListener("click", function () {
-                const newName = document.getElementById("editFullName").value;
-                const newEmail = document.getElementById("editEmail").value;
-
-                document.getElementById("fullName").value = newName;
-                document.getElementById("email").value = newEmail;
-
-                document.getElementById("editModal").style.display = "none";
-
-                const successMsg = document.getElementById("successMessage");
-                successMsg.style.display = "block";
-                successMsg.innerText = "Cập nhật thành công!";
-
-                setTimeout(() => {
-                    successMsg.style.display = "none";
-                }, 3000);
-            });
-        </script>
-
-        <div class="form-field">
-            <label>Họ tên</label>
-            <input type="text" name="fullName" value="<%= customer.getFullName()%>" readonly id="fullName" />
-        </div>
-
-
-        <div class="form-field">
-            <label>Email</label>
-            <input type="text" name="email" value="<%= customer.getEmail()%>" readonly id="email" />
-        </div>
-
-        <button class="update-btn" id="editBtn">Chỉnh sửa</button>
-
-
-    </div>
-</div>
-
-<!-- Modal for Edit Profile -->
-<div class="modal" id="editModal">
-    <div class="modal-content">
-        <h3>Chỉnh sửa thông tin</h3>
-
-        <form id="editForm">
-            <div class="form-field">
-                <label>Họ tên</label>
-                <input type="text" name="fullName" value="<%= customer.getFullName()%>" id="editFullName" />
-            </div>
-
-
-            <div class="form-field">
-                <label>Email</label>
-                <input type="text" name="email" value="<%= customer.getEmail()%>" id="editEmail" />
-            </div>
-
-            <button type="submit" class="edit-btn">Cập nhật</button>
-            <button type="button" class="close-btn" id="closeModal">Đóng</button>
-        </form>
-    </div>
-</div>
-
-<script>
-    // Hiển thị popup khi nhấn "Chỉnh sửa"
-    document.getElementById('editBtn').onclick = function () {
-        document.getElementById('editModal').style.display = 'flex';
-    };
-
-    // Đóng popup
-    document.getElementById('closeModal').onclick = function () {
-        document.getElementById('editModal').style.display = 'none';
-    };
-
-    // Sự kiện cập nhật thông tin
-    document.getElementById('editForm').onsubmit = function (event) {
-        event.preventDefault();
-        const successMsg = document.getElementById("successMessage");
-        successMsg.style.display = "block";
-        successMsg.innerText = "Cập nhật thành công!";
-
-        setTimeout(() => {
-            successMsg.style.display = "none";
-        }, 3000);
-
-        document.getElementById('editModal').style.display = 'none';
-    };
-</script>
-
-<%@include file="../include/footer.jsp" %>
+        <% if (voucherList == null || voucherList.isEmpty()) { %>
+        <p>Không có voucher khả dụng!</p>
+        <% } else { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã voucher</th>
+                    <th>Phần trăm giảm</th>
+                    <th>Giá trị đơn tối thiểu</th>
+                    <th>Ngày hết hạn</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% int i = 1;
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                    java.util.Date today = new java.util.Date();
+                for (Voucher v : voucherList) {%>
+                <tr>
+                    <td><%= i++%></td>
+                    <td><strong><%= v.getCode()%></strong></td>
+                    <td><%= v.getDiscountPercent()%> %</td>
+                    <td><%= String.format("%,.0f", v.getMinOrderValue())%> đ</td>
+                    <td<% if (v.getExpiredAt().before(today)) { %> class="expired"<% }%>>
+                        <%= sdf.format(v.getExpiredAt())%>
+                        <% if (v.getExpiredAt().before(today)) { %> (Đã hết hạn) <% } %>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <% }%>
+    </body>
+</html>
+<%@include file="footer.jsp" %>
