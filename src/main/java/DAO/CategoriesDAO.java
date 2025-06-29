@@ -24,7 +24,7 @@ public class CategoriesDAO {
             try ( PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, parentId);
                 ResultSet rs = ps.executeQuery();
-
+                ProductDAO productDAO = new ProductDAO();
                 while (rs.next()) {
                     Product p = new Product();
                     p.setProductId(rs.getInt("product_id"));
@@ -43,6 +43,10 @@ public class CategoriesDAO {
                     c.setCategoryType(rs.getString("category_type") != null ? rs.getString("category_type") : "");
                     p.setCategory(c);
 
+                    // LẤY RATING VÀ GÁN
+                    p.setAvgStars(productDAO.getAverageStars(p.getProductId()));
+                    p.setTotalRatings(productDAO.getTotalRatings(p.getProductId()));
+                    
                     list.add(p);
                 }
             }
@@ -52,4 +56,5 @@ public class CategoriesDAO {
         }
         return list;
     }
+
 }

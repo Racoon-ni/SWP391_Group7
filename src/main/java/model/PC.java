@@ -9,6 +9,7 @@ package model;
  * @author Huynh Trong Nguyen - CE190356
  */
 public class PC {
+
     private int id;
     private String name;
     private String description;
@@ -17,6 +18,8 @@ public class PC {
     private String imageUrl;
     private Category category;
     private boolean status;
+    private double avgStars;
+    private int totalRatings;
 
     public PC() {
     }
@@ -42,6 +45,22 @@ public class PC {
 
     public String getName() {
         return name;
+    }
+
+    public double getAvgStars() {
+        return avgStars;
+    }
+
+    public void setAvgStars(double avgStars) {
+        this.avgStars = avgStars;
+    }
+
+    public int getTotalRatings() {
+        return totalRatings;
+    }
+
+    public void setTotalRatings(int totalRatings) {
+        this.totalRatings = totalRatings;
     }
 
     public void setName(String name) {

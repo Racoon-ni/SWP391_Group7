@@ -41,13 +41,6 @@
 
         <br/>
         <div class="form-group">
-            <label>Mật Khẩu:</label>
-            <input type="password" id="password" value="${requestScope.user.password}" class="form-control" readonly>
-            <i class="fa-solid fa-eye toggle-password" id="togglePassword" onclick="togglePassword()"></i>
-        </div>
-
-        <br/>
-        <div class="form-group">
             <label>Vai trò:</label>
             <select name="role" class="form-control">
                 <option value="Staff"

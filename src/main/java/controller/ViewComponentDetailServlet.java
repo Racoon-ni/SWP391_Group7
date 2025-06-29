@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.ProductDAO;
+import DAO.RatingDAO;   // <-- Thêm dòng này
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,7 +9,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.List;   // <-- Thêm dòng này
 import model.Product;
+import model.Rating;    // <-- Thêm dòng này
 
 @WebServlet(name = "ViewComponentDetailServlet", urlPatterns = {"/ViewComponentDetail"})
 public class ViewComponentDetailServlet extends HttpServlet {
@@ -31,7 +34,12 @@ public class ViewComponentDetailServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy sản phẩm.");
                 return;
             }
-            
+
+            // LẤY DANH SÁCH ĐÁNH GIÁ
+            RatingDAO ratingDAO = new RatingDAO();
+            List<Rating> ratingList = ratingDAO.getRatingsByProductId(productId);
+            request.setAttribute("ratingList", ratingList); // <-- Gửi sang JSP
+
             // Đặt sản phẩm vào request attribute
             request.setAttribute("product", product);
 

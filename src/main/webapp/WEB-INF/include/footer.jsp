@@ -26,6 +26,7 @@
                     <li><a href="/contact-us" class="text-white">Contact Us</a></li>
                     <li><a href="/privacy-policy" class="text-white">Privacy Policy</a></li>
                     <li><a href="/terms" class="text-white">Terms & Conditions</a></li>
+                    <li><a href="${pageContext.request.contextPath}/sendFeedback" class="text-white">Send Feedback</a></li>
                 </ul>
             </div>
             <!-- Follow Us Section -->

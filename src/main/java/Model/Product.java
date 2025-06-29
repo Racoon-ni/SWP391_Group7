@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author ThinhLVCE181726 <your.name at your.org>
- */
 public class Product {
 
     private int productId;
@@ -20,6 +12,10 @@ public class Product {
     private int categoryId;
     private boolean status;
     private Category category;
+
+    // --- THÊM 2 FIELD MỚI ---
+    private double avgStars;      // Số sao trung bình
+    private int totalRatings;     // Số lượt đánh giá
 
     public Product() {
     }
@@ -35,13 +31,31 @@ public class Product {
         this.categoryId = categoryId;
         this.status = status;
     }
-    
+
+    // Getter & Setter cho avgStars, totalRatings
+  
+    public double getAvgStars() {
+        return avgStars;
+    }
+
+    public void setAvgStars(double avgStars) {
+        this.avgStars = avgStars;
+    }
+
+    public int getTotalRatings() {
+        return totalRatings;
+    }
+
+    public void setTotalRatings(int totalRatings) {
+        this.totalRatings = totalRatings;
+    }
+
+    // ... Các getter/setter khác giữ nguyên như cũ ...
     public Category getCategory() {
         return category;
     }
 
-    // Getter & Setter đầy đủ ở đây (bạn có thể sinh bằng IDE)
-    public void setCategory(Category category) {    
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -116,5 +130,4 @@ public class Product {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
 }

@@ -27,11 +27,13 @@ public class ReorderServlet extends HttpServlet {
 
         try {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
+            User user = (User) session.getAttribute("user");   // <--- Thêm dòng này
+            int userId = user.getId();
 
             orderDAO dao = new orderDAO();
             Order order = dao.getOrderById(orderId);
             ShippingInfo shippingInfo = dao.getShippingInfoByOrderId(orderId);
-            List<OrderDetail> orderDetails = dao.getOrderDetails(orderId);
+            List<OrderDetail> orderDetails = dao.getOrderDetails(orderId, userId);   // <-- Sửa lại ở đây
 
             request.setAttribute("order", order);
             request.setAttribute("shippingInfo", shippingInfo);
@@ -53,27 +55,35 @@ public class ReorderServlet extends HttpServlet {
             response.sendRedirect("login?msg=not_login");
             return;
         }
-        
+
         User user = (User) session.getAttribute("user");
         int userId = user.getId();
 
         try {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
 
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String paymentMethod = request.getParameter("paymentMethod");
+            // Lấy thông tin từ form
+            String receiverName = request.getParameter("receiverName");  // Tên người nhận
+            String phone = request.getParameter("phone");  // Số điện thoại
+            String address = request.getParameter("address");  // Địa chỉ
+            String paymentMethod = request.getParameter("paymentMethod");  // Phương thức thanh toán
 
             String[] productIds = request.getParameterValues("productIds");
             String[] quantities = request.getParameterValues("quantities");
 
+            // Kiểm tra tính hợp lệ của sản phẩm và số lượng
             if (productIds == null || quantities == null || productIds.length != quantities.length) {
                 response.sendRedirect("my-orders?msg=reorder_fail");
                 return;
             }
 
             orderDAO dao = new orderDAO();
-            int newOrderId = dao.reorder(orderId, phone, address, paymentMethod, productIds, quantities, userId);
+
+            // Lấy thông tin người nhận từ đơn hàng cũ
+            ShippingInfo oldShippingInfo = dao.getShippingInfoByOrderId(orderId);
+
+            // Tạo đơn hàng mới
+            int newOrderId = dao.reorder(orderId, phone, address, paymentMethod, productIds, quantities, userId, oldShippingInfo, receiverName);
 
             if (newOrderId > 0) {
                 response.sendRedirect("my-orders?msg=reorder_success");

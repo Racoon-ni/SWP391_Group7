@@ -10,28 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<title>Users List</title>
-<style>
-    .password-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 4px;  /*spacing between stars and eye icon*/ 
-        
-    }
-
-    .password-wrapper button {
-        background: none;
-        border: none;
-        padding: 0;
-        margin: 0;
-        cursor: pointer;
-    }
-
-    .password-wrapper i {
-        font-size: 14px;  adjust size 
-        color: #444;
-    }
-</style>
+<title>Danh sách tài khoản</title>
 
 <%
     ArrayList<User> userList = (ArrayList<User>) request.getAttribute("userList");
@@ -51,7 +30,10 @@
                 <th scope="col" style="text-align: center">ID</th>
                 <th scope="col">Tên đăng nhập</th>
                 <th scope="col">Email</th>
-                <th scope="col">Password đã mã hóa</th>
+                <th scope="col">Họ và Tên</th>
+                <th scope="col">Ngày Sinh</th>
+                <th scope="col">Địa Chỉ</th>
+                <th scope="col">Số Điện Thoại</th>
                 <th scope="col">Vai trò</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col" style="text-align: center">Chức năng</th>
@@ -60,20 +42,15 @@
         <tbody class="table-group-divider">
             <%
                 for (User user : userList) {
-                    String spanId = "pwd" + user.getId();
             %>
             <tr>
                 <th scope="row" style="text-align: center"><%= user.getId()%></th>
                 <td scope="row"><%= user.getUsername()%></td>
                 <td><%= user.getEmail()%></td>
-                <td scope="row" style="text-align: center">
-                    <div class="password-wrapper">
-                        <span id="<%= spanId%>">**********************</span>
-                        <button onclick="togglePwd('<%= spanId%>', this, '<%= user.getPassword()%>')" style="background:none; border:none; cursor:pointer;">
-                            <i class="fa fa-eye"></i>
-                        </button>
-                    </div>
-                </td>
+                <td><%= user.getFullname()%></td>
+                <td><%= user.getDateOfBirth()%></td>
+                <td><%= user.getAddress()%></td>
+                <td><%= user.getPhone()%></td>
                 <td><%= user.getRole()%></td>
                 <td><%= user.isStatus() ? "Còn hoạt động" : "Dừng hoạt động"%></td>
                 <td class="d-flex justify-content-center gap-2" style="text-align: center">
@@ -91,24 +68,8 @@
             %>
         </tbody>
     </table>
-    <p>Không có PC nào trong danh sách này</p>
+    <p>Không có tài khoản nào trong danh sách này</p>
     <%
         }
     %>
 </div>
-<script>
-    function togglePwd(spanId, btn, realPwd) {
-        const el = document.getElementById(spanId);
-        const icon = btn.querySelector('i');
-
-        if (el.textContent === '**********************') {
-            el.textContent = realPwd;
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            el.textContent = '**********************';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-</script>

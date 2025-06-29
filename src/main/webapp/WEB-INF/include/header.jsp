@@ -65,11 +65,11 @@
 
                     <c:if test="${not empty user}">
                         <div class="dropdown">
-                            <a class="nav-link"   data-bs-toggle="dropdown">Chào, ${user.username}
+                            <a class="nav-link" data-bs-toggle="dropdown">Chào, ${user.username}
                                 <i class="fa-regular fa-circle-user" 
                                    style="font-size: large"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="${pageContext.request.contextPath}/view-profile" class="dropdown-item" href="#">Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view-profile" >Thông tin tài khoản</a></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng Xuất</a></li>
                             </ul>
                         </div>
