@@ -1,20 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
+
 import java.util.Date;
 
-/**
- *
- * @author hoaia
- */
 public class Order {
+
     private int orderId;
     private int userId;
     private String status;
     private double totalPrice;
     private Date createdAt;
+
+    // === Thêm thuộc tính này ===
+    private ShippingInfo shippingInfo;
+    private String productsJson; // Thêm dòng này vào class
 
     public Order(int orderId, int userId, String status, double totalPrice, Date createdAt) {
         this.orderId = orderId;
@@ -22,6 +20,24 @@ public class Order {
         this.status = status;
         this.totalPrice = totalPrice;
         this.createdAt = createdAt;
+    }
+
+    // --- GETTER/SETTER mới ---
+    public ShippingInfo getShippingInfo() {
+        return shippingInfo;
+    }
+
+    public void setShippingInfo(ShippingInfo shippingInfo) {
+        this.shippingInfo = shippingInfo;
+    }
+    // --- END ---
+
+    public String getProductsJson() {
+        return productsJson;
+    }
+
+    public void setProductsJson(String productsJson) {
+        this.productsJson = productsJson;
     }
 
     public int getOrderId() {
@@ -63,5 +79,4 @@ public class Order {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-    
 }

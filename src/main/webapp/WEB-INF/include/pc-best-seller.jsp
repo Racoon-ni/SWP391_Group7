@@ -7,7 +7,7 @@
 <div class="pc-bestseller my-3" style="border-style: solid;">
     <div class="d-flex justify-content-between align-items-start mb-3">
         <h3 style="margin-left: 10px">PC bán chạy</h3>
-        <a href="pc-list" style="margin-right: 10px">Xem tất cả</a>
+        <a href="listPC" style="margin-right: 10px">Xem tất cả</a>
     </div>
 
     <div class="d-flex overflow-auto">

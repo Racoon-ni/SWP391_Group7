@@ -202,13 +202,6 @@
     }
 </style>
 
-<!-- Header Section -->
-<div class="header">
-    <div class="logo">PC Store</div>
-    <div class="user-info">
-        <span>Chào bạn Long</span>
-    </div>
-</div>
 
 <!-- Sidebar Section -->
 <div class="sidebar">
@@ -218,7 +211,8 @@
     <a href="#">Thông báo</a>
     <a href="#">Điểm thành viên</a>
     <!-- Thêm mục Kho voucher -->
-    <a href="#">Kho voucher</a>
+    <a href="ViewVouchers">Kho voucher</a>
+    <a href="ViewWishlist">Danh sách yêu thích</a>
 </div>
 
 <!-- Main Content Section -->

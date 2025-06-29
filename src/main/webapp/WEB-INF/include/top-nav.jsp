@@ -67,17 +67,14 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <ul class="no-bullets">
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PC">PC - Máy tính bàn</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=CPU">CPU (Bộ vi xử lý)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Mainboard">Mainboard (Bo mạch chủ)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=RAM">RAM (Bộ nhớ tạm)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Storage">Ổ cứng (SSD/HDD)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=GPU">GPU (Card màn hình)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PSU">PSU (Bộ nguồn)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Cooling">Tản nhiệt (Cooling)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Monitor">Màn hình (Monitor)</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=KeyboardMouse">Bàn phím và Chuột</a></li>
-                <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Case">Vỏ máy (Case)</a></li>
+               <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PC">PC - Máy tính bàn</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=CPU">CPU (Bộ vi xử lý)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Mainboard">Mainboard (Bo mạch chủ)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=RAM">RAM (Bộ nhớ)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Storage">Ổ cứng (SSD/HDD)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=GPU">Card màn hình (VGA)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PSU">Nguồn máy (PSU)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Case">Vỏ máy (Case)</a></li>
             </ul>
         </div>
     </div>

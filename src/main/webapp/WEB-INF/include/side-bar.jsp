@@ -20,7 +20,7 @@
 <!-- Sidebar Filters -->
 <div class="col-md-3 sidebar">
     <h6>Khoảng giá</h6>
-    <form action="${pageContext.request.contextPath}/filter" method="POST">
+    <form action="${pageContext.request.contextPath}/product-list" method="POST">
     <%@include file="/WEB-INF/include/price-slider.jsp" %>
 
     <div>

@@ -92,6 +92,7 @@
 <div class="sidebar">
     <h4 class="sidebar-title">Dashboard</h4> 
 
+
     <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role == 'Admin'}">--%>
     <a href="${pageContext.request.contextPath}/adminstaff-sales-stats">
         <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
