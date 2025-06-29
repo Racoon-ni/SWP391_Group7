@@ -4,7 +4,9 @@
  */
 package controller;
 
+
 import DAO.ProductDAO;
+import DAO.VoucherDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,7 +14,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import model.Product;
+import model.Voucher;
 
 /**
  *
@@ -30,7 +34,9 @@ public class ProductDetailServlet extends HttpServlet {
         
         // Lấy sản phẩm từ DB theo ID
         Product product = productDAO.getProductById(productId);
-        
+         VoucherDAO dao = new VoucherDAO();
+        List<Voucher> vouchers = dao.getAllVouchers();
+        request.setAttribute("vouchers", vouchers);
         // Nếu tìm thấy sản phẩm, forward đến JSP
         if (product != null) {
             request.setAttribute("product", product);
