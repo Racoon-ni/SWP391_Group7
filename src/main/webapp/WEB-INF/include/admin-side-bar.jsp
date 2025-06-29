@@ -130,7 +130,7 @@
 
     <!-- Logout button -->
     <div class="logout-container">
-        <a href="#" class="logout-btn" id="logoutButton">
+        <a href="logout" class="logout-btn" id="logoutButton">
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
         </a>
     </div>
@@ -150,7 +150,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <a href="#" class="btn btn-danger">
+                <a href="logout" class="btn btn-danger">
                     <i class="fas fa-sign-out-alt"></i> Đăng xuất
                 </a>
             </div>
