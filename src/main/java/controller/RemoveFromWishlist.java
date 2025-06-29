@@ -6,25 +6,23 @@ package controller;
 
 import DAO.WishlistDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 import model.User;
-import model.Wishlist;
 
 /**
  *
- * @author Long
+ * @author Admin
  */
-@WebServlet(name = "ViewWishlistServlet", urlPatterns = {"/ViewWishlist"})
-public class ViewWishlistServlet extends HttpServlet {
+@WebServlet(name = "RemoveFromWishlist", urlPatterns = {"/RemoveFromWishlist"})
+public class RemoveFromWishlist extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,7 +36,6 @@ public class ViewWishlistServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -50,31 +47,10 @@ public class ViewWishlistServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    // Xử lý GET request
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = (HttpSession) request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang login
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Lấy danh sách sản phẩm yêu thích từ WishlistDAO
-        WishlistDAO wishlistDAO = new WishlistDAO();
-        List<Wishlist> wishlistProducts = null;
-        try {
-            wishlistProducts = wishlistDAO.getWishlistByUserId(user.getId()); // Sử dụng getId() thay vì getUserId()
-        } catch (SQLException ex) {
-            Logger.getLogger(ViewWishlistServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Truyền danh sách sản phẩm vào JSP
-        request.setAttribute("wishlist", wishlistProducts);
-        request.getRequestDispatcher("WEB-INF/include/wishlist.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -86,9 +62,21 @@ public class ViewWishlistServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Giả sử bạn đã lưu user trong session
+           HttpSession session = request.getSession();
+        User user = (User) request.getSession().getAttribute("user");
+        String productIdParam = request.getParameter("productId");
+
+        if (user != null && productIdParam != null) {
+            int productId = Integer.parseInt(productIdParam);
+
+            WishlistDAO wishlistService = new WishlistDAO();
+            wishlistService.removeFromWishlist(user.getId(), productId);
+            session.setAttribute("successMessage", "Đã xóa sản phẩm khỏi danh sách yêu thích.");
+        }
+
+        response.sendRedirect("ViewWishlist");
     }
 
     /**

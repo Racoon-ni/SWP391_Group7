@@ -4,27 +4,27 @@
  */
 package controller;
 
-import DAO.WishlistDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import DAO.WishlistDAO;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.User;
 import model.Wishlist;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import model.User;
 
 /**
  *
  * @author Long
  */
-@WebServlet(name = "ViewWishlistServlet", urlPatterns = {"/ViewWishlist"})
-public class ViewWishlistServlet extends HttpServlet {
+@WebServlet(name = "AddToWishlistServlet", urlPatterns = {"/AddToWishlist"})
+public class AddToWishlistServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,31 +50,10 @@ public class ViewWishlistServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    // Xử lý GET request
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = (HttpSession) request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        // Kiểm tra nếu người dùng chưa đăng nhập thì chuyển hướng đến trang login
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        // Lấy danh sách sản phẩm yêu thích từ WishlistDAO
-        WishlistDAO wishlistDAO = new WishlistDAO();
-        List<Wishlist> wishlistProducts = null;
-        try {
-            wishlistProducts = wishlistDAO.getWishlistByUserId(user.getId()); // Sử dụng getId() thay vì getUserId()
-        } catch (SQLException ex) {
-            Logger.getLogger(ViewWishlistServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Truyền danh sách sản phẩm vào JSP
-        request.setAttribute("wishlist", wishlistProducts);
-        request.getRequestDispatcher("WEB-INF/include/wishlist.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -88,7 +67,50 @@ public class ViewWishlistServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("application/json; charset=UTF-8");
+
+        // Lấy userId từ session (giả sử đã đăng nhập)
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        Integer userId = user.getId(); // Key này phải giống ở login
+
+        // Đọc productId từ URL query string hoặc JSON body (tùy phía client truyền lên)
+        String productIdParam = request.getParameter("productId");
+        int productId = -1;
+        if (productIdParam != null) {
+            productId = Integer.parseInt(productIdParam);
+        }
+
+        PrintWriter out = response.getWriter();
+
+        if (userId == null) {
+            out.print("{\"success\": false, \"message\": \"Vui lòng đăng nhập để sử dụng wishlist.\"}");
+            return;
+        }
+        if (productId <= 0) {
+            out.print("{\"success\": false, \"message\": \"Thiếu hoặc sai mã sản phẩm.\"}");
+            return;
+        }
+
+        try {
+            WishlistDAO wishlistDAO = new WishlistDAO();
+            if (wishlistDAO.isInWishlist(userId, productId)) {
+                out.print("{\"success\": false, \"message\": \"Sản phẩm đã có trong danh sách yêu thích.\"}");
+            } else {
+                Wishlist wishlist = new Wishlist();
+                wishlist.setUserId(userId);
+                wishlist.setProductId(productId);
+                boolean result = wishlistDAO.addToWishlist(wishlist);
+                if (result) {
+                    out.print("{\"success\": true, \"message\": \"Đã thêm vào danh sách yêu thích!\"}");
+                } else {
+                    out.print("{\"success\": false, \"message\": \"Không thể thêm vào danh sách yêu thích.\"}");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            out.print("{\"success\": false, \"message\": \"Có lỗi khi thao tác với cơ sở dữ liệu.\"}");
+        }
     }
 
     /**
@@ -100,5 +122,4 @@ public class ViewWishlistServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
