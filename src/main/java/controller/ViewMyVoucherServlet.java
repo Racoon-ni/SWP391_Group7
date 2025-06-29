@@ -4,27 +4,24 @@
  */
 package controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import DAO.VoucherDAO;
+import model.Voucher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import DAO.VoucherDAO;
-import model.Voucher;
-import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.sql.*;
 import java.util.List;
+import model.User;
 
 /**
  *
- * @author Long
+ * @author Admin
  */
-@WebServlet(name = "ViewVouchersServlet", urlPatterns = {"/ViewVouchers"})
-public class ViewVouchersServlet extends HttpServlet {
+@WebServlet(name = "ViewMyVoucherServlet", urlPatterns = {"/ViewMyVoucher"})
+public class ViewMyVoucherServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,7 +35,6 @@ public class ViewVouchersServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,12 +47,21 @@ public class ViewVouchersServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        VoucherDAO dao = new VoucherDAO();
-        List<Voucher> vouchers = dao.getAllVouchers();
-        request.setAttribute("vouchers", vouchers);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-        request.getRequestDispatcher("/WEB-INF/include/viewvoucher.jsp").forward(request, response);
+        HttpSession session = (HttpSession) req.getSession();
+        User user = (User) session.getAttribute("user");
+        Integer userId = user.getId();
+
+        if (userId != null) {
+            VoucherDAO dao = new VoucherDAO();
+            List<Voucher> myVouchers = dao.getVouchersByUser(userId);
+            req.setAttribute("voucherList", myVouchers);
+            req.getRequestDispatcher("/WEB-INF/include/view-voucher.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect("/login.jsp");
+        }
     }
 
     /**
@@ -68,6 +73,7 @@ public class ViewVouchersServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);

@@ -11,20 +11,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import DAO.VoucherDAO;
-import model.Voucher;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import java.io.IOException;
-import java.sql.*;
-import java.util.List;
+import jakarta.servlet.annotation.*;
+import model.User;
+import DAO.VoucherDAO;
 
 /**
  *
- * @author Long
+ * @author Admin
  */
-@WebServlet(name = "ViewVouchersServlet", urlPatterns = {"/ViewVouchers"})
-public class ViewVouchersServlet extends HttpServlet {
+@WebServlet(name = "GetVouchersServler", urlPatterns = {"/GetVoucher"})
+public class GetVouchersServler extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,7 +36,6 @@ public class ViewVouchersServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,26 +48,44 @@ public class ViewVouchersServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        VoucherDAO dao = new VoucherDAO();
-        List<Voucher> vouchers = dao.getAllVouchers();
-        request.setAttribute("vouchers", vouchers);
-
-        request.getRequestDispatcher("/WEB-INF/include/viewvoucher.jsp").forward(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request servlet request
-     * @param response servlet response
+     * @param req
+     * @param resp
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        int voucherId = Integer.parseInt(req.getParameter("voucherId"));
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        Integer userId = user.getId();
+
+        if (userId != null) {
+            VoucherDAO dao = new VoucherDAO();
+            boolean already = dao.userHasVoucher(userId, voucherId);
+            if (!already) {
+                dao.addVoucherToUser(userId, voucherId);
+                session.setAttribute("voucherMsg", "Nhận voucher thành công!");
+            } else {
+                session.setAttribute("voucherMsg", "Bạn đã nhận voucher này rồi.");
+            }
+        } else {
+            session.setAttribute("voucherMsg", "Vui lòng đăng nhập để nhận voucher.");
+        }
+
+        // Quay lại trang chi tiết sản phẩm
+        String referer = req.getHeader("referer");
+        resp.sendRedirect(referer != null ? referer : "home.jsp");
     }
 
     /**
