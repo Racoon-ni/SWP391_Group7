@@ -2,6 +2,10 @@
 Trong Nguyen - CE190356 --%> <%@ taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core" %> <%@page import="model.User"%> <%@
 page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!-- Bootstrap Bundle JS (gồm Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <!DOCTYPE html>
 <html lang="vi">
   <head>
@@ -81,13 +85,13 @@ page contentType="text/html;charset=UTF-8" language="java" %>
                 <div class="d-flex gap-5">    
                     <c:if test="${not empty user}">
                         <div class="dropdown">
-                            <a class="nav-link"  href="${pageContext.request.contextPath}/profile" data-bs-toggle="dropdown">Chào, ${user.username}
+                            <a class="nav-link" data-bs-toggle="dropdown">Chào, ${user.username}
                                 <i class="fa-regular fa-circle-user" 
                                    style="font-size: large"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="view-profile">Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view-profile">Thông tin tài khoản</a></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng Xuất</a></li>
-                            </ul>
+                            </ul>   
                         </div>
                     </c:if>
                     <c:if test="${empty user}">
