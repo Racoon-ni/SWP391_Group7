@@ -67,7 +67,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <ul class="no-bullets">
-               <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PC">PC - Máy tính bàn</a></li>
+               <li><a href="listPC">PC - Máy tính bàn</a></li>
                     <li><a href="${pageContext.request.contextPath}/ViewComponent?category=CPU">CPU (Bộ vi xử lý)</a></li>
                     <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Mainboard">Mainboard (Bo mạch chủ)</a></li>
                     <li><a href="${pageContext.request.contextPath}/ViewComponent?category=RAM">RAM (Bộ nhớ)</a></li>
