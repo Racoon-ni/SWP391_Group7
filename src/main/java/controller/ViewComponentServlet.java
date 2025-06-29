@@ -22,14 +22,14 @@ public class ViewComponentServlet extends HttpServlet {
             throws ServletException, IOException {
         // Map ánh xạ key từ URL sang parent_id trong DB
         Map<String, Integer> parentCategoryMap = new HashMap<>();
-        parentCategoryMap.put("PC", 40);
-        parentCategoryMap.put("CPU", 14);
-        parentCategoryMap.put("Mainboard", 28);
-        parentCategoryMap.put("RAM", 8);
+        parentCategoryMap.put("PC", 13);
+        parentCategoryMap.put("CPU", 4);
+        parentCategoryMap.put("Mainboard", 5);
+        parentCategoryMap.put("RAM", 3);
         parentCategoryMap.put("Storage", 2);
-        parentCategoryMap.put("GPU", 35);
-        parentCategoryMap.put("PSU", 22);
-        parentCategoryMap.put("Case", 4);
+        parentCategoryMap.put("GPU", 6);
+        parentCategoryMap.put("PSU", 7);
+        parentCategoryMap.put("Case", 8);
 
         String categoryKey = request.getParameter("category");
         Integer parentId = parentCategoryMap.get(categoryKey);
