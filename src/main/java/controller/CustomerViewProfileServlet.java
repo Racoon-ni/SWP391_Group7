@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import model.Customer;
-import repository.CustomerDAO;
+import DAO.CustomerDAO;
 
 import java.io.IOException;
 import java.util.logging.Level;

@@ -78,53 +78,25 @@ page contentType="text/html;charset=UTF-8" language="java" %>
           </div>
         </form>
 
-        <div class="d-flex gap-5">
-          <c:if test="${not empty user}">
-            <div class="dropdown">
-              <a class="nav-link" data-bs-toggle="dropdown"
-                >Chào, ${user.username}
-                <i
-                  class="fa-regular fa-circle-user"
-                  style="font-size: large"
-                ></i
-              ></a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a
-                    href="${pageContext.request.contextPath}/view-profile"
-                    class="dropdown-item"
-                    href="#"
-                    >Thông tin tài khoản</a
-                  >
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="${pageContext.request.contextPath}/logout"
-                    >Đăng Xuất</a
-                  >
-                </li>
-              </ul>
+                <div class="d-flex gap-5">    
+                    <c:if test="${not empty user}">
+                        <div class="dropdown">
+                            <a class="nav-link"  href="${pageContext.request.contextPath}/profile" data-bs-toggle="dropdown">Chào, ${user.username}
+                                <i class="fa-regular fa-circle-user" 
+                                   style="font-size: large"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="view-profile">Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng Xuất</a></li>
+                            </ul>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty user}">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/login"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
+                    </c:if>
+                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
+                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                </div>
             </div>
-          </c:if>
-          <c:if test="${empty user}">
-            <a class="nav-link" href="${pageContext.request.contextPath}/login"
-              ><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a
-            >
-          </c:if>
-          <a class="nav-link" href="#"
-            ><i class="fas fa-desktop"></i> build PC</a
-          >
-          <a class="nav-link" href="${pageContext.request.contextPath}/my-carts"
-            ><i class="fas fa-shopping-cart"></i> Giỏ hàng</a
-          >
-          <a
-            class="nav-link"
-            href="${pageContext.request.contextPath}/my-orders"
-            ><i class="fas fa-receipt"></i> Đơn hàng của tôi</a
-          >
-        </div>
-      </div>
-    </nav>
-  </body>
-</html>
+        </nav>
+
