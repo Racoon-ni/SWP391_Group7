@@ -1,286 +1,171 @@
-<%-- 
-    Document   : viewvoucher
-    Created on : 25-06-2025, 04:37:08
-    Author     : Long
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Voucher" %>
-<%@include file="header.jsp" %>
+<%@ include file="header.jsp" %>
+
 <%
-    // Lấy danh sách voucher từ request
     List<Voucher> voucherList = (List<Voucher>) request.getAttribute("voucherList");
     String error = (String) request.getAttribute("error");
 %>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f6f9;
-        margin: 0;
-        padding: 0;
-    }
 
-    /* Phần header */
-    .header {
-        background-color: #fff;
-        padding: 20px;
-        border-bottom: 1px solid #e1e1e1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-    }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kho Voucher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
 
-    .header .logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: #005cbf;
-    }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 220px;
+            height: calc(100% - 80px);
+            background-color: #ffffff;
+            border-right: 1px solid #ddd;
+            padding-top: 20px;
+        }
 
-    .header .search-bar {
-        border: 1px solid #ccc;
-        padding: 8px;
-        border-radius: 5px;
-        width: 300px;
-    }
+        .sidebar a {
+            display: block;
+            padding: 14px 20px;
+            color: #333;
+            font-size: 16px;
+            text-decoration: none;
+        }
 
-    .header .user-info {
-        font-size: 16px;
-        color: #333;
-    }
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: white;
+        }
 
-    /* Sidebar */
-    .sidebar {
-        position: fixed;
-        top: 80px; /* Khoảng cách từ header */
-        left: 0;
-        width: 250px;
-        height: calc(100% - 80px); /* Chiều cao sidebar */
-        background-color: #f8f9fa;
-        padding-top: 20px;
-        border-right: 1px solid #ddd;
-        z-index: 500;
-    }
+        .main-content {
+            margin-left: 240px;
+            padding: 100px 30px 30px;
+        }
 
-    .sidebar a {
-        display: block;
-        padding: 15px;
-        color: #333;
-        text-decoration: none;
-        font-size: 18px;
-    }
+        .voucher-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-    .sidebar a:hover {
-        background-color: #007bff;
-        color: white;
-    }
+        .voucher-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
 
-    /* Phần chính */
-    .main-content {
-        margin-left: 250px;
-        margin-top: 80px; /* Khoảng cách từ header */
-        padding: 40px;
-        max-width: 800px;
-        margin: auto;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-    .container {
-        background-color: white;
-        border-radius: 10px;
-        padding: 30px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: center;
+        }
 
-    .container h2 {
-        color: #333;
-        text-align: center;
-        margin-bottom: 20px;
-    }
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
 
-    .form-field {
-        margin-bottom: 20px;
-    }
+        .expired {
+            color: red;
+            font-weight: bold;
+        }
 
-    .form-field label {
-        font-weight: bold;
-        font-size: 16px;
-        display: block;
-        margin-bottom: 5px;
-    }
+        .no-voucher {
+            text-align: center;
+            color: #888;
+            margin-top: 40px;
+            font-size: 18px;
+        }
 
-    .form-field input {
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-        font-size: 14px;
-        color: #555;
-    }
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
 
-    .update-btn {
-        width: 100%;
-        padding: 12px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
 
-    .update-btn:hover {
-        background-color: #0056b3;
-    }
-
-    .back-link {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        font-size: 16px;
-        color: #007bff;
-        text-decoration: none;
-    }
-
-    .back-link:hover {
-        text-decoration: underline;
-    }
-
-    /* Pop-up modal */
-    .modal {
-        display: none; /* Ẩn modal mặc định */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    .modal-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        width: 400px;
-        max-width: 90%;
-    }
-
-    .modal-content input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
-
-    .close-btn {
-        background-color: #dc3545;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    .close-btn:hover {
-        background-color: #c82333;
-    }
-
-    .edit-btn {
-        background-color: #28a745;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .edit-btn:hover {
-        background-color: #218838;
-    }
-</style>
-
-<html>
-    <!-- Sidebar Section -->
+<!-- Sidebar -->
 <div class="sidebar">
     <a href="view-profile">Thông tin tài khoản</a>
     <a href="#">Quản lý đơn hàng</a>
     <a href="#">Sở địa chỉ</a>
     <a href="#">Thông báo</a>
     <a href="#">Điểm thành viên</a>
-    <!-- Thêm mục Kho voucher -->
     <a href="ViewVouchers">Kho voucher</a>
+    <a href="ViewWishlist">Danh sách yêu thích</a>
 </div>
-    <head>
-        <title>Danh sách mã giảm giá</title>
-        <style>
-            table {
-                border-collapse: collapse;
-                width: 80%;
-                margin: 20px 0;
-            }
-            th, td {
-                border: 1px solid #888;
-                padding: 8px 12px;
-                text-align: center;
-            }
-            th {
-                background: #eee;
-            }
-            .expired {
-                color: red;
-                font-weight: bold;
-            }
-        </style>
-    </head>
-    <body>
+
+<!-- Main content -->
+<div class="main-content">
+    <div class="voucher-container">
         <h2>Danh sách mã giảm giá</h2>
 
-        <% if (error != null) {%>
-        <div style="color:red"><%= error%></div>
+        <% if (error != null) { %>
+            <div style="color:red; text-align:center;"><%= error %></div>
         <% } %>
 
         <% if (voucherList == null || voucherList.isEmpty()) { %>
-        <p>Không có voucher khả dụng!</p>
+            <p class="no-voucher">Không có voucher khả dụng!</p>
         <% } else { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Mã voucher</th>
-                    <th>Phần trăm giảm</th>
-                    <th>Giá trị đơn tối thiểu</th>
-                    <th>Ngày hết hạn</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% int i = 1;
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                    java.util.Date today = new java.util.Date();
-                for (Voucher v : voucherList) {%>
-                <tr>
-                    <td><%= i++%></td>
-                    <td><strong><%= v.getCode()%></strong></td>
-                    <td><%= v.getDiscountPercent()%> %</td>
-                    <td><%= String.format("%,.0f", v.getMinOrderValue())%> đ</td>
-                    <td<% if (v.getExpiredAt().before(today)) { %> class="expired"<% }%>>
-                        <%= sdf.format(v.getExpiredAt())%>
-                        <% if (v.getExpiredAt().before(today)) { %> (Đã hết hạn) <% } %>
-                    </td>
-                </tr>
-                <% } %>
-            </tbody>
-        </table>
-        <% }%>
-    </body>
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã voucher</th>
+                        <th>Phần trăm giảm</th>
+                        <th>Giá trị đơn tối thiểu</th>
+                        <th>Ngày hết hạn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        int i = 1;
+                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                        java.util.Date today = new java.util.Date();
+                        for (Voucher v : voucherList) {
+                    %>
+                    <tr>
+                        <td><%= i++ %></td>
+                        <td><strong><%= v.getCode() %></strong></td>
+                        <td><%= v.getDiscountPercent() %> %</td>
+                        <td><%= String.format("%,.0f", v.getMinOrderValue()) %> đ</td>
+                        <td<% if (v.getExpiredAt().before(today)) { %> class="expired"<% } %>>
+                            <%= sdf.format(v.getExpiredAt()) %>
+                            <% if (v.getExpiredAt().before(today)) { %> (Đã hết hạn) <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>
+
+</body>
 </html>
-<%@include file="footer.jsp" %>
+
+<%@ include file="footer.jsp" %>
