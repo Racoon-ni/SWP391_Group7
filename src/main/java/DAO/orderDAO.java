@@ -100,4 +100,15 @@ public class orderDAO {
         }
         return info;
     }
+//    update status for admon
+    public void updateOrderStatus(int orderId, String newStatus) {
+    String sql = "UPDATE Orders SET status = ? WHERE order_id = ?";
+    try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+        ps.setString(1, newStatus);
+        ps.setInt(2, orderId);
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 }

@@ -1,83 +1,52 @@
-<<<<<<< HEAD
-model\OrderDetail.class
-<<<<<<< HEAD
-repository\AdminStaffVoucherDAO.class
-config\DBConnect.class
-controller\AdminStaffOrderServlet.class
-=======
-config\DBConnect.class
-controller\AdminStaffOrderServlet.class
+DAO\CustomerDAO.class
+DAO\AdminStaffOrderDAO.class
 controller\ManageUserServlet.class
 DAO\CategoryDAO.class
->>>>>>> 74e88b5823d6f4ab96566ea876b8d84c38d4ad23
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
 controller\ProductDetailServlet.class
-DAO\ProductDAO.class
-model\AdminStaffOrder.class
-<<<<<<< HEAD
-model\Product.class
-controller\CustomerViewProfileServlet.class
-model\Voucher.class
-repository\CustomerDAO.class
-model\Customer.class
-controller\DashboardAccessFilterServlet.class
-=======
 controller\ViewComponentServlet.class
 model\Product.class
 controller\CustomerViewProfileServlet.class
 DAO\CategoriesDAO.class
-repository\CustomerDAO.class
-DAO\UserDAO.class
 model\Customer.class
 controller\DashboardAccessFilterServlet.class
 model\User.class
->>>>>>> 74e88b5823d6f4ab96566ea876b8d84c38d4ad23
+DAO\AdminStaffVoucherDAO.class
 DAO\pcDAO.class
-controller\LoginServlet.class
-controller\PCListServlet.class
 controller\DashBoardServlet.class
 model\PC.class
 controller\AccessDeniedServlet.class
-<<<<<<< HEAD
-controller\ViewVoucherServlet.class
-DAO\WishlistDAO.class
-controller\AdminStaffVoucherServlet.class
-model\WishlistItem.class
-model\Order.class
 model\AdminStaffVoucher.class
 model\ShippingInfo.class
-controller\CustomerUpdateProfileServlet.class
-controller\ProductListServlet.class
+controller\AdminUpdateOrderStatusServlet.class
 model\Category.class
 DAO\orderDAO.class
-DAO\VoucherDAO.class
-repository\AdminStaffOrderDAO.class
 controller\ManagePCServlet.class
-controller\Handle404Servlet.class
-controller\ViewWishlistServlet.class
 controller\RegisterServlet.class
-controller\HomeServlet.class
-=======
->>>>>>> dev
-=======
+model\OrderDetail.class
+config\DBConnect.class
+controller\AdminStaffOrderServlet.class
+DAO\ProductDAO.class
+model\AdminStaffOrder.class
+controller\AdminStaffLogoutServlet.class
+DAO\UserDAO.class
+controller\LoginServlet.class
+controller\PCListServlet.class
+model\AdminStaffSalesStats.class
 DAO\WishlistDAO.class
+controller\AdminOrderDetailServlet.class
+controller\adminstaff\AdminStaffSalesStatsServlet.class
+controller\AdminStaffVoucherServlet.class
 model\WishlistItem.class
+DAO\AdminStaffSalesDAO.class
 model\Order.class
 DAO\ComponentDAO.class
-model\ShippingInfo.class
+controller\CustomerUpdateProfileServlet.class
 controller\ProductListServlet.class
 controller\ViewComponentDetailServlet.class
-model\Category.class
-DAO\orderDAO.class
-repository\AdminStaffOrderDAO.class
 controller\ManageComponentServlet.class
-controller\ManagePCServlet.class
 controller\Handle404Servlet.class
 controller\ViewWishlistServlet.class
 model\Component.class
-controller\RegisterServlet.class
 controller\HomeServlet.class
-=======
->>>>>>> 9605672f0518a9533ab87b248398815871a59f48
->>>>>>> 74e88b5823d6f4ab96566ea876b8d84c38d4ad23

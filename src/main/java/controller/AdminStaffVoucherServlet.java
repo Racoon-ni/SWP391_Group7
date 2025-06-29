@@ -1,12 +1,12 @@
 package controller;
 
-import repository.AdminStaffVoucherDAO;
+import DAO.AdminStaffVoucherDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.AdminStaffVoucher;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 @WebServlet("/manage-vouchers")  // Sửa đường dẫn cho dễ phân biệt
 public class AdminStaffVoucherServlet extends HttpServlet {
@@ -18,11 +18,14 @@ public class AdminStaffVoucherServlet extends HttpServlet {
 //        String role = (String) session.getAttribute("role");
 
 //        if ("Admin".equals(role)) {
-            // Chỉ cho phép Admin truy cập
-            AdminStaffVoucherDAO voucherDAO = new AdminStaffVoucherDAO();
-            List<AdminStaffVoucher> voucherList = voucherDAO.getAllVouchers(1, 5);  // Example for pagination
-            request.setAttribute("voucherList", voucherList);
-            request.getRequestDispatcher("/WEB-INF/include/manage-vouchers.jsp").forward(request, response);
+        // Chỉ cho phép Admin truy cập
+        int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+        int limit = 5;  // Giới hạn số voucher trên mỗi trang
+
+        AdminStaffVoucherDAO voucherDAO = new AdminStaffVoucherDAO();
+        ArrayList<AdminStaffVoucher> voucherList = voucherDAO.getAllVouchers(page, limit);  // Example for pagination
+        request.setAttribute("voucherList", voucherList);
+        request.getRequestDispatcher("/WEB-INF/include/manage-vouchers.jsp").forward(request, response);
 //        } else {
 //            response.sendRedirect("access-denied.jsp"); // Nếu không phải Admin
 //        }

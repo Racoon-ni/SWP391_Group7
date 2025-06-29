@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 /**
  *
  * @author ADMIN
@@ -15,6 +14,9 @@ import java.util.Date;
  * Model đại diện cho đơn hàng dành riêng cho phần quản trị (admin/staff)
  */
 public class AdminStaffOrder {
+
+    private int userId;
+
     private int orderId;
     private int customerId;
     private Date orderDate;
@@ -31,6 +33,10 @@ public class AdminStaffOrder {
 
     public int getOrderId() {
         return orderId;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public int getCustomerId() {
