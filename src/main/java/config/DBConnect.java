@@ -54,8 +54,8 @@ public class DBConnect {
     }
 
     public static void main(String[] args) {
-//        DBConnect db = new DBConnect();
-//        db.testConnection();
+        DBConnect db = new DBConnect();
+        db.testConnection();
 
     }
 }

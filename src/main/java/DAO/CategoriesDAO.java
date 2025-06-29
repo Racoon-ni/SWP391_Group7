@@ -26,23 +26,23 @@ public class CategoriesDAO {
             ps.setInt(2, parentId);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Product p = new Product();
-                p.setProductId(rs.getInt("product_id"));
-                p.setName(rs.getString("name") != null ? rs.getString("name") : "");
-                p.setDescription(rs.getString("description") != null ? rs.getString("description") : "");
-                p.setPrice(rs.getDouble("price"));
-                p.setStock(rs.getInt("stock"));
-                p.setImageUrl(rs.getString("image_url") != null ? rs.getString("image_url") : "");
-                p.setProductType(rs.getString("product_type") != null ? rs.getString("product_type") : "");
-                p.setStatus(rs.getBoolean("status"));
+                while (rs.next()) {
+                    Product p = new Product();
+                    p.setProductId(rs.getInt("product_id"));
+                    p.setName(rs.getString("name") != null ? rs.getString("name") : "");
+                    p.setDescription(rs.getString("description") != null ? rs.getString("description") : "");
+                    p.setPrice(rs.getDouble("price"));
+                    p.setStock(rs.getInt("stock"));
+                    p.setImageUrl(rs.getString("image_url") != null ? rs.getString("image_url") : "");
+                    p.setProductType(rs.getString("product_type") != null ? rs.getString("product_type") : "");
+                    p.setStatus(rs.getInt("status"));
 
-                Category c = new Category();
-                c.setCategoryId(rs.getInt("category_id"));
-                c.setParentId(rs.getInt("parent_id"));
-                c.setName(rs.getString("category_name") != null ? rs.getString("category_name") : "");
-                c.setCategoryType(rs.getString("category_type") != null ? rs.getString("category_type") : "");
-                p.setCategory(c);
+                    Category c = new Category();
+                    c.setCategoryId(rs.getInt("category_id"));
+                    c.setParentId(rs.getInt("parent_id"));
+                    c.setName(rs.getString("category_name") != null ? rs.getString("category_name") : "");
+                    c.setCategoryType(rs.getString("category_type") != null ? rs.getString("category_type") : "");
+                    p.setCategoryId(1);
 
                 list.add(p);
             }
