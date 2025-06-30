@@ -1,4 +1,4 @@
-package repository;
+package DAO;
 
 import config.DBConnect;
 import model.Customer;

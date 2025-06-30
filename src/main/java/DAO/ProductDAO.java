@@ -9,6 +9,7 @@ package DAO;
  * @author ThinhLVCE181726 <your.name at your.org>
  */
 import config.DBConnect;
+import static config.DBConnect.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,10 +22,15 @@ import java.util.*;
 
 public class ProductDAO {
 
-    public List<Product> getAllPCs() {
+    private int pcId;
+
+    public List<Product> getAllPC() throws Exception {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Product p = new Product();
                 p.setProductId(rs.getInt("product_id"));
@@ -39,6 +45,7 @@ public class ProductDAO {
                 // Thêm:
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
+                p.setStatus(rs.getInt("status"));
                 list.add(p);
             }
         } catch (Exception e) {
@@ -65,7 +72,7 @@ public class ProductDAO {
                 product.setImageUrl(rs.getString("image_url"));
                 product.setProductType(rs.getString("product_type"));
                 product.setCategoryId(rs.getInt("category_id"));
-                product.setStatus(rs.getBoolean("status"));
+                product.setStatus(rs.getInt("status"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,6 +102,8 @@ public class ProductDAO {
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
                 list.add(p);
+                        rs.getInt("status")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,7 +129,7 @@ public class ProductDAO {
                         rs.getString("image_url"),
                         rs.getString("product_type"),
                         rs.getInt("category_id"),
-                        rs.getBoolean("status")
+                        rs.getInt("status")
                 ));
             }
         } catch (SQLException e) {
@@ -153,6 +162,8 @@ public class ProductDAO {
                 // Lấy rating cho từng sản phẩm:
                 setRatingInfoForProduct(p, conn);
                 list.add(p);
+                        rs.getInt("status")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -232,7 +243,7 @@ public class ProductDAO {
                     product.setImageUrl(rs.getString("image_url") != null ? rs.getString("image_url") : "");
                     product.setProductType(rs.getString("product_type") != null ? rs.getString("product_type") : "");
                     product.setCategoryId(rs.getInt("category_id"));
-                    product.setStatus(rs.getBoolean("status"));
+                    product.setStatus(rs.getInt("status"));
                     System.out.println("DEBUG: Product found - Name = " + product.getName());
                 } else {
                     System.out.println("DEBUG: No product found for productId = " + productId);
@@ -247,7 +258,29 @@ public class ProductDAO {
             e.printStackTrace();
             throw new SQLException("Lỗi không xác định khi lấy chi tiết sản phẩm", e);
         }
-
         return product;
     }
+    
+    
+  public Product getPCById(int pcId) throws Exception {
+    // Sửa SQL cho đúng với bảng của bạn
+    String sql = "SELECT * FROM Products WHERE product_id = ? AND product_type = 'PC'";
+    try (Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, pcId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Product pc = new Product();
+            pc.setProductId(rs.getInt("product_id"));
+            pc.setName(rs.getString("name"));
+            pc.setDescription(rs.getString("description"));
+            pc.setPrice(rs.getDouble("price"));
+            pc.setStock(rs.getInt("stock"));
+            pc.setImageUrl(rs.getString("image_url"));
+            // ...set các thuộc tính khác
+            return pc;
+        }
+    }
+    return null;
+}
+
 }

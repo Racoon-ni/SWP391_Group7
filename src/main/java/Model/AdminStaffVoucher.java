@@ -7,7 +7,7 @@ public class AdminStaffVoucher {
     private double minOrderValue;
     private String expiredAt;
 
-    // Constructor
+    // Constructor với tất cả các trường
     public AdminStaffVoucher(int voucherId, String code, int discountPercent, double minOrderValue, String expiredAt) {
         this.voucherId = voucherId;
         this.code = code;
@@ -16,12 +16,15 @@ public class AdminStaffVoucher {
         this.expiredAt = expiredAt;
     }
 
+    // Constructor không có voucherId (dùng khi thêm mới voucher)
     public AdminStaffVoucher(String code, int discountPercent, double minOrderValue, String expiredAt) {
         this.code = code;
         this.discountPercent = discountPercent;
         this.minOrderValue = minOrderValue;
         this.expiredAt = expiredAt;
     }
+
+    
 
     // Getters and Setters
     public int getVoucherId() {

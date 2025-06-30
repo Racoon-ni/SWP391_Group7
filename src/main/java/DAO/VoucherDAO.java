@@ -17,45 +17,76 @@ import java.util.List;
  */
 // Lớp thao tác dữ liệu cho bảng Vouchers
 public class VoucherDAO {
+    public List<Voucher> getAllVouchers() {
+        List<Voucher> list = new ArrayList<>();
+        String sql = "SELECT * FROM Vouchers";
 
-    // Kiểm tra voucher có hợp lệ không
-    public Voucher getValidVoucher(String code, double orderTotal) throws SQLException {
-        String sql = "SELECT * FROM Vouchers WHERE code = ? AND expired_at >= GETDATE() AND min_order_value <= ?";
-        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, code);
-            ps.setDouble(2, orderTotal);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Voucher voucher = new Voucher();
-                voucher.setVoucherId(rs.getInt("voucher_id"));
-                voucher.setCode(rs.getString("code"));
-                voucher.setDiscountPercent(rs.getInt("discount_percent"));
-                voucher.setMinOrderValue(rs.getDouble("min_order_value"));
-                voucher.setExpiredAt(rs.getDate("expired_at"));
-                voucher.setCreatedBy(rs.getInt("created_by"));
-                return voucher;
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Voucher v = new Voucher();
+                v.setVoucherId(rs.getInt("voucher_id"));
+                v.setCode(rs.getString("code"));
+                v.setDiscountPercent(rs.getInt("discount_percent"));
+                v.setMinOrderValue(rs.getDouble("min_order_value"));
+                v.setExpiredAt(rs.getDate("expired_at"));
+                list.add(v);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
+        return list;
     }
 
-    // Lấy danh sách voucher còn hạn
-    public List<Voucher> getAvailableVouchers() throws SQLException {
-        List<Voucher> voucherList = new ArrayList<>();
-        String sql = "SELECT * FROM Vouchers WHERE expired_at >= GETDATE()";
-        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+    public void addVoucherToUser(int userId, int voucherId) {
+        String sql = "INSERT INTO UsedVouchers(user_id, voucher_id) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM UsedVouchers WHERE user_id = ? AND voucher_id = ?)";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, voucherId);
+            ps.setInt(3, userId);
+            ps.setInt(4, voucherId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Voucher> getVouchersByUser(int userId) {
+        List<Voucher> list = new ArrayList<>();
+        String sql = "SELECT v.* FROM Vouchers v JOIN UsedVouchers uv ON v.voucher_id = uv.voucher_id WHERE uv.user_id = ?";
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Voucher voucher = new Voucher();
-                voucher.setVoucherId(rs.getInt("voucher_id"));
-                voucher.setCode(rs.getString("code"));
-                voucher.setDiscountPercent(rs.getInt("discount_percent"));
-                voucher.setMinOrderValue(rs.getDouble("min_order_value"));
-                voucher.setExpiredAt(rs.getDate("expired_at"));
-                voucher.setCreatedBy(rs.getInt("created_by"));
-                voucherList.add(voucher);
+                Voucher v = new Voucher();
+                v.setVoucherId(rs.getInt("voucher_id"));
+                v.setCode(rs.getString("code"));
+                v.setDiscountPercent(rs.getInt("discount_percent"));
+                v.setMinOrderValue(rs.getDouble("min_order_value"));
+                v.setExpiredAt(rs.getDate("expired_at"));
+                list.add(v);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return voucherList;
+        return list;
+    }
+
+    public boolean userHasVoucher(int userId, int voucherId) {
+        String sql = "SELECT 1 FROM UsedVouchers WHERE user_id = ? AND voucher_id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, voucherId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
