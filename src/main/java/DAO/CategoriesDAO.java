@@ -10,21 +10,12 @@ import model.Product;
 public class CategoriesDAO {
 
     public List<Product> getProductsByParentCategoryId(int parentId) throws SQLException, ClassNotFoundException {
-    List<Product> list = new ArrayList<>();
-    String sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock, p.image_url, p.product_type, p.status, "
-               + "c.category_id, c.parent_id, c.name AS category_name, c.category_type "
-               + "FROM Products p "
-               + "INNER JOIN Categories c ON p.category_id = c.category_id "
-               + "WHERE (c.category_id = ? OR c.parent_id = ?) AND p.status = 1";
-
-    try (Connection conn = DBConnect.connect()) {
-        if (conn == null) {
-            throw new SQLException("Không thể kết nối đến cơ sở dữ liệu.");
-        }
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, parentId);
-            ps.setInt(2, parentId);
-            ResultSet rs = ps.executeQuery();
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock, p.image_url, p.product_type, p.status, "
+                + "c.category_id, c.parent_id, c.name AS category_name, c.category_type "
+                + "FROM Products p "
+                + "INNER JOIN Categories c ON p.category_id = c.category_id "
+                + "WHERE (c.category_id = ? OR c.parent_id = ?) AND p.status = 1";
 
         try ( Connection conn = DBConnect.connect()) {
             if (conn == null) {
@@ -32,8 +23,9 @@ public class CategoriesDAO {
             }
             try ( PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, parentId);
+                ps.setInt(2, parentId);
                 ResultSet rs = ps.executeQuery();
-                ProductDAO productDAO = new ProductDAO();
+
                 while (rs.next()) {
                     Product p = new Product();
                     p.setProductId(rs.getInt("product_id"));
@@ -52,22 +44,6 @@ public class CategoriesDAO {
                     c.setCategoryType(rs.getString("category_type") != null ? rs.getString("category_type") : "");
                     p.setCategoryId(1);
 
-                list.add(p);
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        throw e;
-    }
-    return list;
-}
-
-                    p.setCategory(c);
-
-                    // LẤY RATING VÀ GÁN
-                    p.setAvgStars(productDAO.getAverageStars(p.getProductId()));
-                    p.setTotalRatings(productDAO.getTotalRatings(p.getProductId()));
-                    
                     list.add(p);
                 }
             }

@@ -24,10 +24,7 @@ public class OrderDetail {
     }
 
     public OrderDetail() {
-<<<<<<< HEAD
         this.rated = false;
-=======
->>>>>>> dev
     }
 
     public int getOrderItemId() {
@@ -85,7 +82,6 @@ public class OrderDetail {
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
-<<<<<<< HEAD
 
     // === Getter/Setter cho biến rated ===
     public boolean isRated() {
@@ -95,6 +91,4 @@ public class OrderDetail {
     public void setRated(boolean rated) {
         this.rated = rated;
     }
-=======
->>>>>>> dev
 }
