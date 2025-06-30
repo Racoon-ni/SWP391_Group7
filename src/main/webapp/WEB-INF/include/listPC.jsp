@@ -3,6 +3,7 @@
     Created on : Jun 29, 2025, 9:57:26 PM
     Author     : ThinhLVCE181726 <your.name at your.org>
 --%>
+<%@ include file="/WEB-INF/include/header.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, model.Product" %>
 <!DOCTYPE html>
@@ -114,6 +115,7 @@
                <a class="pc-detail-btn" href="pcDetail?pcId=<%= pc.getProductId() %>">Xem chi tiết</a>
 
                 <button type="submit" class="pc-detail-btn" style="background:#1dbf36;">Thêm vào giỏ</button>
+                 <button class="btn btn-wish" title="Yêu thích"><i class="fa fa-heart"></i></button>
             </div>
             <%
                     }
