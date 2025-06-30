@@ -128,9 +128,6 @@
     <a href="${pageContext.request.contextPath}/manage-orders">
         <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
     </a>
-    <a href="${pageContext.request.contextPath}/manage-orders">
-        <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
-    </a>
 
     <!-- Logout button -->
     <div class="logout-container">

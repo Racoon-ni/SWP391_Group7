@@ -94,9 +94,9 @@
 
 
     <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role == 'Admin'}">--%>
-<<<<<<< HEAD
-    <a href="#">
+    <a href="${pageContext.request.contextPath}/adminstaff-sales-stats">
         <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
+
     </a>
 
     <a href="${pageContext.request.contextPath}/manage-pc">
@@ -119,35 +119,7 @@
         <i class="fa-solid fa-tags"></i> Quản lý thể loại
     </a>
 
-    <a href="#">
-=======
-    <a href="${pageContext.request.contextPath}/adminstaff-sales-stats">
-        <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
-
-    </a>
-
-    <a href="${pageContext.request.contextPath}/manage-pc">
-        <i class="fa-solid fa-computer"></i>Quản lý PC
-    </a>
-
-    <a href="${pageContext.request.contextPath}/manage-component">
-        <i class="fa-solid fa-microchip"></i> Quản lý linh kiện
-    </a>
-
-    <a href="${pageContext.request.contextPath}/manage-user">
-        <i class="fa-solid fa-user"></i> Quản lý tài khoản
-    </a>
-
-    <a href="#">
-        <i class="fa-solid fa-comment-dots"></i> Quản lý phản hồi
-    </a>
-
-    <a href="#">
-        <i class="fa-solid fa-tags"></i> Quản lý thể loại
-    </a>
-
     <a href="${pageContext.request.contextPath}/manage-vouchers">
->>>>>>> dev
         <i class="fas fa-shopping-cart"></i> Quản lý Voucher
     </a>
     <%--</c:if>--%>
@@ -159,11 +131,7 @@
 
     <!-- Logout button -->
     <div class="logout-container">
-<<<<<<< HEAD
-        <a href="#" class="logout-btn" id="logoutButton">
-=======
         <a href="logout" class="logout-btn" id="logoutButton">
->>>>>>> dev
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
         </a>
     </div>

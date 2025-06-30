@@ -6,8 +6,6 @@ import DAO.VoucherDAO;
 import DAO.RatingDAO;             // Thêm dòng này
 import model.Product;
 import model.Rating;             // Thêm dòng này
-import java.util.List;           // Thêm dòng này
-
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Product;
 import model.Voucher;
 
 @WebServlet("/product-detail")

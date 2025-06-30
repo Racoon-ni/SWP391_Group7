@@ -26,14 +26,6 @@ public class CategoriesDAO {
                 ps.setInt(2, parentId);
                 ResultSet rs = ps.executeQuery();
 
-        try ( Connection conn = DBConnect.connect()) {
-            if (conn == null) {
-                throw new SQLException("Không thể kết nối đến cơ sở dữ liệu.");
-            }
-            try ( PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, parentId);
-                ResultSet rs = ps.executeQuery();
-                ProductDAO productDAO = new ProductDAO();
                 while (rs.next()) {
                     Product p = new Product();
                     p.setProductId(rs.getInt("product_id"));
@@ -61,6 +53,5 @@ public class CategoriesDAO {
         }
         return list;
     }
-
 
 }

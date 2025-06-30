@@ -28,9 +28,7 @@ public class ProductDAO {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 Product p = new Product();
                 p.setProductId(rs.getInt("product_id"));
@@ -41,7 +39,7 @@ public class ProductDAO {
                 p.setImageUrl(rs.getString("image_url"));
                 p.setProductType(rs.getString("product_type"));
                 p.setCategoryId(rs.getInt("category_id"));
-                p.setStatus(rs.getBoolean("status"));
+                p.setStatus(rs.getInt("status"));
                 // Thêm:
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
@@ -96,14 +94,13 @@ public class ProductDAO {
                         rs.getString("image_url"),
                         rs.getString("product_type"),
                         rs.getInt("category_id"),
-                        rs.getBoolean("status")
+                        rs.getInt("status")
                 );
                 // Lấy thêm rating trung bình và số lượng đánh giá
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
                 list.add(p);
-                        rs.getInt("status")
-                ));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -157,13 +154,12 @@ public class ProductDAO {
                         rs.getString("image_url"),
                         rs.getString("product_type"),
                         rs.getInt("category_id"),
-                        rs.getBoolean("status")
+                        rs.getInt("status")
                 );
                 // Lấy rating cho từng sản phẩm:
                 setRatingInfoForProduct(p, conn);
                 list.add(p);
-                        rs.getInt("status")
-                ));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -260,27 +256,26 @@ public class ProductDAO {
         }
         return product;
     }
-    
-    
-  public Product getPCById(int pcId) throws Exception {
-    // Sửa SQL cho đúng với bảng của bạn
-    String sql = "SELECT * FROM Products WHERE product_id = ? AND product_type = 'PC'";
-    try (Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, pcId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            Product pc = new Product();
-            pc.setProductId(rs.getInt("product_id"));
-            pc.setName(rs.getString("name"));
-            pc.setDescription(rs.getString("description"));
-            pc.setPrice(rs.getDouble("price"));
-            pc.setStock(rs.getInt("stock"));
-            pc.setImageUrl(rs.getString("image_url"));
-            // ...set các thuộc tính khác
-            return pc;
+
+    public Product getPCById(int pcId) throws Exception {
+        // Sửa SQL cho đúng với bảng của bạn
+        String sql = "SELECT * FROM Products WHERE product_id = ? AND product_type = 'PC'";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, pcId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Product pc = new Product();
+                pc.setProductId(rs.getInt("product_id"));
+                pc.setName(rs.getString("name"));
+                pc.setDescription(rs.getString("description"));
+                pc.setPrice(rs.getDouble("price"));
+                pc.setStock(rs.getInt("stock"));
+                pc.setImageUrl(rs.getString("image_url"));
+                // ...set các thuộc tính khác
+                return pc;
+            }
         }
+        return null;
     }
-    return null;
-}
 
 }
