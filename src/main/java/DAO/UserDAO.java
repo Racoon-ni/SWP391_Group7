@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
@@ -39,8 +40,10 @@ public class UserDAO extends DBConnect {
 
     public User getUser(String username, String password) {
 
-        String sql = "  SELECT u.user_id, u.username, u.email, u.password_hash, u.role, u.status\n"
-                + "  FROM Users u\n"
+        String sql = "SELECT u.user_id, u.email,\n"
+                + "  u.fullname, u.date_of_birth, u.address,\n"
+                + "  u.phone, u.gender, u.role, u.status\n"
+                + "  FROM Users u "
                 + "  WHERE u.username = ? AND u.password_hash = ?";
 
         try (
@@ -52,10 +55,15 @@ public class UserDAO extends DBConnect {
                 if (rs.next()) {
                     int id = rs.getInt("user_id");
                     String email = rs.getString("email");
+                    String fullname = rs.getString("fullname");
+                    Date dateOfBirth = rs.getDate("date_of_birth");
+                    String address = rs.getString("address");
+                    String phone = rs.getString("phone");
+                    String gender = rs.getString("phone");
                     String role = rs.getString("role");
                     boolean status = rs.getBoolean("status");
 
-                    return new User(id, username, email, hashMd5(password), role, status);
+                    return new User(id, username, hashMd5(password), email, fullname, dateOfBirth, address, phone, gender, role, status);
                 }
             }
 
@@ -68,8 +76,10 @@ public class UserDAO extends DBConnect {
 
     public User getUserById(int id) {
 
-        String sql = "  SELECT u.user_id, u.username, u.email, u.password_hash, u.role, u.status\n"
-                + "  FROM Users u\n"
+        String sql = "SELECT u.username, u.email,\n"
+                + "  u.fullname, u.date_of_birth, u.address,\n"
+                + "  u.phone, u.gender, u.role, u.status\n"
+                + "  FROM Users u"
                 + "  WHERE u.user_id = ?";
 
         try (
@@ -80,11 +90,15 @@ public class UserDAO extends DBConnect {
                 if (rs.next()) {
                     String username = rs.getString("username");
                     String email = rs.getString("email");
-                    String password_hash = rs.getString("password_hash");
+                    String fullname = rs.getString("fullname");
+                    Date dateOfBirth = rs.getDate("date_of_birth");
+                    String address = rs.getString("address");
+                    String phone = rs.getString("phone");
+                    String gender = rs.getString("phone");
                     String role = rs.getString("role");
                     boolean status = rs.getBoolean("status");
 
-                    return new User(id, username, email, password_hash, role, status);
+                    return new User(id, username, "", email, fullname, dateOfBirth, address, phone, gender, role, status);
                 }
             }
 
@@ -135,9 +149,10 @@ public class UserDAO extends DBConnect {
     public ArrayList<User> getAllUser() {
 
         ArrayList<User> userList = new ArrayList<>();
-        String sql = "SELECT u.user_id, u.username, u.email, u.password_hash, \n"
-                + "u.role ,u.status\n"
-                + "FROM Users u";
+        String sql = "  SELECT u.user_id, u.username, u.email,\n"
+                + "  u.fullname, u.date_of_birth, u.address,\n"
+                + "  u.phone, u.gender, u.role, u.status\n"
+                + "  FROM Users u";
 
         try (
                  PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
@@ -145,11 +160,15 @@ public class UserDAO extends DBConnect {
                 int id = rs.getInt("user_id");
                 String name = rs.getString("username");
                 String email = rs.getString("email");
-                String psw = rs.getString("password_hash");
+                String fullname = rs.getString("fullname");
+                Date dateOfBirth = rs.getDate("date_of_birth");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                String gender = rs.getString("phone");
                 String role = rs.getString("role");
                 boolean status = rs.getBoolean("status");
 
-                User user = new User(id, name, email, psw, role, status);
+                User user = new User(id, name, "", email, fullname, dateOfBirth, address, phone, gender, role, status);
                 userList.add(user);
             }
 

@@ -45,8 +45,28 @@
                         <img src="<%= imgUrl%>" class="card-img-top" style="height:180px; object-fit:cover;">
                         <div class="card-body">
                             <h5 class="card-title" style="font-size: 1.1rem;"><%= p.getName()%></h5>
+                            <div class="mb-1">
+                                <%
+                                    if (p.getTotalRatings() > 0) {
+                                %>
+                                <span style="color: orange; font-weight: bold;">
+                                    &#9733; <%= String.format("%.1f", p.getAvgStars())%> / 5
+                                </span>
+                                <span class="text-muted">
+                                    (<%= p.getTotalRatings()%> đánh giá)
+                                </span>
+                                <%
+                                } else {
+                                %>
+                                <span class="text-muted fst-italic">Chưa có đánh giá</span>
+                                <%
+                                    }
+                                %>
+                            </div>
+
                             <p class="card-text text-truncate" title="<%= p.getDescription()%>"><%= p.getDescription()%></p>
                             <div class="mb-2 fw-bold text-primary" style="font-size: 1.1rem;">
+
                                 <%= String.format("%,.0f", p.getPrice())%> đ
                             </div>
                             <div class="mb-2"><span class="badge bg-secondary">Kho: <%= p.getStock()%></span></div>
@@ -55,7 +75,7 @@
                             <!-- Nút Thêm vào giỏ hàng -->
                             <a href="#" class="btn btn-outline-primary btn-sm w-100">Thêm vào giỏ</a>
                             <!-- Link Xem Chi Tiết -->
-                            <a href="product-detail?id=<%= p.getProductId() %>" class="btn btn-outline-secondary btn-sm w-100 mt-2">Xem chi tiết</a>
+                            <a href="product-detail?id=<%= p.getProductId()%>" class="btn btn-outline-secondary btn-sm w-100 mt-2">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>

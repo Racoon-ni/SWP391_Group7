@@ -26,6 +26,14 @@ public class CategoriesDAO {
                 ps.setInt(2, parentId);
                 ResultSet rs = ps.executeQuery();
 
+        try ( Connection conn = DBConnect.connect()) {
+            if (conn == null) {
+                throw new SQLException("Không thể kết nối đến cơ sở dữ liệu.");
+            }
+            try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, parentId);
+                ResultSet rs = ps.executeQuery();
+                ProductDAO productDAO = new ProductDAO();
                 while (rs.next()) {
                     Product p = new Product();
                     p.setProductId(rs.getInt("product_id"));
@@ -54,25 +62,5 @@ public class CategoriesDAO {
         return list;
     }
 
-    public class CategoryDAO {
-        // Lấy toàn bộ category
 
-        public List<Category> getAllCategories() {
-            List<Category> list = new ArrayList<>();
-            String sql = "SELECT * FROM Categories ORDER BY parent_id, category_id";
-            try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Category c = new Category();
-                    c.setCategoryId(rs.getInt("category_id"));
-                    c.setParentId(rs.getObject("parent_id") == null ? null : rs.getInt("parent_id"));
-                    c.setName(rs.getString("name"));
-                    c.setCategoryType(rs.getString("category_type"));
-                    list.add(c);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return list;
-        }
-    }
 }

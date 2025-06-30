@@ -89,7 +89,7 @@ page contentType="text/html;charset=UTF-8" language="java" %>
                                 <i class="fa-regular fa-circle-user" 
                                    style="font-size: large"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view-profile">Thông tin tài khoản</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/view-profile" >Thông tin tài khoản</a></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng Xuất</a></li>
                             </ul>   
                         </div>

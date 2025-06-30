@@ -2,6 +2,7 @@ package controller;
 
 import DAO.ProductDAO;
 import DAO.VoucherDAO;
+import DAO.RatingDAO;   // <-- Thêm dòng này
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,8 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.List;   // <-- Thêm dòng này
 import model.Product;
 import model.Voucher;
+import model.Rating;    // <-- Thêm dòng này
 
 @WebServlet(name = "ViewComponentDetailServlet", urlPatterns = {"/ViewComponentDetail"})
 public class ViewComponentDetailServlet extends HttpServlet {
@@ -38,6 +41,12 @@ public class ViewComponentDetailServlet extends HttpServlet {
             VoucherDAO dao = new VoucherDAO();
             List<Voucher> vouchers = dao.getAllVouchers();
             request.setAttribute("vouchers", vouchers);
+
+            // LẤY DANH SÁCH ĐÁNH GIÁ
+            RatingDAO ratingDAO = new RatingDAO();
+            List<Rating> ratingList = ratingDAO.getRatingsByProductId(productId);
+            request.setAttribute("ratingList", ratingList); // <-- Gửi sang JSP
+
             // Đặt sản phẩm vào request attribute
             request.setAttribute("product", product);
 

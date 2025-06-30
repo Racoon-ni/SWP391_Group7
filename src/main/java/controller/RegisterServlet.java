@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Date;
 import model.User;
 
 /**
@@ -59,9 +60,10 @@ public class RegisterServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("psw");
         String validPass = request.getParameter("valid_password");
+        Date d = new Date();
 
         UserDAO uDAO = new UserDAO();
-        User user = new User(0, username, username + "@example.com", password, "Customer", true);
+        User user = new User(0, username, username + "@example.com", password, "", d, "", "", "", "Customer", true);
 
         request.setAttribute("username", username);
         if (password.equals(validPass)) {

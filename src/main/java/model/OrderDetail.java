@@ -9,6 +9,8 @@ public class OrderDetail {
     private String imageUrl;
     private int quantity;
     private double unitPrice;
+    // === Thêm biến này để biết đã đánh giá chưa ===
+    private boolean rated;
 
     public OrderDetail(int orderItemId, int orderId, int productId, String productName, String imageUrl, int quantity, double unitPrice) {
         this.orderItemId = orderItemId;
@@ -18,9 +20,14 @@ public class OrderDetail {
         this.imageUrl = imageUrl;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.rated = false; // mặc định là chưa đánh giá
     }
 
     public OrderDetail() {
+<<<<<<< HEAD
+        this.rated = false;
+=======
+>>>>>>> dev
     }
 
     public int getOrderItemId() {
@@ -78,4 +85,16 @@ public class OrderDetail {
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
+<<<<<<< HEAD
+
+    // === Getter/Setter cho biến rated ===
+    public boolean isRated() {
+        return rated;
+    }
+
+    public void setRated(boolean rated) {
+        this.rated = rated;
+    }
+=======
+>>>>>>> dev
 }
