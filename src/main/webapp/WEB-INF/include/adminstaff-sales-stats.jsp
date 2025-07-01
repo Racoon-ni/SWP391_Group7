@@ -89,7 +89,7 @@
 
     <div class="summary">
         Tổng doanh thu: 
-        <fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+        <fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="$" groupingUsed="true"/>
     </div>
 
     <div class="section-title">Doanh thu theo ngày</div>
@@ -97,14 +97,14 @@
         <thead>
             <tr>
                 <th>Ngày</th>
-                <th>Doanh thu (VNĐ)</th>
+                <th>Doanh thu ($)</th>
             </tr>
         </thead>
         <tbody>
             <c:forEach var="stat" items="${dailyStats}">
                 <tr>
                     <td><fmt:formatDate value="${stat.date}" pattern="dd/MM/yyyy"/></td>
-                    <td><fmt:formatNumber value="${stat.revenue}" type="currency" currencySymbol="₫" groupingUsed="true"/></td>
+                    <td><fmt:formatNumber value="${stat.revenue}" type="currency" currencySymbol="$" groupingUsed="true"/></td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -115,14 +115,14 @@
         <thead>
             <tr>
                 <th>Tháng/Năm</th>
-                <th>Doanh thu (VNĐ)</th>
+                <th>Doanh thu ($)</th>
             </tr>
         </thead>
         <tbody>
             <c:forEach var="stat" items="${monthlyStats}">
                 <tr>
                     <td>${stat.month}/${stat.year}</td>
-                    <td><fmt:formatNumber value="${stat.revenue}" type="currency" currencySymbol="₫" groupingUsed="true"/></td>
+                    <td><fmt:formatNumber value="${stat.revenue}" type="currency" currencySymbol="$" groupingUsed="true"/></td>
                 </tr>
             </c:forEach>
         </tbody>
