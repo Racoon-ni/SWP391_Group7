@@ -4,19 +4,18 @@
  */
 package controller;
 
-import DAO.CategoryDAO;
-import DAO.ComponentDAO;
+
 import DAO.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import model.Category;
-import model.Component;
+import java.util.Date;
+
 import model.User;
 
 /**
@@ -83,8 +82,9 @@ public class ManageUserServlet extends HttpServlet {
                     int id = Integer.parseInt(request.getParameter("id"));
                     String role = request.getParameter("role");
                     boolean status = Boolean.parseBoolean(request.getParameter("status"));
-
-                    if (uDAO.updateUser(new User(id, "", "", "", role, status)) == 1) {
+                    Date d = new Date();
+                    
+                    if (uDAO.updateUser(new User(id, "", "", "", "",d , "", "", "", role, status))== 1) {
                         response.sendRedirect(request.getContextPath() + "/manage-user");
                     }
 

@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DAO.VoucherDAO;
 import model.Voucher;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
@@ -51,17 +51,12 @@ public class ViewVouchersServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        try {
-            VoucherDAO voucherDAO = new VoucherDAO();
-            List<Voucher> voucherList = voucherDAO.getAvailableVouchers();
-            request.setAttribute("voucherList", voucherList);
-            request.getRequestDispatcher("WEB-INF/include/viewvoucher.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            request.setAttribute("error", "Không thể lấy danh sách voucher: " + ex.getMessage());
-            request.getRequestDispatcher("home.jsp").forward(request, response);
-        }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        VoucherDAO dao = new VoucherDAO();
+        List<Voucher> vouchers = dao.getAllVouchers();
+        request.setAttribute("vouchers", vouchers);
+
+        request.getRequestDispatcher("/WEB-INF/include/viewvoucher.jsp").forward(request, response);
     }
 
     /**

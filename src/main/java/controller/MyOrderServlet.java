@@ -7,7 +7,6 @@ import model.Order;
 import model.OrderDetail;
 import model.ShippingInfo;
 import DAO.orderDAO;
-
 import java.io.IOException;
 import java.util.*;
 import model.User;
@@ -29,10 +28,6 @@ public class MyOrderServlet extends HttpServlet {
 
             orderDAO dao = new orderDAO();
             List<Order> orders = dao.getOrdersByUserId(user.getId());
-//        int userId = 1;
-//
-//        orderDAO dao = new orderDAO();
-//        List<Order> orders = dao.getOrdersByUserId(userId);
 
             // --- Load ShippingInfo cho từng Order ---
             for (Order order : orders) {
@@ -43,7 +38,8 @@ public class MyOrderServlet extends HttpServlet {
             // --- Lấy chi tiết từng đơn hàng (OrderDetails) ---
             Map<Integer, List<OrderDetail>> orderDetailsMap = new HashMap<>();
             for (Order order : orders) {
-                List<OrderDetail> details = dao.getOrderDetails(order.getOrderId());
+                // SỬA ĐÚNG HÀM GỌI: TRUYỀN 2 THAM SỐ!
+                List<OrderDetail> details = dao.getOrderDetails(order.getOrderId(), user.getId());
                 orderDetailsMap.put(order.getOrderId(), details);
             }
 
@@ -54,5 +50,4 @@ public class MyOrderServlet extends HttpServlet {
             rd.forward(request, response);
         }
     }
-
 }
