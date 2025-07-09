@@ -14,7 +14,6 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("user") == null) {

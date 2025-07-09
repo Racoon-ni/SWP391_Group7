@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.*;
 import model.OrderDetail;
 import model.Order;
 import model.ShippingInfo;
+import model.User;
 import DAO.orderDAO;
 import java.io.IOException;
 import java.util.List;
@@ -22,10 +23,18 @@ public class OrderDetailsServlet extends HttpServlet {
         }
         int orderId = Integer.parseInt(orderIdStr);
 
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login");
+            return;
+        }
+        User user = (User) session.getAttribute("user");
+        int userId = user.getId();
+
         orderDAO dao = new orderDAO();
 
-        // Lấy từng thông tin cần thiết
-        List<OrderDetail> details = dao.getOrderDetails(orderId);
+        // Lấy từng thông tin cần thiết (GỌI ĐÚNG 2 THAM SỐ)
+        List<OrderDetail> details = dao.getOrderDetails(orderId, userId);
         Order order = dao.getOrderById(orderId);
         ShippingInfo shippingInfo = dao.getShippingInfoByOrderId(orderId);
 

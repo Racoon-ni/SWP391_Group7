@@ -1,3 +1,5 @@
+<%@page import="model.AdminStaffVoucher"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page pageEncoding="UTF-8" %>
 
 <title>Quản lý Voucher</title>
@@ -217,18 +219,33 @@
         </thead>
         <tbody>
             <!-- Voucher List Populated from Database -->
-            <c:forEach var="voucher" items="${voucherList}">
-                <tr>
-                    <td>${voucher.code}</td>
-                    <td>${voucher.discountPercent}</td>
-                    <td>${voucher.minOrderValue}</td>
-                    <td>${voucher.expiredAt}</td>
-                    <td>
-                        <button class="btn" onclick="openEditModal(${voucher.voucherId})">Chỉnh sửa</button>
-                        <button class="btn" onclick="deleteVoucher(${voucher.voucherId})">Xóa</button>
-                    </td>
-                </tr>
-            </c:forEach>
+            <%
+                ArrayList<AdminStaffVoucher> voucherList = (ArrayList<AdminStaffVoucher>) request.getAttribute("voucherList");
+                for (AdminStaffVoucher voucher : voucherList) {
+
+            %>
+            <tr>
+                <td><%= voucher.getCode()%></td>
+                <td><%= voucher.getDiscountPercent()%></td>
+                <td><%= voucher.getMinOrderValue()%></td>
+                <td><%= voucher.getExpiredAt()%></td>
+                <td>
+                    <button class="btn"
+                            onclick="openEditModal(this)"
+                            data-id="<%= voucher.getVoucherId()%>"
+                            data-code="<%= voucher.getCode()%>"
+                            data-discount="<%= voucher.getDiscountPercent()%>"
+                            data-minorder="<%= voucher.getMinOrderValue()%>"
+                            data-expired="<%= voucher.getExpiredAt()%>">
+                        Chỉnh sửa
+                    </button>
+
+                    <button class="btn" onclick="deleteVoucher(<%= voucher.getVoucherId()%>)">Xóa</button>
+                </td>
+            </tr>
+            <%
+                }
+            %>
         </tbody>
     </table>
 
@@ -236,8 +253,9 @@
     <div class="modal" id="voucherModal">
         <div class="modal-content">
             <h3 id="modalTitle">Thêm Voucher</h3>
-            <form id="voucherForm">
-                <input type="hidden" id="voucherId">
+            <form method="POST" action="${pageContext.request.contextPath}/manage-vouchers" id="voucherForm">
+                <input type="hidden" id="voucherId" name="voucherId">
+                <input type="hidden" name="action" value="add">
                 <div class="form-field">
                     <label>Mã Voucher</label>
                     <input type="text" id="voucherCode" name="voucherCode" required />
@@ -266,36 +284,66 @@
 
 <script>
     // Hiển thị modal khi nhấn "Thêm Voucher"
-    document.getElementById('addVoucherBtn').onclick = function() {
+    document.getElementById('addVoucherBtn').onclick = function () {
         clearForm();
         document.getElementById('modalTitle').textContent = 'Thêm Voucher';
         document.getElementById('voucherModal').style.display = 'flex';
     };
 
     // Đóng modal
-    document.getElementById('closeModalBtn').onclick = function() {
+    document.getElementById('closeModalBtn').onclick = function () {
         document.getElementById('voucherModal').style.display = 'none';
     };
 
     // Hiển thị modal khi nhấn "Chỉnh sửa Voucher"
-    function openEditModal(voucherId) {
-        // Dữ liệu voucher ví dụ (cần phải thay thế với dữ liệu thực tế từ server)
-        document.getElementById('voucherId').value = voucherId;
-        document.getElementById('voucherCode').value = 'EXAMPLE123';
-        document.getElementById('discountPercent').value = 20;
-        document.getElementById('minOrderValue').value = 100;
-        document.getElementById('expiredAt').value = '2025-12-31';
+    function openEditModal(button) {
+        const id = button.getAttribute('data-id');
+        const code = button.getAttribute('data-code');
+        const discount = button.getAttribute('data-discount');
+        const minOrder = button.getAttribute('data-minorder');
+        const expiredAt = button.getAttribute('data-expired');
+
+        document.getElementById('voucherId').value = id;
+        document.getElementById('voucherCode').value = code;
+        document.getElementById('discountPercent').value = discount;
+        document.getElementById('minOrderValue').value = minOrder;
+        document.getElementById('expiredAt').value = expiredAt;
+
         document.getElementById('modalTitle').textContent = 'Chỉnh sửa Voucher';
+        document.querySelector('#voucherForm input[name="action"]').value = 'edit';
         document.getElementById('voucherModal').style.display = 'flex';
     }
+
 
     // Xóa voucher (cần thêm logic xóa thực tế với AJAX)
     function deleteVoucher(voucherId) {
         if (confirm('Bạn có chắc chắn muốn xóa voucher này?')) {
-            // Gọi API hoặc gửi yêu cầu xóa voucher (dùng AJAX hoặc redirect)
-            alert('Voucher ' + voucherId + ' đã bị xóa!');
+            // Create a form dynamically
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '${pageContext.request.contextPath}/manage-vouchers';
+
+            // Hidden input: action
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = 'delete';
+
+            // Hidden input: voucherId
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'voucherId';
+            idInput.value = voucherId;
+
+            form.appendChild(actionInput);
+            form.appendChild(idInput);
+
+            document.body.appendChild(form);
+            form.submit(); // Submit the form as POST
         }
     }
+
+
 
     // Làm sạch form
     function clearForm() {
@@ -304,21 +352,20 @@
     }
 
     // Gửi dữ liệu (Thêm hoặc Sửa)
-    document.getElementById('voucherForm').onsubmit = function(event) {
-        event.preventDefault();
-
-        const voucherId = document.getElementById('voucherId').value;
-        const voucherCode = document.getElementById('voucherCode').value;
-        const discountPercent = document.getElementById('discountPercent').value;
-        const minOrderValue = document.getElementById('minOrderValue').value;
-        const expiredAt = document.getElementById('expiredAt').value;
-
-        // Gửi dữ liệu lên server hoặc cập nhật cơ sở dữ liệu (sử dụng AJAX hoặc POST)
-        console.log('Voucher Data:', { voucherId, voucherCode, discountPercent, minOrderValue, expiredAt });
-
-        document.getElementById('voucherModal').style.display = 'none';
-        alert('Cập nhật thành công!');
-    };
+//    document.getElementById('voucherForm').onsubmit = function (event) {
+//        event.preventDefault();
+//
+//        const voucherId = document.getElementById('voucherId').value;
+//        const voucherCode = document.getElementById('voucherCode').value;
+//        const discountPercent = document.getElementById('discountPercent').value;
+//        const minOrderValue = document.getElementById('minOrderValue').value;
+//        const expiredAt = document.getElementById('expiredAt').value;
+//
+//        // Gửi dữ liệu lên server hoặc cập nhật cơ sở dữ liệu (sử dụng AJAX hoặc POST)
+//        console.log('Voucher Data:', {voucherId, voucherCode, discountPercent, minOrderValue, expiredAt});
+//
+//        document.getElementById('voucherModal').style.display = 'none';
+//        alert('Cập nhật thành công!');
+//    };
 </script>
 
-<%@ include file="../include/footer.jsp" %>

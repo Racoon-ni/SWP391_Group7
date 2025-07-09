@@ -6,6 +6,8 @@ package model;
 
 import java.util.Date;
 
+import java.util.Date;
+
 /**
  *
  * @author Huynh Trong Nguyen - CE190356
@@ -13,7 +15,6 @@ import java.util.Date;
 public class User {
     private int id;
     private String username;
-    private String email;
     private String password;
     private Date date_of_birth;
     private String address;
@@ -45,11 +46,26 @@ public class User {
     public User(int id, String username, String email, String password, String role, boolean status) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.password = password;
+        this.email = email;
+        this.fullname = fullname;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.phone = phone;
+        this.gender = gender;
         this.role = role;
         this.status = status;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+   
 
     public int getId() {
         return id;
@@ -75,12 +91,44 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getRole() {

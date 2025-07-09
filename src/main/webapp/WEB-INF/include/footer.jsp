@@ -28,6 +28,16 @@
                 <p><i class="fas fa-map-marker-alt me-3 text-info"></i> 600 Nguyễn Văn Cừ Nối Dài, An Bình, Bình Thủy, Cần Thơ 900000, Vietnam</p>
                 <p><i class="fas fa-phone me-3 text-info"></i> 0765 931 799</p>
                 <p><i class="fas fa-envelope me-3 text-info"></i>tuongnghi04@gmail.com</p>
+            <!-- Quick Links Section -->
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/about-us" class="text-white">About Us</a></li>
+                    <li><a href="/contact-us" class="text-white">Contact Us</a></li>
+                    <li><a href="/privacy-policy" class="text-white">Privacy Policy</a></li>
+                    <li><a href="/terms" class="text-white">Terms & Conditions</a></li>
+                    <li><a href="${pageContext.request.contextPath}/sendFeedback" class="text-white">Send Feedback</a></li>
+                </ul>
             </div>
 
             <!-- Social Media -->

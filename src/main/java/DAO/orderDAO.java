@@ -34,7 +34,40 @@ public class orderDAO {
         return orders;
     }
 
-    public List<OrderDetail> getOrderDetails(int orderId) {
+    // Lấy chi tiết sản phẩm của 1 đơn hàng và kiểm tra đã đánh giá hay chưa cho từng sản phẩm
+    public List<OrderDetail> getOrderDetails(int orderId, int userId) {
+        List<OrderDetail> details = new ArrayList<>();
+        String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id, "
+                + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price "
+                + "FROM OrderItems oi "
+                + "JOIN Products p ON oi.product_id = p.product_id "
+                + "WHERE oi.order_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
+            while (rs.next()) {
+                OrderDetail detail = new OrderDetail(
+                        rs.getInt("order_item_id"),
+                        rs.getInt("order_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("product_name"),
+                        rs.getString("image_url"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("unit_price")
+                );
+                // Đúng logic: check theo userId, orderId, productId
+                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
+                details.add(detail);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return details;
+    }
+
+    // Lấy chi tiết sản phẩm của 1 đơn hàng (không kiểm tra rated - phục vụ lấy danh sách đánh giá nhiều sản phẩm cùng lúc)
+    public List<OrderDetail> getOrderDetailsNoUser(int orderId) {
         List<OrderDetail> details = new ArrayList<>();
         String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id, "
                 + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price "
@@ -60,6 +93,22 @@ public class orderDAO {
             e.printStackTrace();
         }
         return details;
+    }
+
+    // Kiểm tra user đã đánh giá sản phẩm này chưa
+    private boolean checkUserRatedProduct(int userId, int productId) {
+        String sql = "SELECT COUNT(*) FROM Ratings WHERE user_id = ? AND product_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public Order getOrderById(int orderId) {
@@ -155,7 +204,16 @@ public class orderDAO {
 
         try {
             conn = DBConnect.connect();
+        try {
+            conn = DBConnect.connect();
 
+            // 1. Tính tổng giá trị đơn hàng
+            for (int i = 0; i < productIds.length; i++) {
+                int productId = Integer.parseInt(productIds[i]);
+                int quantity = Integer.parseInt(quantities[i]);
+                double unitPrice = getProductPrice(productId);
+                totalPrice += unitPrice * quantity;
+            }
             // 1. Tính tổng giá trị đơn hàng
             for (int i = 0; i < productIds.length; i++) {
                 int productId = Integer.parseInt(productIds[i]);
@@ -170,6 +228,12 @@ public class orderDAO {
             psOrder.setInt(1, userId);
             psOrder.setDouble(2, totalPrice);
             psOrder.executeUpdate();
+            // 2. Tạo đơn hàng mới
+            String createOrder = "INSERT INTO Orders (user_id, status, total_price) VALUES (?, 'Pending', ?)";
+            psOrder = conn.prepareStatement(createOrder, Statement.RETURN_GENERATED_KEYS);
+            psOrder.setInt(1, userId);
+            psOrder.setDouble(2, totalPrice);
+            psOrder.executeUpdate();
 
             rs = psOrder.getGeneratedKeys();
             if (rs.next()) {
@@ -177,14 +241,20 @@ public class orderDAO {
             } else {
                 return -1; // Không tạo được đơn hàng
             }
+            rs = psOrder.getGeneratedKeys();
+            if (rs.next()) {
+                newOrderId = rs.getInt(1);
+            } else {
+                return -1; // Không tạo được đơn hàng
+            }
 
-            // 3. Ghi thông tin giao hàng
+            // 3. Ghi thông tin giao hàng cho đơn hàng mới
             String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) "
                     + "VALUES (?, ?, ?, ?, ?, 'Unpaid')";
             psShipping = conn.prepareStatement(insertShipping);
             psShipping.setInt(1, newOrderId);
             psShipping.setString(2, address);
-            psShipping.setString(3, "Receiver"); // Tùy chỉnh tên người nhận nếu cần
+            psShipping.setString(3, newReceiverName != null ? newReceiverName : oldShippingInfo.getReceiverName()); // Cập nhật tên người nhận
             psShipping.setString(4, phone);
             psShipping.setString(5, paymentMethod);
             psShipping.executeUpdate();
@@ -197,6 +267,12 @@ public class orderDAO {
                 int quantity = Integer.parseInt(quantities[i]);
                 double unitPrice = getProductPrice(productId);
 
+                psItemInsert.setInt(1, newOrderId);
+                psItemInsert.setInt(2, productId);
+                psItemInsert.setInt(3, quantity);
+                psItemInsert.setDouble(4, unitPrice);
+                psItemInsert.executeUpdate();
+            }
                 psItemInsert.setInt(1, newOrderId);
                 psItemInsert.setInt(2, productId);
                 psItemInsert.setInt(3, quantity);
@@ -235,8 +311,51 @@ public class orderDAO {
         }
         return -1;
     }
+            return newOrderId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (psOrder != null) {
+                    psOrder.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psShipping != null) {
+                    psShipping.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psItemInsert != null) {
+                    psItemInsert.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return -1;
+    }
 
     private double getProductPrice(int productId) {
+        String sql = "SELECT price FROM Products WHERE product_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0; // fallback
+    }
         String sql = "SELECT price FROM Products WHERE product_id = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setInt(1, productId);
