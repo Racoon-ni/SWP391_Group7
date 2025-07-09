@@ -147,89 +147,149 @@ public class orderDAO {
     }
 
     public int reorder(int oldOrderId, String phone, String address, String paymentMethod, String[] productIds, String[] quantities, int userId) {
-    Connection conn = null;
-    PreparedStatement psOrder = null, psShipping = null, psItemInsert = null;
-    ResultSet rs = null;
-    int newOrderId = -1;
-    double totalPrice = 0;
+        Connection conn = null;
+        PreparedStatement psOrder = null, psShipping = null, psItemInsert = null;
+        ResultSet rs = null;
+        int newOrderId = -1;
+        double totalPrice = 0;
 
-    try {
-        conn = DBConnect.connect();
+        try {
+            conn = DBConnect.connect();
 
-        // 1. Tính tổng giá trị đơn hàng
-        for (int i = 0; i < productIds.length; i++) {
-            int productId = Integer.parseInt(productIds[i]);
-            int quantity = Integer.parseInt(quantities[i]);
-            double unitPrice = getProductPrice(productId);
-            totalPrice += unitPrice * quantity;
+            // 1. Tính tổng giá trị đơn hàng
+            for (int i = 0; i < productIds.length; i++) {
+                int productId = Integer.parseInt(productIds[i]);
+                int quantity = Integer.parseInt(quantities[i]);
+                double unitPrice = getProductPrice(productId);
+                totalPrice += unitPrice * quantity;
+            }
+
+            // 2. Tạo đơn hàng mới
+            String createOrder = "INSERT INTO Orders (user_id, status, total_price) VALUES (?, 'Pending', ?)";
+            psOrder = conn.prepareStatement(createOrder, Statement.RETURN_GENERATED_KEYS);
+            psOrder.setInt(1, userId);
+            psOrder.setDouble(2, totalPrice);
+            psOrder.executeUpdate();
+
+            rs = psOrder.getGeneratedKeys();
+            if (rs.next()) {
+                newOrderId = rs.getInt(1);
+            } else {
+                return -1; // Không tạo được đơn hàng
+            }
+
+            // 3. Ghi thông tin giao hàng
+            String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) "
+                    + "VALUES (?, ?, ?, ?, ?, 'Unpaid')";
+            psShipping = conn.prepareStatement(insertShipping);
+            psShipping.setInt(1, newOrderId);
+            psShipping.setString(2, address);
+            psShipping.setString(3, "Receiver"); // Tùy chỉnh tên người nhận nếu cần
+            psShipping.setString(4, phone);
+            psShipping.setString(5, paymentMethod);
+            psShipping.executeUpdate();
+
+            // 4. Ghi các sản phẩm
+            String insertItems = "INSERT INTO OrderItems (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
+            psItemInsert = conn.prepareStatement(insertItems);
+            for (int i = 0; i < productIds.length; i++) {
+                int productId = Integer.parseInt(productIds[i]);
+                int quantity = Integer.parseInt(quantities[i]);
+                double unitPrice = getProductPrice(productId);
+
+                psItemInsert.setInt(1, newOrderId);
+                psItemInsert.setInt(2, productId);
+                psItemInsert.setInt(3, quantity);
+                psItemInsert.setDouble(4, unitPrice);
+                psItemInsert.executeUpdate();
+            }
+
+            return newOrderId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (psOrder != null) {
+                    psOrder.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psShipping != null) {
+                    psShipping.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psItemInsert != null) {
+                    psItemInsert.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
-
-        // 2. Tạo đơn hàng mới
-        String createOrder = "INSERT INTO Orders (user_id, status, total_price) VALUES (?, 'Pending', ?)";
-        psOrder = conn.prepareStatement(createOrder, Statement.RETURN_GENERATED_KEYS);
-        psOrder.setInt(1, userId);
-        psOrder.setDouble(2, totalPrice);
-        psOrder.executeUpdate();
-
-        rs = psOrder.getGeneratedKeys();
-        if (rs.next()) {
-            newOrderId = rs.getInt(1);
-        } else {
-            return -1; // Không tạo được đơn hàng
-        }
-
-        // 3. Ghi thông tin giao hàng
-        String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) "
-                + "VALUES (?, ?, ?, ?, ?, 'Unpaid')";
-        psShipping = conn.prepareStatement(insertShipping);
-        psShipping.setInt(1, newOrderId);
-        psShipping.setString(2, address);
-        psShipping.setString(3, "Receiver"); // Tùy chỉnh tên người nhận nếu cần
-        psShipping.setString(4, phone);
-        psShipping.setString(5, paymentMethod);
-        psShipping.executeUpdate();
-
-        // 4. Ghi các sản phẩm
-        String insertItems = "INSERT INTO OrderItems (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
-        psItemInsert = conn.prepareStatement(insertItems);
-        for (int i = 0; i < productIds.length; i++) {
-            int productId = Integer.parseInt(productIds[i]);
-            int quantity = Integer.parseInt(quantities[i]);
-            double unitPrice = getProductPrice(productId);
-
-            psItemInsert.setInt(1, newOrderId);
-            psItemInsert.setInt(2, productId);
-            psItemInsert.setInt(3, quantity);
-            psItemInsert.setDouble(4, unitPrice);
-            psItemInsert.executeUpdate();
-        }
-
-        return newOrderId;
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        try { if (psOrder != null) psOrder.close(); } catch (Exception e) {}
-        try { if (psShipping != null) psShipping.close(); } catch (Exception e) {}
-        try { if (psItemInsert != null) psItemInsert.close(); } catch (Exception e) {}
-        try { if (conn != null) conn.close(); } catch (Exception e) {}
+        return -1;
     }
-    return -1;
-}
-
 
     private double getProductPrice(int productId) {
-    String sql = "SELECT price FROM Products WHERE product_id = ?";
-    try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-        ps.setInt(1, productId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getDouble("price");
+        String sql = "SELECT price FROM Products WHERE product_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return 0.0; // fallback
     }
-    return 0.0; // fallback
-}
 
+    public void placeOrder(Order order) {
+        String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
+        String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)";
 
+        try ( Connection conn = DBConnect.connect()) {
+            conn.setAutoCommit(false); // bắt đầu transaction
+
+            // 1. Insert vào bảng Orders
+            try ( PreparedStatement ps = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, order.getUserId());
+                ps.setString(2, order.getStatus());
+                ps.setDouble(3, order.getTotalPrice()); // update đúng giá nếu cần
+                ps.setTimestamp(4, new Timestamp(order.getCreatedAt().getTime()));
+                ps.executeUpdate();
+
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    int orderId = rs.getInt(1);
+
+                    // 2. Insert vào bảng OrderShippingPayment
+                    ShippingInfo ship = order.getShippingInfo();
+                    try ( PreparedStatement ps2 = conn.prepareStatement(insertShipping)) {
+                        ps2.setInt(1, orderId);
+                        ps2.setString(2, ship.getShippingAddress());
+                        ps2.setString(3, ship.getReceiverName());
+                        ps2.setString(4, ship.getPhone());
+                        ps2.setString(5, ship.getPaymentMethod());
+                        ps2.setString(6, ship.getPaymentStatus());
+                        ps2.executeUpdate();
+                    }
+                }
+
+                conn.commit(); // commit transaction
+            } catch (Exception e) {
+                conn.rollback(); // rollback nếu lỗi
+                throw e;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

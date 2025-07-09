@@ -179,4 +179,39 @@ public class UserDAO extends DBConnect {
         }
     }
 
+    public User getUserByIdForCheckout(int id) {
+        String sql = "SELECT user_id, username, email, password_hash, fullname, date_of_birth, "
+                + "address, phone, gender, role, status, created_at "
+                + "FROM Users WHERE user_id = ?";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    String username = rs.getString("username");
+                    String email = rs.getString("email");
+                    String password = rs.getString("password_hash");
+                    String fullname = rs.getString("fullname");
+                    java.sql.Date dob = rs.getDate("date_of_birth");
+                    String address = rs.getString("address");
+                    String phone = rs.getString("phone");
+                    String gender = rs.getString("gender");
+                    String role = rs.getString("role");
+                    boolean status = rs.getBoolean("status");
+                    java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+
+                    // Constructor đầy đủ của User
+                    return new User(userId, username, email, password, dob, address, phone, gender, role, status, createdAt, null);
+                }
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
 }
