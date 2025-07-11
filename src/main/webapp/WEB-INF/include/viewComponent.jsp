@@ -30,34 +30,7 @@
         }
     }
 </style>
-<title>Danh sách linh kiện - ${category}</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<style>
-    .component-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .component-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-    .btn {
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    .btn:hover {
-        transform: scale(1.05);
-    }
-    .error-message {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-</style>
+
 </head>
 <body class="bg-gray-100">
 
