@@ -45,7 +45,7 @@ public class orderDAO {
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
-            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
+//            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
             while (rs.next()) {
                 OrderDetail detail = new OrderDetail(
                         rs.getInt("order_item_id"),
@@ -57,7 +57,7 @@ public class orderDAO {
                         rs.getDouble("unit_price")
                 );
                 // Đúng logic: check theo userId, orderId, productId
-                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
+//                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
                 details.add(detail);
             }
         } catch (Exception e) {
@@ -331,6 +331,19 @@ public class orderDAO {
             e.printStackTrace();
         }
         return 0.0; // fallback
+    }
+
+    public boolean updateOrderStatus(int orderId, String newStatus) {
+        String sql = "UPDATE Orders SET status = ? WHERE order_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setInt(2, orderId);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }
