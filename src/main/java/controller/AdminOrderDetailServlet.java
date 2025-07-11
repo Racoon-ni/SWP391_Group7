@@ -9,7 +9,6 @@ import DAO.orderDAO;
 import model.Order;
 import model.OrderDetail;
 import model.ShippingInfo;
-import model.User;
 
 @WebServlet("/order-detail-admin")
 public class AdminOrderDetailServlet extends HttpServlet {
@@ -19,14 +18,11 @@ public class AdminOrderDetailServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            HttpSession session = request.getSession(false);
             int orderId = Integer.parseInt(request.getParameter("id"));
-            User user = (User) session.getAttribute("user");
 
-            int userId = user.getId();
             orderDAO dao = new orderDAO();
             Order order = dao.getOrderById(orderId);
-            List<OrderDetail> orderDetails = dao.getOrderDetails(orderId, userId);
+            List<OrderDetail> orderDetails = dao.getOrderDetails(orderId, order.getUserId());
             ShippingInfo shipping = dao.getShippingInfoByOrderId(orderId);
 
             if (order != null) {
