@@ -94,7 +94,7 @@ public class UserDAO extends DBConnect {
                     Date dateOfBirth = rs.getDate("date_of_birth");
                     String address = rs.getString("address");
                     String phone = rs.getString("phone");
-                    String gender = rs.getString("phone");
+                    String gender = rs.getString("gender");
                     String role = rs.getString("role");
                     boolean status = rs.getBoolean("status");
 

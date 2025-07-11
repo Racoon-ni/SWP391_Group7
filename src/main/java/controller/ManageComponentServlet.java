@@ -40,9 +40,20 @@ public class ManageComponentServlet extends HttpServlet {
         if (view == null || view.isEmpty() || view.equalsIgnoreCase("list")) {
 
             ComponentDAO comp = new ComponentDAO();
+            CategoryDAO c = new CategoryDAO();
 
-            ArrayList<Component> componentList = comp.getAllComponents();
+            ArrayList<Component> componentList;
+            String cateId = request.getParameter("cateId");
+            
+            if (cateId == null || cateId.isEmpty()) {
+                componentList = comp.getAllComponents(null);
+            } else {
+                componentList = comp.getAllComponents(cateId);
+            }
 
+            ArrayList<Category> cateList = c.getAllCategories();
+
+            request.setAttribute("cateList", cateList);
             request.setAttribute("componentList", componentList);
 
             request.getRequestDispatcher("/WEB-INF/include/component-list.jsp").forward(request, response);

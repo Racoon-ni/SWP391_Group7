@@ -10,11 +10,13 @@
 <%@include file="../include/admin-side-bar.jsp" %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<title>PCs List</title>
+<title>Components List</title>
 
 <%
     ArrayList<Component> componentList = (ArrayList<Component>) request.getAttribute("componentList");
 %>
+
+
 <div class="main-content">
     <div class="d-flex justify-content-end">
         <a href="${pageContext.request.contextPath}/manage-component?view=add" class="btn btn-success">
@@ -34,7 +36,28 @@
                 <th scope="col">Tồn kho</th>
                 <th scope="col">Ảnh</th>
                 <th scope="col">Trạng thái</th>
-                <th scope="col">Thể loại</th>
+                <th>
+                    Thể loại
+                    <form id ="filterForm" action="${pageContext.request.contextPath}/manage-component" method="GET" style="display: inline;">
+                        <button type="button" onclick="showDropdown()" style="background: none; border: none; cursor: pointer;">
+                            <i class="fa fa-filter"></i> 
+                        </button>
+
+                        <!-- Hidden select -->
+                        <select name="cateId" id="categorySelect" style="display: none;" onchange="document.getElementById('filterForm').submit()">
+                            <option value="">-- Chọn --</option>
+                            <c:if test="${not empty cateList}">
+                                <c:forEach items="${cateList}" var="cate">
+                                    <c:if test="${cate.categoryType == 'Component'}">
+                                        <option value="${cate.categoryId}">
+                                            ${cate.name}
+                                        </option>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
+                        </select>
+                    </form>
+                </th>
                 <th scope="col" style="text-align: center">Chức năng</th>
             </tr>
         </thead>
@@ -57,15 +80,13 @@
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
 
-                    <!-- Delete button for each PC -->
+
+                    <!-- Delete button for each Component -->
                     <a href="#" class="btn btn-danger" data-bs-toggle="modal"
                        data-bs-target="#deleteModal"
                        data-pcid="<%= comp.getId()%>">
                         <i class="fa-solid fa-trash"></i>
                     </a>
-
-                    <!-- One shared modal -->
-                    <%@ include file="delete-component.jsp" %>
 
                 </td>
 
@@ -76,8 +97,52 @@
             %>
         </tbody>
     </table>
-    <p>Không có PC nào trong danh sách này</p>
+    <p>Không có linh kiện nào trong danh sách này</p>
     <%
         }
     %>
+    <c:if test="${not empty param.cateId}">
+        <div style="    position: absolute; top: 20px;">
+            <button type="button" class="btn btn-danger" onclick="clearFilter()">
+                <i class="fa-solid fa-delete-left"></i> Xóa lọc
+            </button>
+        </div>
+    </c:if>
+
 </div>
+<!-- One shared modal -->
+<%@ include file="delete-component.jsp" %>
+
+<script>
+    function showDropdown() {
+        const select = document.getElementById('categorySelect');
+        select.style.display = 'block'; // or 'block' if needed
+        select.focus();
+
+        // Delay to prevent immediate close
+        setTimeout(() => {
+            function handleOutsideClick(event) {
+                if (!select.contains(event.target)) {
+                    select.style.display = 'none';
+                    document.removeEventListener('click', handleOutsideClick);
+                }
+            }
+            document.addEventListener('click', handleOutsideClick);
+        }, 0);
+    }
+
+    function clearFilter() {
+        const select = document.getElementById('categorySelect');
+        const form = document.getElementById('filterForm');
+
+        if (select && form) {
+            select.value = '';
+            form.submit();
+        } else {
+            window.location.href = 'manage-component';
+        }
+    }
+
+</script>
+
+

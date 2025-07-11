@@ -8,6 +8,7 @@ import config.DBConnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Category;
@@ -18,30 +19,50 @@ import model.Component;
  * @author Huynh Trong Nguyen - CE190356
  */
 public class ComponentDAO {
-    
-    public ArrayList<Component> getAllComponents() {
 
+    public ArrayList<Component> getAllComponents(String cateIdsParam) {
         ArrayList<Component> componentList = new ArrayList<>();
-        String sql = "SELECT p.product_id as p_id, p.name as p_name, p.description, p.price, p.stock, \n"
-                + "  p.image_url as image, p.status, c.name as cate_name \n"
-                + "  FROM Products p\n"
-                + "  JOIN Categories c on p.category_id = c.category_id\n"
-                + "  WHERE p.product_type = 'Component'";
+        ArrayList<Integer> cateIdList = new ArrayList<>();
 
-        try (
-                 PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
-            while (rs.next()) {
-                int id = rs.getInt("p_id");
-                String name = rs.getString("p_name");
-                String description = rs.getString("description");
-                double price = rs.getDouble("price");
-                int stock = rs.getInt("stock");
-                String imageUrl = rs.getString("image");
-                boolean status = rs.getBoolean("status");
-                Category category = new Category(0, 0, rs.getString("cate_name"), "");
+        StringBuilder sql = new StringBuilder("SELECT p.product_id as p_id, p.name as p_name, p.description, p.price, p.stock, "
+                + "p.image_url as image, p.status, c.name as cate_name "
+                + "FROM Products p "
+                + "JOIN Categories c on p.category_id = c.category_id "
+                + "WHERE p.product_type = 'Component'");
 
-                Component component = new Component(id, name, description, price, stock, imageUrl, category, status);
-                componentList.add(component);
+        boolean hasCategory = cateIdsParam != null && !cateIdsParam.isEmpty();
+        if (hasCategory) {
+            String[] cateIdArray = cateIdsParam.split(",");
+            for (String id : cateIdArray) {
+                cateIdList.add(Integer.parseInt(id.trim()));
+            }
+
+            // Add placeholders like ?,?,?
+            String placeholders = String.join(",", Collections.nCopies(cateIdList.size(), "?"));
+            sql.append(" AND p.category_id IN (").append(placeholders).append(")");
+        }
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql.toString())) {
+            if (hasCategory) {
+                for (int i = 0; i < cateIdList.size(); i++) {
+                    ps.setInt(i + 1, cateIdList.get(i)); // Bind each category ID
+                }
+            }
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("p_id");
+                    String name = rs.getString("p_name");
+                    String description = rs.getString("description");
+                    double price = rs.getDouble("price");
+                    int stock = rs.getInt("stock");
+                    String imageUrl = rs.getString("image");
+                    boolean status = rs.getBoolean("status");
+                    Category category = new Category(0, 0, rs.getString("cate_name"), "");
+
+                    Component component = new Component(id, name, description, price, stock, imageUrl, category, status);
+                    componentList.add(component);
+                }
             }
 
         } catch (Exception ex) {
@@ -108,8 +129,8 @@ public class ComponentDAO {
     public int updateComponent(Component component) {
 
         String sql = "Update Products SET name = ?, description = ?, price = ?,\n"
-                    + "stock = ?, category_id = ?, status = ?\n"
-                    + "WHERE product_id = ? ";
+                + "stock = ?, category_id = ?, status = ?\n"
+                + "WHERE product_id = ? ";
 
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setString(1, component.getName());

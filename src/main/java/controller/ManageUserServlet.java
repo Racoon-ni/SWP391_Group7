@@ -4,8 +4,8 @@
  */
 package controller;
 
-
 import DAO.UserDAO;
+import DAO.orderDAO;
 import java.io.IOException;
 
 import jakarta.servlet.ServletException;
@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import model.OrderDetail;
 
 import model.User;
 
@@ -58,6 +60,17 @@ public class ManageUserServlet extends HttpServlet {
             request.setAttribute("user", user);
 
             request.getRequestDispatcher("/WEB-INF/include/edit-user.jsp").forward(request, response);
+        } else if (view.equalsIgnoreCase("details")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            UserDAO uDAO = new UserDAO();
+            orderDAO dao = new orderDAO();
+            
+            User user = uDAO.getUserById(id);
+            List<OrderDetail> orderDetails = dao.getOrderDetailsByUserId(id);
+            
+            request.setAttribute("user", user);
+            request.setAttribute("orderDetails", orderDetails);
+            request.getRequestDispatcher("/WEB-INF/include/user-details.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("/WEB-INF/include/user-list.jsp").forward(request, response);
         }
@@ -83,8 +96,8 @@ public class ManageUserServlet extends HttpServlet {
                     String role = request.getParameter("role");
                     boolean status = Boolean.parseBoolean(request.getParameter("status"));
                     Date d = new Date();
-                    
-                    if (uDAO.updateUser(new User(id, "", "", "", "",d , "", "", "", role, status))== 1) {
+
+                    if (uDAO.updateUser(new User(id, "", "", "", "", d, "", "", "", role, status)) == 1) {
                         response.sendRedirect(request.getContextPath() + "/manage-user");
                     }
 
