@@ -10,7 +10,7 @@ package model;
  */
 public class Category {
     private int categoryId;
-    private int parentId;
+    private Integer parentId;
     private String name;
     private String categoryType;
 
@@ -33,11 +33,11 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
