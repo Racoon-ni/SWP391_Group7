@@ -111,6 +111,11 @@
         <i class="fa-solid fa-user"></i> Quản lý tài khoản
     </a>
 
+    <a href="${pageContext.request.contextPath}/StaffList">
+        <i class="fa-solid fa-user"></i> Quản lý Staff
+    </a>
+
+
     <a href="${pageContext.request.contextPath}/feedbacks">
         <i class="fa-solid fa-comment-dots"></i> Quản lý phản hồi
     </a>
