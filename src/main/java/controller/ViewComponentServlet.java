@@ -1,0 +1,71 @@
+package controller;
+
+import DAO.CategoriesDAO;
+import DAO.RatingDAO;
+import model.Category;
+import model.Product;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@WebServlet(name = "ViewComponentServlet", urlPatterns = {"/ViewComponent"})
+public class ViewComponentServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Map<String, Integer> parentCategoryMap = new HashMap<>();
+        parentCategoryMap.put("PC", 13);
+        parentCategoryMap.put("CPU", 4);
+        parentCategoryMap.put("Mainboard", 5);
+        parentCategoryMap.put("RAM", 3);
+        parentCategoryMap.put("Storage", 2);
+        parentCategoryMap.put("GPU", 6);
+        parentCategoryMap.put("PSU", 7);
+        parentCategoryMap.put("Case", 8);
+
+        String categoryKey = request.getParameter("category");
+        Integer parentId = parentCategoryMap.get(categoryKey);
+
+        List<Product> productList = new ArrayList<>();
+        String errorMessage = null;
+
+        try {
+            if (parentId == null) {
+                errorMessage = "Danh mục không hợp lệ.";
+            } else {
+                try {
+                    productList = new CategoriesDAO().getProductsByParentCategoryId(parentId);
+
+                    // ✅ Gán đánh giá trung bình và lượt đánh giá vào từng sản phẩm
+                    RatingDAO ratingDAO = new RatingDAO();
+                    Map<Integer, Double> avgStarsMap = ratingDAO.getAverageStars();
+                    Map<Integer, Integer> ratingCountsMap = ratingDAO.getRatingCounts();
+
+                    for (Product p : productList) {
+                        int pid = p.getProductId();
+                        p.setAvgStars(avgStarsMap.getOrDefault(pid, 0.0));
+                        p.setTotalRatings(ratingCountsMap.getOrDefault(pid, 0));
+                    }
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ViewComponentServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewComponentServlet.class.getName()).log(Level.SEVERE, null, ex);
+            errorMessage = "Lỗi khi truy xuất dữ liệu: " + ex.getMessage();
+        }
+
+        request.setAttribute("componentList", productList);
+        request.setAttribute("category", categoryKey);
+        request.setAttribute("errorMessage", errorMessage);
+        request.getRequestDispatcher("/WEB-INF/include/viewComponent.jsp").forward(request, response);
+    }
+}

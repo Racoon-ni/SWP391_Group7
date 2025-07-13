@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author ThinhLVCE181726 <your.name at your.org>
- */
 public class Product {
     private int productId;
     private String name;
@@ -17,11 +9,17 @@ public class Product {
     private String imageUrl;
     private String productType;
     private int categoryId;
-    private boolean status;
+    private int status;
+    // getters, setters
 
-    public Product() {}
+    // --- THÊM 2 FIELD MỚI ---
+    private double avgStars;      // Số sao trung bình
+    private int totalRatings;     // Số lượt đánh giá
 
-    public Product(int productId, String name, String description, double price, int stock, String imageUrl, String productType, int categoryId, boolean status) {
+    public Product() {
+    }
+
+    public Product(int productId, String name, String description, double price, int stock, String imageUrl, String productType, int categoryId, int status) {
         this.productId = productId;
         this.name = name;
         this.description = description;
@@ -33,7 +31,25 @@ public class Product {
         this.status = status;
     }
 
-    // Getter & Setter đầy đủ ở đây (bạn có thể sinh bằng IDE)
+    // Getter & Setter cho avgStars, totalRatings
+  
+    public double getAvgStars() {
+        return avgStars;
+    }
+
+    public void setAvgStars(double avgStars) {
+        this.avgStars = avgStars;
+    }
+
+    public int getTotalRatings() {
+        return totalRatings;
+    }
+
+    public void setTotalRatings(int totalRatings) {
+        this.totalRatings = totalRatings;
+    }
+
+    // ... Các getter/setter khác giữ nguyên như cũ ...
 
     public int getProductId() {
         return productId;
@@ -99,12 +115,11 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public boolean isStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(int status) {
         this.status = status;
     }
-    
 }

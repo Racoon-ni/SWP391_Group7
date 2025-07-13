@@ -62,23 +62,19 @@
         <img src="${pageContext.request.contextPath}/assets/images/icons8-view-headline-50.png" alt="modal" style="margin-right: 10px;"/>
     </button>
 
-    <!-- The Modal -->
+   <!-- The Modal -->
     <div id="myModal" class="modal">
-        <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
             <ul class="no-bullets">
-                <li>PC - Máy tính bàn</li>
-                <li>CPU (Bộ vi xử lý)</li>
-                <li>Mainboard (Bo mạch chủ)</li>
-                <li>RAM (Bộ nhớ tạm)</li>
-                <li>Ổ cứng (SSD/HDD)</li>
-                <li>GPU (Card màn hình)</li>
-                <li>PSU (Bộ nguồn)</li>
-                <li>Tản nhiệt (Cooling)</li>
-                <li>Màn hình (Monitor)</li>
-                <li>Bàn phím và Chuột</li>
-                <li>Vỏ máy (Case)</li>
+               <li><a href="listPC">PC - Máy tính bàn</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=CPU">CPU (Bộ vi xử lý)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Mainboard">Mainboard (Bo mạch chủ)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=RAM">RAM (Bộ nhớ)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Storage">Ổ cứng (SSD/HDD)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=GPU">Card màn hình (VGA)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PSU">Nguồn máy (PSU)</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ViewComponent?category=Case">Vỏ máy (Case)</a></li>
             </ul>
         </div>
     </div>

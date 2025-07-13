@@ -1,117 +1,195 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/include/header.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.*, model.Product" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
- <head>
-        <meta charset="UTF-8">
-        <title>PC Store</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet">
+<head>
+    <title>Danh sách linh kiện - ${category}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 2em;
+            color: #333;
+        }
+        .pc-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .pc-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            width: 260px;
+            padding: 16px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.3s ease, transform 0.2s;
+        }
+        .pc-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+        .pc-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+            background-color: #fafafa;
+        }
+        .pc-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            margin: 6px 0;
+            color: #222;
+        }
+        .pc-desc {
+            font-size: 0.92em;
+            color: #555;
+            height: 36px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+        }
+        .pc-price {
+            color: #cc1d1d;
+            font-weight: bold;
+            margin: 8px 0;
+            font-size: 1em;
+        }
+        .pc-stock {
+            font-size: 0.9em;
+            color: #007800;
+            margin-bottom: 8px;
+        }
+        .rating-info {
+            margin: 6px 0;
+            font-size: 0.9em;
+            text-align: center;
+            color: #444;
+        }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .pc-detail-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .pc-detail-btn.blue {
+            background-color: #005fff;
+            color: #fff;
+        }
+        .pc-detail-btn.blue:hover {
+            background-color: #0040b3;
+        }
+        .pc-detail-btn.green {
+            background-color: #1dbf36;
+            color: #fff;
+        }
+        .pc-detail-btn.green:hover {
+            background-color: #158a28;
+        }
+        .btn-wish {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        .btn-wish:hover {
+            background-color: #ffecec;
+            border-color: #cc1d1d;
+        }
+        .no-pc {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1.2em;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h2>Danh Sách ${category}</h2>
+    <div class="pc-container">
+        <c:choose>
+            <c:when test="${empty componentList}">
+                <div class="no-pc">Không có sản phẩm nào trong danh mục này.</div>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="pc" items="${componentList}">
+                    <div class="pc-card">
+                        <img class="pc-img" src="${pc.imageUrl == null ? 'images/default-pc.png' : 'images/' += pc.imageUrl}" alt="${pc.name}" />
+                        <div class="pc-title">${pc.name}</div>
+                        <div class="pc-desc">${pc.description}</div>
+                        <div class="pc-price">${pc.price} USD</div>
+                        <div class="pc-stock">Tồn kho: ${pc.stock}</div>
 
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-            }
-            .product-card img {
-                max-width: 100%;
-            }
-            .shadowed-navbar {
-                border-bottom: 2px solid black; /* Solid black line */
-                box-shadow: 0px 8px 8px -4px rgba(0, 0, 0, 0.4); /* Dark shadow */
-                z-index: 1030; /* Keeps it on top */
-                padding: 0 10px;
-                margin-bottom: 20px;
-            }
-            .annie-use-your-telescope {
-                font-family: "Annie Use Your Telescope", cursive;
-            }
-            
-        </style>
-    </head>
-    <body>
-       <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold annie-use-your-telescope" 
-                   href="${pageContext.request.contextPath}/home" 
-                   style="font-size: 4rem;">
-                    <span style="color: orange;">PC</span><span style="color: black;"> Store</span>
-                </a>
+                        <div class="rating-info">
+                            <c:choose>
+                                <c:when test="${pc.totalRatings > 0}">
+                                    <c:set var="avg" value="${pc.avgStars}" />
+                                    <c:set var="fullStars" value="${avg - (avg % 1)}" />
+                                    <c:set var="hasHalf" value="${avg - fullStars >= 0.25 && avg - fullStars < 0.75}" />
+                                    <c:set var="emptyStars" value="${5 - fullStars - (hasHalf ? 1 : 0)}" />
 
-                   <%@include file="../include/top-nav.jsp" %>
-                <form action="/search" method="GET" style="width: 30%; margin-top: 10px; margin-right: 10px">
-                    <div class="position-relative">
-                        <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px">
-                        <button type="submit" class="btn position-absolute top-50 end-0 translate-middle-y pe-3 border-0 bg-transparent">
-                            <i class="fas fa-search text-muted"></i>
-                        </button>
-                    </div>
-                </form>
+                                    <c:forEach var="i" begin="1" end="${fullStars}">
+                                        <i class="fa-solid fa-star" style="color: orange;"></i>
+                                    </c:forEach>
+                                    <c:if test="${hasHalf}">
+                                        <i class="fa-solid fa-star-half-stroke" style="color: orange;"></i>
+                                    </c:if>
+                                    <c:forEach var="i" begin="1" end="${emptyStars}">
+                                        <i class="fa-regular fa-star" style="color: orange;"></i>
+                                    </c:forEach>
+                                    <span style="margin-left: 4px; font-weight: bold;">
+                                        ${String.format("%.1f", avg)} / 5
+                                    </span>
+                                    <span style="color: gray;">(${pc.totalRatings} đánh giá)</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="color: gray;">Chưa có đánh giá</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
 
-
-                <div class="d-flex gap-5">    
-                    <a class="nav-link" href="#"><i class="fa-regular fa-user"></i> Đăng nhập/Đăng ký</a>
-                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
-                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
-                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
-                </div>
-            </div>
-        </nav>
-        <!-- US-11: View Components (Bootstrap version) -->
-        <section class="container py-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-uppercase fw-bold mb-0" style="color: #c5a992;">Linh kiện máy tính</h2>
-                <div class="d-flex flex-wrap gap-2">
-                    <select class="form-select">
-                        <option selected>Loại</option>
-                        <option>CPU</option>
-                        <option>RAM</option>
-                        <option>VGA</option>
-                        <option>SSD</option>
-                    </select>
-                    <select class="form-select">
-                        <option selected>Hãng</option>
-                        <option>Intel</option>
-                        <option>AMD</option>
-                        <option>Kingston</option>
-                    </select>
-                    <select class="form-select">
-                        <option selected>Giá</option>
-                        <option>0-2tr</option>
-                        <option>2-5tr</option>
-                        <option>5-10tr</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <c:forEach var="i" begin="1" end="10">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm">
-                            <img src="cpu.jpg" class="card-img-top" alt="CPU" style="height: 180px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-semibold">Intel Core i7</h5>
-                                <p class="fw-bold mb-2" style="color: #c5a992;">6.500.000₫</p>
-                                <a href="#" class="btn btn-sm mt-auto text-white" style="background-color: #c5a992;">Xem chi tiết</a>
-                            </div>
+                        <div class="btn-row">
+                            <a class="pc-detail-btn blue" href="ViewComponentDetail?productId=${pc.productId}">Xem chi tiết</a>
+                            <button type="submit" class="pc-detail-btn green">Thêm vào giỏ</button>
+                            <button class="btn-wish" title="Yêu thích"><i class="fa fa-heart"></i></button>
                         </div>
                     </div>
                 </c:forEach>
-            </div>
-
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link">Trang trước</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Trang sau</a></li>
-                </ul>
-            </nav>
-        </section>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    </body>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</body>
 </html>
-
-

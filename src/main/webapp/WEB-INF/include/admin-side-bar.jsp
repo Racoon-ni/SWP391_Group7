@@ -1,7 +1,9 @@
 
+<%@page import="model.User"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
     .user-ma{
@@ -86,59 +88,54 @@
     }
 </style>
 
-<%
-    String pageSelected = (String) request.getAttribute("pageSelected");
-%>  
-
-
 <!-- Sidebar -->
 <div class="sidebar">
     <h4 class="sidebar-title">Dashboard</h4> 
-    
-    <a href="#">
+
+
+    <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role == 'Admin'}">--%>
+    <a href="${pageContext.request.contextPath}/adminstaff-sales-stats">
         <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
+
     </a>
-    
+
+    <a href="${pageContext.request.contextPath}/manage-pc">
+        <i class="fa-solid fa-computer"></i>Quản lý PC
+    </a>
+
+    <a href="${pageContext.request.contextPath}/manage-component">
+        <i class="fa-solid fa-microchip"></i> Quản lý linh kiện
+    </a>
+
+    <a href="${pageContext.request.contextPath}/manage-user">
+        <i class="fa-solid fa-user"></i> Quản lý tài khoản
+    </a>
+
+    <a href="${pageContext.request.contextPath}/feedbacks">
+        <i class="fa-solid fa-comment-dots"></i> Quản lý phản hồi
+    </a>
+
     <a href="#">
-        <i class="fas fa-box"></i> Quản lý PC
+        <i class="fa-solid fa-tags"></i> Quản lý thể loại
     </a>
-    
-    <a href="#">
-        <i class="fas fa-users"></i> Quản lý nhân viên
-    </a>
-    
-    <a href="#">
-        <i class="fas fa-users"></i> Quản lý khách hàng
-    </a>
-    
-   
-    
-     <a href="#">
-        <i class="fas fa-users"></i> Quản lý linh kiện
-    </a>
-    
-     <a href="#">
-        <i class="fas fa-users"></i> Quản lý phản hồi
-    </a>
-    
-     <a href="#">
-        <i class="fas fa-users"></i> Quản lý thể loại
-    </a>
-    
-    <a href="#">
-        <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
-    </a>
-    
-    <a href="#">
+
+    <a href="${pageContext.request.contextPath}/manage-vouchers">
         <i class="fas fa-shopping-cart"></i> Quản lý Voucher
+    </a>
+    <%--</c:if>--%>
+
+    <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role != 'Customer'}">--%>
+    <a href="${pageContext.request.contextPath}/manage-orders">
+        <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
     </a>
 
     <!-- Logout button -->
     <div class="logout-container">
-        <a href="#" class="logout-btn" id="logoutButton">
+        <a href="logout" class="logout-btn" id="logoutButton">
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
         </a>
     </div>
+    <%--</c:if>--%>
 </div>
 
 <!-- Modal xác nhận đăng xuất -->
@@ -154,7 +151,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <a href="#" class="btn btn-danger">
+                <a href="logout" class="btn btn-danger">
                     <i class="fas fa-sign-out-alt"></i> Đăng xuất
                 </a>
             </div>
@@ -163,7 +160,8 @@
 </div>
 
 <!-- Bootstrap Bundle (gồm Popper) -->
-<script src="<%= request.getContextPath()%>/assets/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <!-- Fix lỗi modal bị đen màn hình -->
 <script>
