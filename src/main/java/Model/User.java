@@ -1,32 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.util.Date;
 
-/**
- *
- * @author Huynh Trong Nguyen - CE190356
- */
 public class User {
+
     private int id;
     private String username;
     private String password;
     private String email;
     private String fullname;
-    private Date dateOfBirth;
+    private Date dateOfBirth; // sửa về java.sql.Date cho dễ thao tác với DB
     private String address;
     private String phone;
     private String gender;
     private String role;
     private boolean status;
 
+    // Constructors
     public User() {
     }
 
-    public User(int id, String username, String password, String email, String fullname, Date dateOfBirth, String address, String phone, String gender, String role, boolean status) {
+    public User(int id, String username, String password, String email, String fullname,
+            Date dateOfBirth, String address, String phone, String gender, String role, boolean status) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -40,16 +35,7 @@ public class User {
         this.status = status;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-   
-
+    // Getters & Setters
     public int getId() {
         return id;
     }
@@ -64,6 +50,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -129,6 +123,4 @@ public class User {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    
 }
