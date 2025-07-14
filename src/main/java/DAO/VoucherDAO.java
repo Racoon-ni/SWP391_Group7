@@ -4,10 +4,17 @@ import model.Voucher;
 import java.sql.*;
 import java.util.Date;
 import config.DBConnect;
+import java.util.Date;
+import config.DBConnect;
 import java.util.ArrayList;
 import java.util.List;
 import DAO.NotificationDAO; // ✅ Đảm bảo import NotificationDAO
 
+/**
+ *
+ * @author Long
+ */
+// Lớp thao tác dữ liệu cho bảng Vouchers
 public class VoucherDAO {
 
     public List<Voucher> getAllVouchers() {
@@ -16,6 +23,13 @@ public class VoucherDAO {
 
         try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
+                Voucher v = new Voucher();
+                v.setVoucherId(rs.getInt("voucher_id"));
+                v.setCode(rs.getString("code"));
+                v.setDiscountPercent(rs.getInt("discount_percent"));
+                v.setMinOrderValue(rs.getDouble("min_order_value"));
+                v.setExpiredAt(rs.getDate("expired_at"));
+                list.add(v);
                 Voucher v = new Voucher();
                 v.setVoucherId(rs.getInt("voucher_id"));
                 v.setCode(rs.getString("code"));

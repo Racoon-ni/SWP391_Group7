@@ -40,9 +40,8 @@
                     Thể loại
                     <form id ="filterForm" action="${pageContext.request.contextPath}/manage-component" method="GET" style="display: inline;">
                         <button type="button" onclick="showDropdown()" style="background: none; border: none; cursor: pointer;">
-                            <i class="fa fa-filter"></i> <!-- FontAwesome icon, or use 🔍 -->
+                            <i class="fa fa-filter"></i> 
                         </button>
-
 
                         <!-- Hidden select -->
                         <select name="cateId" id="categorySelect" style="display: none;" onchange="document.getElementById('filterForm').submit()">
@@ -50,8 +49,7 @@
                             <c:if test="${not empty cateList}">
                                 <c:forEach items="${cateList}" var="cate">
                                     <c:if test="${cate.categoryType == 'Component'}">
-                                        <option value="${cate.categoryId}"
-                                                <c:if test="${not empty pc && pc.category.categoryId == cate.categoryId}">selected</c:if>>
+                                        <option value="${cate.categoryId}">
                                             ${cate.name}
                                         </option>
                                     </c:if>
@@ -83,15 +81,12 @@
                     </a>
 
 
-
-                    <!-- Delete button for each PC -->
+                    <!-- Delete button for each Component -->
                     <a href="#" class="btn btn-danger" data-bs-toggle="modal"
                        data-bs-target="#deleteModal"
                        data-pcid="<%= comp.getId()%>">
                         <i class="fa-solid fa-trash"></i>
                     </a>
-
-
 
                 </td>
 
@@ -138,9 +133,16 @@
 
     function clearFilter() {
         const select = document.getElementById('categorySelect');
-        select.value = '';
-        document.getElementById('filterForm').submit();
+        const form = document.getElementById('filterForm');
+
+        if (select && form) {
+            select.value = '';
+            form.submit();
+        } else {
+            window.location.href = 'manage-component';
+        }
     }
+
 </script>
 
 

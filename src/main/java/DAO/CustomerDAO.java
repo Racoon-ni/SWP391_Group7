@@ -11,7 +11,8 @@ public class CustomerDAO {
 
     public Customer getCustomerById(int userId) {
         String sql = "SELECT * FROM Users WHERE user_id = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -35,7 +36,8 @@ public class CustomerDAO {
     public boolean updateCustomerInfo(Customer c) {
         String sql = "UPDATE Users SET fullname=?, gender=?, date_of_birth=?,\n"
                 + "address=?, phone=?, email=? WHERE user_id=?";
-        try ( Connection con = DBConnect.connect();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnect.connect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, c.getFullName());
             ps.setString(2, c.getGender());
@@ -52,10 +54,10 @@ public class CustomerDAO {
             return false;
         }
     }
-
-    public static boolean checkOldPassword(int userId, String inputPassword) {
+     public static boolean checkOldPassword(int userId, String inputPassword) {
         String sql = "SELECT password_hash FROM Users WHERE user_id = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -70,7 +72,8 @@ public class CustomerDAO {
 
     public static boolean updatePassword(int userId, String newPassword) {
         String sql = "UPDATE Users SET password_hash = ? WHERE user_id = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, hash(newPassword));
             ps.setInt(2, userId);
             return ps.executeUpdate() > 0;

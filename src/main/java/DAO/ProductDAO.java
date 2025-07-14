@@ -25,8 +25,14 @@ public class ProductDAO {
     private int pcId;
 
     public List<Product> getAllPC() throws Exception {
+
+    private int pcId;
+
+    public List<Product> getAllPC() throws Exception {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -39,6 +45,11 @@ public class ProductDAO {
                 p.setImageUrl(rs.getString("image_url"));
                 p.setProductType(rs.getString("product_type"));
                 p.setCategoryId(rs.getInt("category_id"));
+                p.setStatus(rs.getInt("status"));
+                // Thêm:
+                p.setAvgStars(getAverageStars(p.getProductId()));
+                p.setTotalRatings(getTotalRatings(p.getProductId()));
+                p.setStatus(rs.getInt("status"));
                 p.setStatus(rs.getInt("status"));
                 // Thêm:
                 p.setAvgStars(getAverageStars(p.getProductId()));
