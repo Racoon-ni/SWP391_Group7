@@ -30,13 +30,6 @@ public class VoucherDAO {
                 v.setMinOrderValue(rs.getDouble("min_order_value"));
                 v.setExpiredAt(rs.getDate("expired_at"));
                 list.add(v);
-                Voucher v = new Voucher();
-                v.setVoucherId(rs.getInt("voucher_id"));
-                v.setCode(rs.getString("code"));
-                v.setDiscountPercent(rs.getInt("discount_percent"));
-                v.setMinOrderValue(rs.getDouble("min_order_value"));
-                v.setExpiredAt(rs.getDate("expired_at"));
-                list.add(v);
             }
         } catch (Exception e) {
             e.printStackTrace();

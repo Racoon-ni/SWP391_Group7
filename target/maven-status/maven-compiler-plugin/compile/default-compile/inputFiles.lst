@@ -1,5 +1,6 @@
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\AccessDeniedServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\LoginServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\StaffUpdateServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\AdminStaffOrderDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\AdminStaffLogoutServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ListPCServlet.java
@@ -10,6 +11,7 @@ C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\pcDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\GetVouchersServler.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\AddToCartServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\StaffCreateServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\CustomerChangePasswordServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Notification.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\User.java
@@ -17,6 +19,7 @@ C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\RatingDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\RateProductServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Rating.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\StaffDeleteServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\CategoryDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\SendFeedbackServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewMyVoucherServlet.java
@@ -32,12 +35,10 @@ C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\CustomerUpdateProfileServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\ShippingInfo.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\MyOrderServlet.java
-C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ProductListServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\CategoryListServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\DeleteCartItemServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\ProductDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\NotificationListServlet.java
-C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\WishlistItem.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\AddToWishlistServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\PCListServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\CustomerDAO.java
@@ -48,7 +49,6 @@ C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\CartDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\AdminStaffVoucherDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Wishlist.java
-C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\repository\orderDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\AdminOrderDetailServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\FeedbackDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewComponentServlet.java
@@ -59,11 +59,13 @@ C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Cart.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\AdminStaffSalesStatsServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\NotificationMarkAllReadServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\StaffListServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ViewVoucherServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Order.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\AdminStaffSalesStats.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\FeedbackManagementServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Feedback.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\StaffDetailServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\Model\Category.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\DashboardAccessFilterServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ManageComponentServlet.java
@@ -82,6 +84,7 @@ C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\DAO\WishlistDAO.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ReplyFeedbackFormServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\MyCartServlet.java
+C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\CategoryController.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\CancelOrderSevlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\DashBoardServlet.java
 C:\Users\hoaia\OneDrive\Desktop\SWP391_Group7\An\SWP391_Group7\SWP391_Group7\src\main\java\controller\ProductDetailServlet.java

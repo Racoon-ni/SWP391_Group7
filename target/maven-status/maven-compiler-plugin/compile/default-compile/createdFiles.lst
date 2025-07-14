@@ -1,3 +1,4 @@
+controller\StaffUpdateServlet.class
 DAO\CustomerDAO.class
 DAO\CartDAO.class
 DAO\AdminStaffOrderDAO.class
@@ -6,6 +7,7 @@ DAO\CategoryDAO.class
 controller\OrderDetailsServlet.class
 controller\MyOrderServlet.class
 controller\ProductDetailServlet.class
+controller\CategoryController.class
 controller\ViewComponentServlet.class
 model\Product.class
 controller\CustomerViewProfileServlet.class
@@ -23,8 +25,10 @@ DAO\pcDAO.class
 controller\DashBoardServlet.class
 model\PC.class
 controller\AccessDeniedServlet.class
+controller\StaffCreateServlet.class
 DAO\NotificationDAO.class
 controller\ReorderServlet.class
+controller\StaffDeleteServlet.class
 controller\AddToCartServlet.class
 controller\RateProductServlet.class
 model\AdminStaffVoucher.class
@@ -43,6 +47,7 @@ model\Cart.class
 controller\DeleteCartItemServlet.class
 config\DBConnect.class
 controller\AdminStaffOrderServlet.class
+controller\StaffDetailServlet.class
 DAO\ProductDAO.class
 model\AdminStaffOrder.class
 controller\MyFeedbackServlet.class
@@ -58,12 +63,10 @@ DAO\WishlistDAO.class
 controller\AdminOrderDetailServlet.class
 controller\adminstaff\AdminStaffSalesStatsServlet.class
 controller\AdminStaffVoucherServlet.class
-model\WishlistItem.class
 controller\NotificationListServlet.class
 controller\NotificationMarkAllReadServlet.class
 DAO\AdminStaffSalesDAO.class
 model\Feedback.class
-repository\orderDAO.class
 model\Order.class
 model\Wishlist.class
 controller\CategoryListServlet.class
@@ -73,12 +76,12 @@ controller\NotificationMarkReadServlet.class
 DAO\ComponentDAO.class
 controller\SendFeedbackServlet.class
 controller\CustomerUpdateProfileServlet.class
-controller\ProductListServlet.class
 controller\ViewComponentDetailServlet.class
 DAO\RatingDAO.class
 DAO\VoucherDAO.class
 controller\ManageComponentServlet.class
 controller\Handle404Servlet.class
+controller\StaffListServlet.class
 controller\MyCartServlet.class
 controller\ViewWishlistServlet.class
 model\Component.class

@@ -26,6 +26,10 @@ public class ReplyFeedbackServlet extends HttpServlet {
             // ✅ Lấy ID admin đang đăng nhập từ session
             Integer adminId = (Integer) session.getAttribute("adminId");
 
+            System.out.println("📌 adminId: " + adminId);
+            System.out.println("📌 feedbackId: " + feedbackId + ", customerId: " + customerId);
+            System.out.println("📌 replyMessage: " + replyMessage);
+
             boolean isSuccess = false;
 
             // ✅ Kiểm tra dữ liệu đầu vào
@@ -34,6 +38,8 @@ public class ReplyFeedbackServlet extends HttpServlet {
 
                 // ✅ Admin trả lời feedback (update DB)
                 int updated = feedbackDAO.replyToFeedback(feedbackId, adminId, replyMessage);
+                System.out.println("✅ Feedback updated, returned userId: " + updated);
+                
                 isSuccess = (updated > 0);
 
                 // ✅ Nếu update thành công -> Gửi thông báo cho khách hàng
@@ -44,7 +50,10 @@ public class ReplyFeedbackServlet extends HttpServlet {
                     String link = "/my-feedbacks";
 
                     notiDAO.sendNotification(customerId, title, message, link);
+                    System.out.println("📬 Đã gửi thông báo đến customerId: " + customerId);
                 }
+            } else {
+                System.out.println("❌ Dữ liệu đầu vào không hợp lệ hoặc adminId bị null");
             }
 
             // ✅ Gửi trạng thái xử lý về để hiển thị thông báo

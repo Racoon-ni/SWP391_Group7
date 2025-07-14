@@ -6,10 +6,9 @@ package DAO;
 
 /**
  *
- * @author ThinhLVCE181726 <your.name at your.org>
+ * @author ThinhLVCE181726
  */
 import config.DBConnect;
-import static config.DBConnect.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,22 +16,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Product;
-import java.sql.*;
-import java.util.*;
 
 public class ProductDAO {
 
     private int pcId;
 
-    public List<Product> getAllPC() throws Exception {
-
-    private int pcId;
-
+    // Lấy tất cả PC
     public List<Product> getAllPC() throws Exception {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
-
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -46,15 +38,9 @@ public class ProductDAO {
                 p.setProductType(rs.getString("product_type"));
                 p.setCategoryId(rs.getInt("category_id"));
                 p.setStatus(rs.getInt("status"));
-                // Thêm:
+                // Thêm rating
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
-                p.setStatus(rs.getInt("status"));
-                p.setStatus(rs.getInt("status"));
-                // Thêm:
-                p.setAvgStars(getAverageStars(p.getProductId()));
-                p.setTotalRatings(getTotalRatings(p.getProductId()));
-                p.setStatus(rs.getInt("status"));
                 list.add(p);
             }
         } catch (Exception e) {
@@ -63,7 +49,7 @@ public class ProductDAO {
         return list;
     }
 
-    // lấy sản phẩm bằng ID 
+    // Lấy sản phẩm bằng ID 
     public Product getProductById(int productId) {
         Product product = null;
         String sql = "SELECT * FROM Products WHERE product_id = ?";
@@ -89,12 +75,14 @@ public class ProductDAO {
         return product;
     }
 
+    // Lấy sản phẩm theo Category ID
     public List<Product> getProductByCategoryId(int categoryId) throws SQLException, ClassNotFoundException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE category_id = ? AND status = 1";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 Product p = new Product(
                         rs.getInt("product_id"),
@@ -107,11 +95,9 @@ public class ProductDAO {
                         rs.getInt("category_id"),
                         rs.getInt("status")
                 );
-                // Lấy thêm rating trung bình và số lượng đánh giá
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
                 list.add(p);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,7 +106,7 @@ public class ProductDAO {
         return list;
     }
 
-    // Lấy tất cả các linh kiện
+    // Lấy tất cả linh kiện
     public List<Product> getAllComponents() throws ClassNotFoundException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products p JOIN Categories c ON p.category_id = c.category_id WHERE p.product_type = 'Component' AND p.status = 1";
@@ -146,13 +132,13 @@ public class ProductDAO {
         return list;
     }
 
-    // Lấy sản phẩm theo category (ví dụ: RAM, CPU, Series)
+    // Lấy sản phẩm theo tên category
     public List<Product> getProductsByCategory(String category) throws ClassNotFoundException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products p JOIN Categories c ON p.category_id = c.category_id WHERE c.name = ? AND p.status = 1";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, category);  // Set category name (RAM, CPU, etc.)
+            ps.setString(1, category);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -167,10 +153,8 @@ public class ProductDAO {
                         rs.getInt("category_id"),
                         rs.getInt("status")
                 );
-                // Lấy rating cho từng sản phẩm:
                 setRatingInfoForProduct(p, conn);
                 list.add(p);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -196,7 +180,6 @@ public class ProductDAO {
         }
     }
 
-    // Lấy rating trung bình và số lượt đánh giá của 1 sản phẩm
     public double getAverageStars(int productId) {
         String sql = "SELECT AVG(stars) FROM Ratings WHERE product_id = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -269,7 +252,6 @@ public class ProductDAO {
     }
 
     public Product getPCById(int pcId) throws Exception {
-        // Sửa SQL cho đúng với bảng của bạn
         String sql = "SELECT * FROM Products WHERE product_id = ? AND product_type = 'PC'";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, pcId);
@@ -282,13 +264,11 @@ public class ProductDAO {
                 pc.setPrice(rs.getDouble("price"));
                 pc.setStock(rs.getInt("stock"));
                 pc.setImageUrl(rs.getString("image_url"));
-                // ...set các thuộc tính khác
                 return pc;
             }
         }
         return null;
     }
-    // Gửi thông báo sản phẩm mới đến tất cả khách hàng
 
     public void sendNewProductNotification(String productName) {
         String message = "Sản phẩm mới \"" + productName + "\" đã được cập nhật!";
@@ -303,5 +283,4 @@ public class ProductDAO {
             e.printStackTrace();
         }
     }
-
 }
