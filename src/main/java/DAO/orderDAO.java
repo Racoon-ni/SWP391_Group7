@@ -230,7 +230,7 @@ public class orderDAO {
         return false;
     }
 
-    public int reorder(int oldOrderId, String phone, String address, String paymentMethod, String[] productIds, String[] quantities, int userId, ShippingInfo oldShippingInfo, String newReceiverName) {
+    public int reorder(int oldOrderId, String phone, String address, String paymentMethod, String[] productIds, String[] quantities, int userId) {
         Connection conn = null;
         PreparedStatement psOrder = null, psShipping = null, psItemInsert = null;
         ResultSet rs = null;
@@ -239,7 +239,16 @@ public class orderDAO {
 
         try {
             conn = DBConnect.connect();
+        try {
+            conn = DBConnect.connect();
 
+            // 1. Tính tổng giá trị đơn hàng
+            for (int i = 0; i < productIds.length; i++) {
+                int productId = Integer.parseInt(productIds[i]);
+                int quantity = Integer.parseInt(quantities[i]);
+                double unitPrice = getProductPrice(productId);
+                totalPrice += unitPrice * quantity;
+            }
             // 1. Tính tổng giá trị đơn hàng
             for (int i = 0; i < productIds.length; i++) {
                 int productId = Integer.parseInt(productIds[i]);
@@ -254,7 +263,19 @@ public class orderDAO {
             psOrder.setInt(1, userId);
             psOrder.setDouble(2, totalPrice);
             psOrder.executeUpdate();
+            // 2. Tạo đơn hàng mới
+            String createOrder = "INSERT INTO Orders (user_id, status, total_price) VALUES (?, 'Pending', ?)";
+            psOrder = conn.prepareStatement(createOrder, Statement.RETURN_GENERATED_KEYS);
+            psOrder.setInt(1, userId);
+            psOrder.setDouble(2, totalPrice);
+            psOrder.executeUpdate();
 
+            rs = psOrder.getGeneratedKeys();
+            if (rs.next()) {
+                newOrderId = rs.getInt(1);
+            } else {
+                return -1; // Không tạo được đơn hàng
+            }
             rs = psOrder.getGeneratedKeys();
             if (rs.next()) {
                 newOrderId = rs.getInt(1);
@@ -273,7 +294,7 @@ public class orderDAO {
             psShipping.setString(5, paymentMethod);
             psShipping.executeUpdate();
 
-            // 4. Ghi các sản phẩm vào đơn hàng mới
+            // 4. Ghi các sản phẩm
             String insertItems = "INSERT INTO OrderItems (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
             psItemInsert = conn.prepareStatement(insertItems);
             for (int i = 0; i < productIds.length; i++) {
@@ -287,7 +308,44 @@ public class orderDAO {
                 psItemInsert.setDouble(4, unitPrice);
                 psItemInsert.executeUpdate();
             }
+                psItemInsert.setInt(1, newOrderId);
+                psItemInsert.setInt(2, productId);
+                psItemInsert.setInt(3, quantity);
+                psItemInsert.setDouble(4, unitPrice);
+                psItemInsert.executeUpdate();
+            }
 
+            return newOrderId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (psOrder != null) {
+                    psOrder.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psShipping != null) {
+                    psShipping.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psItemInsert != null) {
+                    psItemInsert.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return -1;
+    }
             return newOrderId;
         } catch (Exception e) {
             e.printStackTrace();
@@ -333,7 +391,20 @@ public class orderDAO {
         }
         return 0.0; // fallback
     }
+        String sql = "SELECT price FROM Products WHERE product_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0; // fallback
+    }
 
+<<<<<<< HEAD
     public boolean updateOrderStatus(int orderId, String newStatus) {
         String sql = "UPDATE Orders SET status = ? WHERE order_id = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
@@ -347,6 +418,9 @@ public class orderDAO {
         return false;
     }
  public void placeOrder(Order order) {
+=======
+    public void placeOrder(Order order) {
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
         String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
         String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -388,6 +462,7 @@ public class orderDAO {
             e.printStackTrace();
         }
     }
+<<<<<<< HEAD
     public void placeOrder(Order order, List<Cart> cartItems) {
     String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
     String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)";
@@ -442,4 +517,6 @@ public class orderDAO {
         e.printStackTrace();
     }
 }
+=======
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
 }

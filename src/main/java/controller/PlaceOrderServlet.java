@@ -27,12 +27,20 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
+<<<<<<< HEAD
         String fullname = request.getParameter("fullname");
+=======
+        String fullname = request.getParameter("fullName");
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
         String paymentMethod = request.getParameter("paymentMethod");
 
+<<<<<<< HEAD
         // Tạo thông tin giao hàng
+=======
+        // Tạo đối tượng ShippingInfo
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
         ShippingInfo shipping = new ShippingInfo();
         shipping.setReceiverName(fullname);
         shipping.setShippingAddress(address);
@@ -40,6 +48,7 @@ public class PlaceOrderServlet extends HttpServlet {
         shipping.setPaymentMethod(paymentMethod);
         shipping.setPaymentStatus("Pending");
 
+<<<<<<< HEAD
         // ✅ Lấy cart đã chọn từ session (đã được set ở CheckoutServlet)
         @SuppressWarnings("unchecked")
         List<Cart> cartItems = (List<Cart>) session.getAttribute("cartItems");
@@ -75,3 +84,24 @@ dispatcher.forward(request, response);
     }
 }
 
+=======
+        // Lấy giỏ hàng và tính tổng tiền
+        CartDAO cartDAO = new CartDAO();
+        List<Cart> cartItems = cartDAO.getCartItemsByUserId(user.getId());
+        double total = cartDAO.calculateTotal(cartItems);
+
+        // Tạo Order
+        Order order = new Order(0, user.getId(), "Pending", total, new Date());
+        order.setShippingInfo(shipping);
+
+        // Lưu đơn hàng
+        orderDAO orderDAO = new orderDAO();
+        orderDAO.placeOrder(order);
+
+        // (Tùy chọn) Xóa giỏ hàng sau khi đặt
+        // cartDAO.clearCartByUserId(user.getId());
+
+        response.sendRedirect("home.jsp");
+    }
+}
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d

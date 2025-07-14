@@ -13,8 +13,13 @@
     User user = (User) request.getAttribute("userInfo");
 
     String dobFormatted = "";
+<<<<<<< HEAD
     if (user != null && user.getDateOfBirth()!= null) {
         dobFormatted = new java.text.SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth());
+=======
+    if (user != null && user.getDate_of_birth() != null) {
+        dobFormatted = new java.text.SimpleDateFormat("yyyy-MM-dd").format(user.getDate_of_birth());
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
     }
 %>
 <!DOCTYPE html>
@@ -59,8 +64,13 @@
             <h4 class="section-title mb-4">Thông tin khách hàng</h4>
             <form method="post" action="place-order" id="orderForm">
                 <div class="mb-3">
+<<<<<<< HEAD
                     <label>Họ và tên</label>
                     <input type="text" class="form-control" name="fullname" value="<%= user != null ? user.getFullname(): "" %>" required>
+=======
+                    <label>Họ tên</label>
+                    <input type="text" class="form-control" name="fullname" value="<%= user != null ? user.getUsername() : "" %>" required>
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
                 </div>
                 <div class="mb-3">
                     <label>Giới tính</label>
@@ -86,7 +96,14 @@
                     <label>Ngày sinh</label>
                     <input type="date" class="form-control" name="dob" value="<%= dobFormatted %>">
                 </div>
+<<<<<<< HEAD
                 
+=======
+                <div class="mb-3">
+                    <label>CMND/CCCD</label>
+                    <input type="text" class="form-control" name="idCard" value="<%= user != null ? user.getIdCard() : "" %>">
+                </div>
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
                 <div class="mb-3">
                     <label>Hình thức thanh toán</label><br>
                     <div class="form-check">
@@ -121,7 +138,11 @@
                 <hr>
                 <div class="d-flex justify-content-between">
                     <strong>Tổng thành tiền:</strong>
+<<<<<<< HEAD
                     <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount*1000)  %> đ</strong>
+=======
+                    <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount) %> đ</strong>
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
                 </div>
                 <div class="mt-3">
                     <input type="text" class="form-control" placeholder="Mã khuyến mãi">
@@ -153,6 +174,7 @@
         });
     }
 </script>
+<<<<<<< HEAD
 <c:if test="${orderSuccess == true}">
     <script>
         Swal.fire({
@@ -170,5 +192,8 @@
         }, 5000);
     </script>
 </c:if>
+=======
+
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
 </body>
 </html>

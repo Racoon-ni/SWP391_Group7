@@ -2,6 +2,10 @@
 <%@ page import="model.Product" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<<<<<<< HEAD
+=======
+<%@ page import="java.text.SimpleDateFormat" %>
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
 
 <!DOCTYPE html>
 <html lang="en">

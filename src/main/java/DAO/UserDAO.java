@@ -189,6 +189,7 @@ public class UserDAO extends DBConnect {
         }
     }
 
+<<<<<<< HEAD
     // Kiểm tra username tồn tại
     public boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
@@ -273,6 +274,11 @@ public class UserDAO extends DBConnect {
     public User getUserByIdForCheckout(int id) {
         String sql = "SELECT user_id, username, email, password_hash, fullname, date_of_birth, "
                 + "address, phone, gender, role, status "
+=======
+    public User getUserByIdForCheckout(int id) {
+        String sql = "SELECT user_id, username, email, password_hash, fullname, date_of_birth, "
+                + "address, phone, gender, role, status, created_at "
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
                 + "FROM Users WHERE user_id = ?";
 
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
@@ -291,6 +297,7 @@ public class UserDAO extends DBConnect {
                     String gender = rs.getString("gender");
                     String role = rs.getString("role");
                     boolean status = rs.getBoolean("status");
+<<<<<<< HEAD
                     
 
                     // Constructor đầy đủ của User
@@ -298,6 +305,14 @@ public class UserDAO extends DBConnect {
                 }
             }
            
+=======
+                    java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+
+                    // Constructor đầy đủ của User
+                    return new User(userId, username, email, password, dob, address, phone, gender, role, status, createdAt, null);
+                }
+            }
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
 
         } catch (Exception ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -305,4 +320,8 @@ public class UserDAO extends DBConnect {
 
         return null;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
 }

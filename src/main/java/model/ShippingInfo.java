@@ -17,14 +17,22 @@ public class ShippingInfo {
 
     public ShippingInfo() {
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
    
     public String getReceiverName() { return receiverName; }
     public String getPhone() { return phone; }
     public String getShippingAddress() { return shippingAddress; }
     public String getPaymentMethod() { return paymentMethod; }
     public String getPaymentStatus() { return paymentStatus; }
+<<<<<<< HEAD
      public void setReceiverName(String receiverName) {
+=======
+
+    public void setReceiverName(String receiverName) {
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
         this.receiverName = receiverName;
     }
 
@@ -43,4 +51,8 @@ public class ShippingInfo {
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
+<<<<<<< HEAD
+=======
+    
+>>>>>>> fc2302132c71aa13aaed03ea183a3ae763ab616d
 }
