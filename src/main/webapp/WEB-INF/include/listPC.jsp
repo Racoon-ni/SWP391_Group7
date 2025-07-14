@@ -1,7 +1,7 @@
 <%-- 
     Document   : listPC
     Created on : Jun 29, 2025, 9:57:26 PM
-    Author     : ThinhLVCE181726 <your.name at your.org>
+    Author     : ThinhLVCE181726
 --%>
 <%@ include file="/WEB-INF/include/header.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -10,6 +10,8 @@
 <html>
     <head>
         <title>Danh Sách PC Bộ</title>
+        <!-- Font Awesome 6 để hiển thị sao -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -92,6 +94,11 @@
                 font-size: 1.2em;
                 color: #999;
             }
+            .rating-info {
+                margin-top: 4px;
+                font-size: 0.9em;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -112,10 +119,41 @@
                 <div class="pc-desc"><%= pc.getDescription()%></div>
                 <div class="pc-price">Giá: <%= String.format("%,.0f", pc.getPrice())%> VNĐ</div>
                 <div class="pc-stock">Còn hàng: <%= pc.getStock()%></div>
-               <a class="pc-detail-btn" href="pcDetail?pcId=<%= pc.getProductId() %>">Xem chi tiết</a>
 
+                <!-- ⭐ Hiển thị đánh giá trung bình chính xác không làm tròn -->
+                <div class="rating-info">
+                    <%
+                        if (pc.getTotalRatings() > 0) {
+                            double avg = pc.getAvgStars();
+                            int fullStars = (int) avg;
+                            boolean hasHalf = (avg - fullStars) >= 0.25 && (avg - fullStars) < 0.75;
+                            int emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+                    %>
+                    <%-- Sao đầy --%>
+                    <% for (int i = 0; i < fullStars; i++) { %>
+                    <i class="fa-solid fa-star" style="color: orange;"></i>
+                    <% } %>
+                    <%-- Nửa sao nếu có --%>
+                    <% if (hasHalf) { %>
+                    <i class="fa-solid fa-star-half-stroke" style="color: orange;"></i>
+                    <% } %>
+                    <%-- Sao rỗng --%>
+                    <% for (int i = 0; i < emptyStars; i++) { %>
+                    <i class="fa-regular fa-star" style="color: orange;"></i>
+                    <% }%>
+                    <span style="margin-left: 6px; font-weight: bold; color: black;">
+                        <%= String.format(Locale.forLanguageTag("vi"), "%.1f", avg)%> / 5 (<%= pc.getTotalRatings()%> đánh giá)
+                    </span>
+                    <% } else { %>
+                    <span style="color: gray;">Chưa có đánh giá</span>
+                    <% }%>
+                </div>
+
+
+
+                <a class="pc-detail-btn" href="pcDetail?pcId=<%= pc.getProductId()%>">Xem chi tiết</a>
                 <button type="submit" class="pc-detail-btn" style="background:#1dbf36;">Thêm vào giỏ</button>
-                 <button class="btn btn-wish" title="Yêu thích"><i class="fa fa-heart"></i></button>
+                <button class="btn btn-wish" title="Yêu thích"><i class="fa fa-heart"></i></button>
             </div>
             <%
                     }
@@ -124,4 +162,3 @@
         </div>
     </body>
 </html>
-

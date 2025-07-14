@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.CategoryDAO;
+import DAO.NotificationDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -98,18 +99,30 @@ public class ManagePCServlet extends HttpServlet {
         CategoryDAO c = new CategoryDAO();
         if (act != null) {
             switch (act) {
-                case "create": // not validate yet
+                case "create":
                     String name = request.getParameter("name");
                     String description = request.getParameter("description");
                     double price = Double.parseDouble(request.getParameter("price"));
                     int stock = Integer.parseInt(request.getParameter("stock"));
                     int cateId = Integer.parseInt(request.getParameter("cateId"));
 
-                    if (p.addPC(new PC(0, name, description, price, stock, "", c.getCategoryById(cateId), true)) == 1) {
-                        response.sendRedirect(request.getContextPath() + "/manage-pc");
-                    }
+                    PC newPC = new PC(0, name, description, price, stock, "", c.getCategoryById(cateId), true);
 
+                    int productId = p.addPC(newPC); // ✅ Lấy productId sau khi thêm
+
+                    if (productId != -1) {
+                        // ✅ Gửi thông báo với link chi tiết PC
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        notiDAO.sendProductUpdateToAllUsers(name, "pc", productId); // Gửi kèm id
+
+                        response.sendRedirect(request.getContextPath() + "/manage-pc");
+                    } else {
+                        // Gửi lỗi nếu thêm thất bại
+                        request.setAttribute("error", "Không thể thêm sản phẩm.");
+                        request.getRequestDispatcher("/create-pc.jsp").forward(request, response);
+                    }
                     break;
+
                 case "edit": // not validate yetư
                     int id = Integer.parseInt(request.getParameter("id"));
                     name = request.getParameter("name");

@@ -3,16 +3,21 @@ package model;
 import java.sql.Timestamp;
 
 public class Feedback {
+
     private int feedbackId;
     private int userId;
-    private String userName;  // ✅ THÊM dòng này
+    private String userName;
     private String title;
     private String message;
     private String status;
     private Timestamp createdAt;
 
-    // Getters & Setters
+    // Các trường cho admin trả lời
+    private String replyMessage;
+    private int replyBy;
+    private Timestamp replyAt;
 
+    // Getter & Setter
     public int getFeedbackId() {
         return feedbackId;
     }
@@ -29,11 +34,11 @@ public class Feedback {
         this.userId = userId;
     }
 
-    public String getUserName() {           // ✅ THÊM getter
+    public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {   // ✅ THAY ĐỔI từ throw lỗi → gán giá trị
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
@@ -67,5 +72,29 @@ public class Feedback {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getReplyMessage() {
+        return replyMessage;
+    }
+
+    public void setReplyMessage(String replyMessage) {
+        this.replyMessage = replyMessage;
+    }
+
+    public int getReplyBy() {
+        return replyBy;
+    }
+
+    public void setReplyBy(int replyBy) {
+        this.replyBy = replyBy;
+    }
+
+    public Timestamp getReplyAt() {
+        return replyAt;
+    }
+
+    public void setReplyAt(Timestamp replyAt) {
+        this.replyAt = replyAt;
     }
 }

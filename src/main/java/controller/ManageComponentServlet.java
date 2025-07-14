@@ -6,6 +6,8 @@ package controller;
 
 import DAO.CategoryDAO;
 import DAO.ComponentDAO;
+import DAO.NotificationDAO;
+import DAO.ProductDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,7 +46,7 @@ public class ManageComponentServlet extends HttpServlet {
 
             ArrayList<Component> componentList;
             String cateId = request.getParameter("cateId");
-            
+
             if (cateId == null || cateId.isEmpty()) {
                 componentList = comp.getAllComponents(null);
             } else {
@@ -98,18 +100,22 @@ public class ManageComponentServlet extends HttpServlet {
         CategoryDAO c = new CategoryDAO();
         if (act != null) {
             switch (act) {
-                case "create": // not validate yet
+                case "create":
                     String name = request.getParameter("name");
                     String description = request.getParameter("description");
                     double price = Double.parseDouble(request.getParameter("price"));
                     int stock = Integer.parseInt(request.getParameter("stock"));
                     int cateId = Integer.parseInt(request.getParameter("cateId"));
 
-                    if (comp.addComponent(new Component(0, name, description, price, stock, "", c.getCategoryById(cateId), true)) == 1) {
+                    Component newComponent = new Component(0, name, description, price, stock, "", c.getCategoryById(cateId), true);
+                    if (comp.addComponent(newComponent) == 1) {
+                        int newId = comp.getLastInsertedComponentId();
+                        new NotificationDAO().sendProductUpdateToAllUsers(name, "component", newId);
+
                         response.sendRedirect(request.getContextPath() + "/manage-component");
                     }
-
                     break;
+
                 case "edit": // not validate yetư
                     int id = Integer.parseInt(request.getParameter("id"));
                     name = request.getParameter("name");
