@@ -14,10 +14,33 @@ public class ShippingInfo {
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
     }
+
+    public ShippingInfo() {
+    }
+    
    
     public String getReceiverName() { return receiverName; }
     public String getPhone() { return phone; }
     public String getShippingAddress() { return shippingAddress; }
     public String getPaymentMethod() { return paymentMethod; }
     public String getPaymentStatus() { return paymentStatus; }
+     public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 }

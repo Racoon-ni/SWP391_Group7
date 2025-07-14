@@ -10,6 +10,7 @@ public class Product {
     private String productType;
     private int categoryId;
     private int status;
+    private Category category;
     // getters, setters
 
     // --- THÊM 2 FIELD MỚI ---
@@ -29,6 +30,16 @@ public class Product {
         this.productType = productType;
         this.categoryId = categoryId;
         this.status = status;
+    }
+
+    
+     public Category getCategory() {
+        return category;
+    }
+
+    // Getter & Setter đầy đủ ở đây (bạn có thể sinh bằng IDE)
+    public void setCategory(Category category) {    
+        this.category = category;
     }
 
     // Getter & Setter cho avgStars, totalRatings

@@ -9,49 +9,46 @@ import model.Product;
 
 public class CategoriesDAO {
 
-    public List<Product> getProductsByParentCategoryId(int parentId) throws SQLException, ClassNotFoundException {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock, p.image_url, p.product_type, p.status, "
-                + "c.category_id, c.parent_id, c.name AS category_name, c.category_type "
-                + "FROM Products p "
-                + "INNER JOIN Categories c ON p.category_id = c.category_id "
-                + "WHERE (c.category_id = ? OR c.parent_id = ?) AND p.status = 1";
+    public List<Product> getProductsByCategoryId(int categoryId) throws SQLException, ClassNotFoundException {
+    List<Product> list = new ArrayList<>();
+    String sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock, p.image_url, p.product_type, p.status, " +
+                 "c.category_id, c.name AS category_name, c.category_type, c.parent_id " +
+                 "FROM Products p " +
+                 "INNER JOIN Categories c ON p.category_id = c.category_id " +
+                 "WHERE p.category_id = ? AND p.status = 1";
 
-        try ( Connection conn = DBConnect.connect()) {
-            if (conn == null) {
-                throw new SQLException("Không thể kết nối đến cơ sở dữ liệu.");
-            }
-            try ( PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, parentId);
-                ps.setInt(2, parentId);
-                ResultSet rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    Product p = new Product();
-                    p.setProductId(rs.getInt("product_id"));
-                    p.setName(rs.getString("name") != null ? rs.getString("name") : "");
-                    p.setDescription(rs.getString("description") != null ? rs.getString("description") : "");
-                    p.setPrice(rs.getDouble("price"));
-                    p.setStock(rs.getInt("stock"));
-                    p.setImageUrl(rs.getString("image_url") != null ? rs.getString("image_url") : "");
-                    p.setProductType(rs.getString("product_type") != null ? rs.getString("product_type") : "");
-                    p.setStatus(rs.getInt("status"));
-
-                    Category c = new Category();
-                    c.setCategoryId(rs.getInt("category_id"));
-                    c.setParentId(rs.getInt("parent_id"));
-                    c.setName(rs.getString("category_name") != null ? rs.getString("category_name") : "");
-                    c.setCategoryType(rs.getString("category_type") != null ? rs.getString("category_type") : "");
-                    p.setCategoryId(1);
-
-                    list.add(p);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+    try (Connection conn = DBConnect.connect()) {
+        if (conn == null) {
+            throw new SQLException("Không thể kết nối đến cơ sở dữ liệu.");
         }
-        return list;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setProductType(rs.getString("product_type"));
+                p.setStatus(rs.getInt("status"));
+
+                Category c = new Category();
+                c.setCategoryId(rs.getInt("category_id"));
+                c.setName(rs.getString("category_name"));
+                c.setCategoryType(rs.getString("category_type"));
+                c.setParentId(rs.getInt("parent_id"));
+                p.setCategory(c);
+
+                list.add(p);
+            }
+        }
     }
+    return list;
+}
+
 
 }

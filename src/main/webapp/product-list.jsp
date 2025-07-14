@@ -1,32 +1,22 @@
-<%-- 
-    Document   : product-list
-    Created on : Jun 20, 2025, 12:05:21 AM
-    Author     : ThinhLVCE181726 <your.name at your.org>
---%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Product" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Danh sách PC</title>
-        <style>
-            table {
-                border-collapse: collapse;
-                width: 90%;
-            }
-            th, td {
-                border: 1px solid #ccc;
-                padding: 8px;
-                text-align: center;
-            }
-            img {
-                width: 90px;
-            }
-        </style>
-        <!-- Thêm vào <head> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="assets/css/styles.css" rel="stylesheet" />
+        <style>
+            .card-img-top {
+                height: 180px;
+                object-fit: cover;
+            }
+            .card-title {
+                font-size: 1.1rem;
+            }
+        </style>
     </head>
     <body>
         <div class="container py-4">
@@ -36,54 +26,55 @@
                     List<Product> products = (List<Product>) request.getAttribute("products");
                     if (products != null && !products.isEmpty()) {
                         for (Product p : products) {
+                            String imgUrl = p.getImageUrl() != null ? p.getImageUrl() : "https://via.placeholder.com/250x180?text=No+Image";
                 %>
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 shadow">
-                        <%
-                            String imgUrl = p.getImageUrl() != null ? p.getImageUrl() : "https://via.placeholder.com/250x180?text=No+Image";
-                        %>
-                        <img src="<%= imgUrl%>" class="card-img-top" style="height:180px; object-fit:cover;">
+                        <img src="<%= imgUrl%>" class="card-img-top" alt="Ảnh sản phẩm">
                         <div class="card-body">
-                            <h5 class="card-title" style="font-size: 1.1rem;"><%= p.getName()%></h5>
-                            <div class="mb-1">
-                                <%
-                                    if (p.getTotalRatings() > 0) {
-                                %>
-                                <span style="color: orange; font-weight: bold;">
-                                    &#9733; <%= String.format("%.1f", p.getAvgStars())%> / 5
-                                </span>
-                                <span class="text-muted">
-                                    (<%= p.getTotalRatings()%> đánh giá)
-                                </span>
-                                <%
-                                } else {
-                                %>
-                                <span class="text-muted fst-italic">Chưa có đánh giá</span>
-                                <%
-                                    }
-                                %>
-                            </div>
-
+                            <h5 class="card-title"><%= p.getName()%></h5>
                             <p class="card-text text-truncate" title="<%= p.getDescription()%>"><%= p.getDescription()%></p>
-                            <div class="mb-2 fw-bold text-primary" style="font-size: 1.1rem;">
-
-                                <%= String.format("%,.0f", p.getPrice())%> đ
-                            </div>
+                            <div class="mb-2 fw-bold text-primary"><%= String.format("%,.0f", p.getPrice())%> đ</div>
                             <div class="mb-2"><span class="badge bg-secondary">Kho: <%= p.getStock()%></span></div>
                         </div>
                         <div class="card-footer bg-white">
-                            <!-- Nút Thêm vào giỏ hàng -->
-                            <a href="#" class="btn btn-outline-primary btn-sm w-100">Thêm vào giỏ</a>
-                            <!-- Link Xem Chi Tiết -->
-                            <a href="product-detail?id=<%= p.getProductId()%>" class="btn btn-outline-secondary btn-sm w-100 mt-2">Xem chi tiết</a>
+                            <!-- Thêm vào giỏ -->
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.user}">
+                                    <form method="post" action="${pageContext.request.contextPath}/AddToCart">
+                                        <input type="hidden" name="productId" value="<%= p.getProductId()%>" />
+                                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                                            <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+                                        </button>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="btn btn-primary btn-sm w-100 text-white">
+                                        <a href="${pageContext.request.contextPath}/login" class="btn btn-primary btn-sm w-100 text-white text-center">
+                                            <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+                                        </a>
+                                    </button>
+
+                                </c:otherwise>
+                            </c:choose>
+
+                            <!-- Xem chi tiết -->
+                            <a href="product-detail?id=<%= p.getProductId()%>" class="btn btn-outline-secondary btn-sm w-100 mt-2">
+                                Xem chi tiết
+                            </a>
                         </div>
                     </div>
                 </div>
                 <%
                     }
-                } else { %>
-                <div class="col-12"><div class="alert alert-warning text-center">Không có dữ liệu</div></div>
-                <% }%>
+                } else {
+                %>
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">Không có dữ liệu</div>
+                </div>
+                <%
+                    }
+                %>
             </div>
         </div>
     </body>
