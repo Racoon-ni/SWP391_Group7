@@ -162,7 +162,7 @@
                 </tr>
             </thead>
             <h4>Cập nhật trạng thái đơn hàng</h4>
-            <form action="manage-orders" method="post" style="margin-top: 20px;">
+            <form action="admin/manage-orders/update-status" method="post" style="margin-top: 20px;">
                 <input type="hidden" name="orderId" value="${order.orderId}" />
 
                 <label for="status">Trạng thái mới:</label>

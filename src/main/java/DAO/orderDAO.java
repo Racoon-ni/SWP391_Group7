@@ -1,5 +1,7 @@
 package DAO;
 
+import DAO.NotificationDAO;
+import model.Notification;
 import config.DBConnect;
 import model.OrderDetail;
 import model.Order;
@@ -45,7 +47,7 @@ public class orderDAO {
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
-//            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
+            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
             while (rs.next()) {
                 OrderDetail detail = new OrderDetail(
                         rs.getInt("order_item_id"),
@@ -57,41 +59,7 @@ public class orderDAO {
                         rs.getDouble("unit_price")
                 );
                 // Đúng logic: check theo userId, orderId, productId
-//                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
-                details.add(detail);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return details;
-    }
-
-    public List<OrderDetail> getOrderDetailsByUserId(int userId) {
-        List<OrderDetail> details = new ArrayList<>();
-        String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id,\n"
-                + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price \n"
-                + "FROM OrderItems oi \n"
-                + "JOIN Products p ON oi.product_id = p.product_id\n"
-                + "Join Orders o ON o.order_id = oi.order_id\n"
-                + "WHERE o.user_id = ?";
-        
-        
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-//            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
-            while (rs.next()) {
-                OrderDetail detail = new OrderDetail(
-                        rs.getInt("order_item_id"),
-                        rs.getInt("order_id"),
-                        rs.getInt("product_id"),
-                        rs.getString("product_name"),
-                        rs.getString("image_url"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("unit_price")
-                );
-                // Đúng logic: check theo userId, orderId, productId
-//                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
+                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
                 details.add(detail);
             }
         } catch (Exception e) {
@@ -334,16 +302,108 @@ public class orderDAO {
     }
 
     public boolean updateOrderStatus(int orderId, String newStatus) {
-        String sql = "UPDATE Orders SET status = ? WHERE order_id = ?";
+        String updateSQL = "UPDATE Orders SET status = ? WHERE order_id = ?";
+        String getUserSQL = "SELECT user_id FROM Orders WHERE order_id = ?";
+        Connection conn = null;
+        PreparedStatement psUpdate = null;
+        PreparedStatement psGetUser = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.connect();
+
+            // Lấy user_id của đơn hàng
+            psGetUser = conn.prepareStatement(getUserSQL);
+            psGetUser.setInt(1, orderId);
+            rs = psGetUser.executeQuery();
+
+            int userId = -1;
+            if (rs.next()) {
+                userId = rs.getInt("user_id");
+            } else {
+                return false; // không tìm thấy đơn hàng
+            }
+
+            // Cập nhật trạng thái đơn hàng
+            psUpdate = conn.prepareStatement(updateSQL);
+            psUpdate.setString(1, newStatus);
+            psUpdate.setInt(2, orderId);
+            int rows = psUpdate.executeUpdate();
+
+            if (rows > 0) {
+                // Gửi thông báo
+                String title = "Cập nhật đơn hàng";
+                String message = "Đơn hàng #" + orderId + " đã được cập nhật trạng thái: " + newStatus;
+                String link = "/order-detail?id=" + orderId;
+
+                NotificationDAO dao = new NotificationDAO();
+                dao.sendNotification(userId, title, message, link);
+
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psUpdate != null) {
+                    psUpdate.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (psGetUser != null) {
+                    psGetUser.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        return false;
+    }
+
+    public List<OrderDetail> getOrderDetailsByUserId(int userId) {
+        List<OrderDetail> details = new ArrayList<>();
+        String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id,\n"
+                + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price \n"
+                + "FROM OrderItems oi \n"
+                + "JOIN Products p ON oi.product_id = p.product_id\n"
+                + "Join Orders o ON o.order_id = oi.order_id\n"
+                + "WHERE o.user_id = ?";
+
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, newStatus);
-            ps.setInt(2, orderId);
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDetail detail = new OrderDetail(
+                        rs.getInt("order_item_id"),
+                        rs.getInt("order_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("product_name"),
+                        rs.getString("image_url"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("unit_price")
+                );
+
+                details.add(detail);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return details;
     }
 
 }

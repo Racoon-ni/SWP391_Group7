@@ -47,10 +47,15 @@ public class AdminStaffVoucherServlet extends HttpServlet {
 
             boolean success = voucherDAO.addVoucher(voucher);
             if (success) {
+                // ✅ Gửi thông báo voucher mới đến khách hàng
+                DAO.NotificationDAO notiDAO = new DAO.NotificationDAO();
+                notiDAO.sendVoucherUpdateToAllUsers(code);
+
                 response.sendRedirect("manage-vouchers?success=true");
             } else {
                 response.sendRedirect("manage-vouchers?error=true");
             }
+
         } else if ("edit".equals(action)) {
             // Cập nhật voucher
             int voucherId = Integer.parseInt(request.getParameter("voucherId"));
@@ -68,6 +73,7 @@ public class AdminStaffVoucherServlet extends HttpServlet {
             } else {
                 response.sendRedirect("manage-vouchers?error=true");
             }
+
         } else if ("delete".equals(action)) {
             // Xóa voucher
             int voucherId = Integer.parseInt(request.getParameter("voucherId"));
@@ -80,4 +86,5 @@ public class AdminStaffVoucherServlet extends HttpServlet {
             }
         }
     }
+
 }
