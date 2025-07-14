@@ -14,6 +14,8 @@
         <div class="col-md-9 mt-5">
             <!-- Carousel -->
             <%@include file="/WEB-INF/include/carousel.jsp" %>
+            <!-- Category -->
+            <%@include file="/WEB-INF/include/category-list.jsp" %>
             <!-- PC Best Seller -->
             <%@include file="/WEB-INF/include/pc-best-seller.jsp" %>
         </div>
