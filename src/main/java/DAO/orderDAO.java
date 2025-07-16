@@ -404,7 +404,7 @@ public class orderDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return details;
     }
 public void placeOrder(Order order) {
         String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
