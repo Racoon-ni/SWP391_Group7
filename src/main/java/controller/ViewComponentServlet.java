@@ -19,6 +19,21 @@ public class ViewComponentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Map ánh xạ key từ URL sang category_id trong DB
+        Map<String, Integer> categoryMap = new HashMap<>();
+        categoryMap.put("PC", 1);
+        categoryMap.put("CPU", 2);
+        categoryMap.put("RAM", 3);
+        categoryMap.put("Mainboard", 4);
+        categoryMap.put("VGA", 5);
+        categoryMap.put("SSD", 6);
+        categoryMap.put("HDD", 7);
+        categoryMap.put("PSU", 8);
+        categoryMap.put("Case", 9);
+        categoryMap.put("Tản nhiệt", 10);
+        categoryMap.put("Màn hình", 11);
+        categoryMap.put("Bàn phím", 12);
+        categoryMap.put("Chuột", 13);
 
         Map<String, Integer> parentCategoryMap = new HashMap<>();
         parentCategoryMap.put("PC", 13);
@@ -31,16 +46,17 @@ public class ViewComponentServlet extends HttpServlet {
         parentCategoryMap.put("Case", 8);
 
         String categoryKey = request.getParameter("category");
-        Integer parentId = parentCategoryMap.get(categoryKey);
+        Integer categoryId = categoryMap.get(categoryKey);
 
         List<Product> productList = new ArrayList<>();
         String errorMessage = null;
 
         try {
-            if (parentId == null) {
+            if (categoryId == null) {
                 errorMessage = "Danh mục không hợp lệ.";
             } else {
                 try {
+                    productList = new CategoriesDAO().getProductsByCategoryId(categoryId);
                     productList = new CategoriesDAO().getProductsByParentCategoryId(parentId);
 
                     // ✅ Gán đánh giá trung bình và lượt đánh giá vào từng sản phẩm
@@ -69,3 +85,5 @@ public class ViewComponentServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/include/viewComponent.jsp").forward(request, response);
     }
 }
+
+

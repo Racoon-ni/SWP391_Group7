@@ -232,6 +232,12 @@
             </div>
         </div>
     </nav>
+                    <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
+                         <a class="nav-link" href="${pageContext.request.contextPath}/my-carts"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                </div>
+            </div>
+        </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
