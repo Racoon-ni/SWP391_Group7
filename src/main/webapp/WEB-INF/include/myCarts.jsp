@@ -6,12 +6,12 @@
         response.sendRedirect(request.getContextPath() + "/login");
     }
 %>
-
 <html>
 <head>
     <title>Giỏ hàng của bạn</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .cart-title {
             font-size: 2rem;
@@ -60,29 +60,34 @@
         <c:otherwise>
             <h2 class="cart-title mb-4"><i class="fas fa-shopping-cart"></i> Giỏ hàng của bạn</h2>
 
-            <form action="checkout.jsp" method="post">
+            <form action="${pageContext.request.contextPath}/checkout" method="post">
                 <div class="row">
                     <div class="col-lg-8">
                         <table class="table table-hover cart-table">
                             <thead class="table-dark">
-                                <tr>
-                                    <th></th>
-                                    <th>Sản phẩm</th>
-                                    <th>Đơn giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Thành tiền</th>
-                                    <th></th>
-                                </tr>
+                            <tr>
+                                <th></th>
+                                <th>Sản phẩm</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                                <th></th>
+                            </tr>
                             </thead>
                             <tbody>
                             <c:forEach var="item" items="${cartItems}">
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="selectedItems" value="${item.cartItemId}" />
+                                        <input type="checkbox"
+                                               name="selectedItems"
+                                               value="${item.cartItemId}"
+                                               class="cart-checkbox"
+                                               data-price="${item.price}"
+                                               data-quantity="${item.quantity}" />
                                         <img src="${item.imageUrl}" alt="${item.productName}" />
                                     </td>
                                     <td>
-                                        <a href="productDetail.jsp?id=${item.productId}" class="text-decoration-none text-dark">
+                                        <a href="product-detail?id=${item.productId}" class="text-decoration-none text-dark">
                                             ${item.productName}
                                         </a>
                                     </td>
@@ -102,10 +107,11 @@
                                     </td>
                                     <td>${item.price * item.quantity} đ</td>
                                     <td>
-                                        <a href="${pageContext.request.contextPath}/DeleteCartItem?id=${item.cartItemId}" 
-                                           class="btn btn-sm btn-outline-danger">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                onclick="confirmDelete('${pageContext.request.contextPath}/DeleteCartItem?id=${item.cartItemId}')">
                                             <i class="fas fa-trash"></i>
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -117,9 +123,10 @@
                         <div class="summary-box">
                             <h5>Tóm tắt đơn hàng</h5>
                             <hr>
-                            <p>Tổng cộng: <strong>${totalAmount} đ</strong></p>
+                            <p class="text-muted">Chỉ tính sản phẩm đã chọn</p>
+                            <p>Tổng cộng: <strong id="totalAmount"></strong></p>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-success">Tiến hành thanh toán</button>
+                                <button type="submit" class="btn btn-secondary">Tiến hành thanh toán</button>
                                 <a href="${pageContext.request.contextPath}/home" class="btn btn-secondary">Tiếp tục mua sắm</a>
                             </div>
                         </div>
@@ -129,6 +136,61 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+<!-- SweetAlert2 Confirm Delete + Success Toast -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmDelete(deleteUrl) {
+        Swal.fire({
+            title: 'Bạn có chắc muốn xóa?',
+            text: "Sản phẩm sẽ bị xóa khỏi giỏ hàng!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đã xóa sản phẩm!',
+                    showConfirmButton: false,
+                    timer: 1200
+                });
+
+                setTimeout(() => {
+                    window.location.href = deleteUrl;
+                }, 1300);
+            }
+        });
+    }
+
+    // === Cập nhật tổng tiền theo checkbox ===
+    function updateTotalAmount() {
+        const checkboxes = document.querySelectorAll('.cart-checkbox');
+        let total = 0;
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                const price = parseFloat(cb.dataset.price);
+                const quantity = parseInt(cb.dataset.quantity);
+                total += price * quantity * 1000;
+            }
+        });
+
+        document.getElementById('totalAmount').innerText = total.toLocaleString('vi-VN') + ' đ';
+    }
+
+    document.querySelectorAll('.cart-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateTotalAmount);
+    });
+
+    // Tính lần đầu nếu có sẵn đã chọn
+    updateTotalAmount();
+</script>
+
 <%@ include file="/WEB-INF/include/footer.jsp" %>
 </body>
 </html>

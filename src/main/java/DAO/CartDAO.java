@@ -1,5 +1,6 @@
 package DAO;
 
+
 import model.Cart;
 import config.DBConnect;
 import java.sql.*;
@@ -7,6 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartDAO {
+    public void clearCartByUserId(int userId) throws Exception {
+    String sql = "DELETE FROM CartItems WHERE user_id = ?";
+    try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        ps.executeUpdate();
+    }
+}
+
 
     public List<Cart> getCartByUserId(int userId) throws SQLException, ClassNotFoundException {
         List<Cart> cartItems = new ArrayList<>();
@@ -107,6 +116,38 @@ public class CartDAO {
         ps.executeUpdate();
     }
 }
+public List<Cart> getCartItemsByUserId(int userId) {
+    List<Cart> cartItems = new ArrayList<>();
+    String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, p.stock, c.quantity, p.price " +
+                 "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
+    try (Connection conn = DBConnect.connect();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Cart item = new Cart(
+                rs.getInt("cart_item_id"),
+                rs.getInt("product_id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("quantity"),
+                rs.getInt("stock"),
+                rs.getDouble("price")
+            );
+            cartItems.add(item);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return cartItems;
+}
 
+public double calculateTotal(List<Cart> cartItems) {
+    double total = 0;
+    for (Cart item : cartItems) {
+        total += item.getPrice() * item.getQuantity();
+    }
+    return total;
+}
 
 }

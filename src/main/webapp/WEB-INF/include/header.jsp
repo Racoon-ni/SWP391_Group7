@@ -73,7 +73,7 @@
                     </c:if>
 
                     <a class="nav-link" href="#"><i class="fas fa-desktop"></i> build PC</a>
-                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+                         <a class="nav-link" href="${pageContext.request.contextPath}/my-carts"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
                     <a class="nav-link" href="${pageContext.request.contextPath}/my-orders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                 </div>
             </div>
