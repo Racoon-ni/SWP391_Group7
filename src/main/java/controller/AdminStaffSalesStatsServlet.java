@@ -1,4 +1,4 @@
-package controller.adminstaff;
+package controller;
 
 import DAO.AdminStaffSalesDAO;
 import model.AdminStaffSalesStats;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/adminstaff-sales-stats")
+@WebServlet("/adminstaff-")
 public class AdminStaffSalesStatsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

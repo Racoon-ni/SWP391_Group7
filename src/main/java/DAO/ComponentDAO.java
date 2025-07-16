@@ -161,4 +161,16 @@ public class ComponentDAO {
             return 0;
         }
     }
+
+    public int getLastInsertedComponentId() {
+        String sql = "SELECT MAX(product_id) FROM Products WHERE product_type = 'Component'";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ComponentDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
 }

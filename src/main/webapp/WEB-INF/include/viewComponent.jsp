@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/include/header.jsp" %>
-<%@ page pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.*, model.Product" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <title>Danh sách linh kiện - ${category}</title>
@@ -99,3 +100,4 @@
 <%@ include file="/WEB-INF/include/footer.jsp" %>
 </body>
 </html>
+

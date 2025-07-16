@@ -1,8 +1,7 @@
 package DAO;
 
 import config.DBConnect;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,8 +18,7 @@ public class pcDAO extends DBConnect {
                 + "FROM Products p JOIN Categories c on p.category_id = c.category_id "
                 + "WHERE p.product_type = 'PC'";
 
-        try (
-                 PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("p_id");
                 String name = rs.getString("p_name");
@@ -35,7 +33,7 @@ public class pcDAO extends DBConnect {
                 Category category = new Category(categoryId, 0, cateName, "");
                 PC pc = new PC(id, name, description, price, stock, imageUrl, category, status);
 
-                // LẤY RATING TRUNG BÌNH VÀ SỐ LƯỢT ĐÁNH GIÁ
+                // Lấy rating trung bình và số lượt đánh giá
                 pc.setAvgStars(getAverageStars(id));
                 pc.setTotalRatings(getTotalRatings(id));
 
@@ -47,17 +45,15 @@ public class pcDAO extends DBConnect {
         return pcList;
     }
 
-    // Lấy chi tiết PC có rating trung bình & lượt đánh giá
+    // Lấy chi tiết PC theo id
     public PC getPCById(int id) {
         String sql = "SELECT p.product_id as p_id, p.name as p_name, p.description, p.price, p.stock, "
                 + "p.image_url as image, p.status, c.category_id as c_id, c.name as cate_name "
-                + "FROM Products p "
-                + "JOIN Categories c on p.category_id = c.category_id "
+                + "FROM Products p JOIN Categories c on p.category_id = c.category_id "
                 + "WHERE p.product_id = ?";
-        try (
-                 PreparedStatement ps = DBConnect.prepareStatement(sql);) {
-            ps.setInt(1, id);
 
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, id);
             try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String name = rs.getString("p_name");
@@ -68,12 +64,13 @@ public class pcDAO extends DBConnect {
                     boolean status = rs.getBoolean("status");
                     int categoryId = rs.getInt("c_id");
                     String cateName = rs.getString("cate_name");
-                    Category category = new Category(categoryId, 0, cateName, "");
 
+                    Category category = new Category(categoryId, 0, cateName, "");
                     PC pc = new PC(id, name, description, price, stock, imageUrl, category, status);
-                    // LẤY RATING TRUNG BÌNH VÀ SỐ LƯỢT ĐÁNH GIÁ
+
                     pc.setAvgStars(getAverageStars(id));
                     pc.setTotalRatings(getTotalRatings(id));
+
                     return pc;
                 }
             }
@@ -83,23 +80,34 @@ public class pcDAO extends DBConnect {
         return null;
     }
 
+    // ✅ Thêm PC và trả về product_id vừa được tạo
     public int addPC(PC pc) {
-        String sql = "INSERT INTO Products (name, description, price, stock, image_url, product_type, category_id) "
-                + "VALUES (?, ?, ?, ?, ?, 'PC', ?)";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+        String sql = "INSERT INTO Products (name, description, price, stock, image_url, product_type, category_id, status) "
+                + "VALUES (?, ?, ?, ?, ?, 'PC', ?, 1)"; // mặc định status = 1 (true)
+
+        try ( PreparedStatement ps = DBConnect.connect().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, pc.getName());
             ps.setString(2, pc.getDescription());
             ps.setDouble(3, pc.getPrice());
             ps.setInt(4, pc.getStock());
             ps.setString(5, pc.getImageUrl());
             ps.setInt(6, pc.getCategory().getCategoryId());
-            return ps.executeUpdate(); // returns 1 if success
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1); // ✅ Trả về product_id mới
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return -1; // thêm thất bại
     }
 
+    // Cập nhật PC
     public int updatePC(PC pc) {
         String sql = "UPDATE Products SET name = ?, description = ?, price = ?, "
                 + "stock = ?, category_id = ?, status = ?, image_url = ? "
@@ -113,6 +121,7 @@ public class pcDAO extends DBConnect {
             ps.setBoolean(6, pc.isStatus());
             ps.setString(7, pc.getImageUrl());
             ps.setInt(8, pc.getId());
+
             return ps.executeUpdate();
         } catch (Exception ex) {
             Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,6 +129,7 @@ public class pcDAO extends DBConnect {
         return 0;
     }
 
+    // Xoá PC
     public int delete(int id) {
         String query = "DELETE FROM Products WHERE product_id = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(query)) {
@@ -146,7 +156,7 @@ public class pcDAO extends DBConnect {
         return 0;
     }
 
-    // Lấy số lượt đánh giá
+    // Lấy tổng số lượt đánh giá
     public int getTotalRatings(int pcId) {
         String sql = "SELECT COUNT(*) FROM Ratings WHERE product_id = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {

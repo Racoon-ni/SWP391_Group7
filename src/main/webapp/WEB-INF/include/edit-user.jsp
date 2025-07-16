@@ -8,7 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<title>Update User Status</title>
+<title>Edit PC</title>
 
 <style>
     .toggle-password {
@@ -23,7 +23,7 @@
     }
 </style>
 <div class="container">
-    <h1>Cập nhật trạng thái tài khoản</h1>
+    <h1>Sửa tài khoản</h1>
 
     <form method="POST" action="${pageContext.request.contextPath}/manage-user">
         <input type="hidden" name="action" value="edit" />        

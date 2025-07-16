@@ -1,18 +1,17 @@
 package controller;
 
 import DAO.CategoriesDAO;
+import DAO.RatingDAO;
 import model.Category;
+import model.Product;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Product;
 
 @WebServlet(name = "ViewComponentServlet", urlPatterns = {"/ViewComponent"})
 public class ViewComponentServlet extends HttpServlet {
@@ -36,6 +35,16 @@ public class ViewComponentServlet extends HttpServlet {
         categoryMap.put("Bàn phím", 12);
         categoryMap.put("Chuột", 13);
 
+        Map<String, Integer> parentCategoryMap = new HashMap<>();
+        parentCategoryMap.put("PC", 13);
+        parentCategoryMap.put("CPU", 4);
+        parentCategoryMap.put("Mainboard", 5);
+        parentCategoryMap.put("RAM", 3);
+        parentCategoryMap.put("Storage", 2);
+        parentCategoryMap.put("GPU", 6);
+        parentCategoryMap.put("PSU", 7);
+        parentCategoryMap.put("Case", 8);
+
         String categoryKey = request.getParameter("category");
         Integer categoryId = categoryMap.get(categoryKey);
 
@@ -48,6 +57,19 @@ public class ViewComponentServlet extends HttpServlet {
             } else {
                 try {
                     productList = new CategoriesDAO().getProductsByCategoryId(categoryId);
+                    productList = new CategoriesDAO().getProductsByParentCategoryId(parentId);
+
+                    // ✅ Gán đánh giá trung bình và lượt đánh giá vào từng sản phẩm
+                    RatingDAO ratingDAO = new RatingDAO();
+                    Map<Integer, Double> avgStarsMap = ratingDAO.getAverageStars();
+                    Map<Integer, Integer> ratingCountsMap = ratingDAO.getRatingCounts();
+
+                    for (Product p : productList) {
+                        int pid = p.getProductId();
+                        p.setAvgStars(avgStarsMap.getOrDefault(pid, 0.0));
+                        p.setTotalRatings(ratingCountsMap.getOrDefault(pid, 0));
+                    }
+
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(ViewComponentServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
