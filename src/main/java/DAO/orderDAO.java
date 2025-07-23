@@ -448,59 +448,113 @@ public void placeOrder(Order order) {
             e.printStackTrace();
         }
     }
+//    public void placeOrder(Order order, List<Cart> cartItems) {
+//    String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
+//    String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)";
+//    String insertItems = "INSERT INTO OrderItems (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
+//
+//    try (Connection conn = DBConnect.connect()) {
+//        conn.setAutoCommit(false);
+//
+//        try (PreparedStatement ps = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
+//            ps.setInt(1, order.getUserId());
+//            ps.setString(2, order.getStatus());
+//            ps.setDouble(3, order.getTotalPrice());
+//            ps.setTimestamp(4, new Timestamp(order.getCreatedAt().getTime()));
+//            ps.executeUpdate();
+//
+//            ResultSet rs = ps.getGeneratedKeys();
+//            if (rs.next()) {
+//                int orderId = rs.getInt(1);
+//
+//                // Insert shipping info
+//                ShippingInfo ship = order.getShippingInfo();
+//                try (PreparedStatement ps2 = conn.prepareStatement(insertShipping)) {
+//                    ps2.setInt(1, orderId);
+//                    ps2.setString(2, ship.getShippingAddress());
+//                    ps2.setString(3, ship.getReceiverName());
+//                    ps2.setString(4, ship.getPhone());
+//                    ps2.setString(5, ship.getPaymentMethod());
+//                    ps2.setString(6, ship.getPaymentStatus());
+//                    ps2.executeUpdate();
+//                }
+//
+//                // Insert order items
+//                try (PreparedStatement ps3 = conn.prepareStatement(insertItems)) {
+//                    for (Cart item : cartItems) {
+//                        ps3.setInt(1, orderId);
+//                        ps3.setInt(2, item.getProductId());
+//                        ps3.setInt(3, item.getQuantity());
+//                        ps3.setDouble(4, item.getPrice());
+//                        ps3.addBatch();
+//                    }
+//                    ps3.executeBatch();
+//                }
+//            }
+//
+//            conn.commit();
+//        } catch (Exception e) {
+//            conn.rollback();
+//            throw e;
+//        }
+//
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    }
+//}
     public void placeOrder(Order order, List<Cart> cartItems) {
-    String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
-    String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)";
-    String insertItems = "INSERT INTO OrderItems (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
+        String insertOrder = "INSERT INTO Orders (user_id, status, total_price, created_at) VALUES (?, ?, ?, ?)";
+        String insertShipping = "INSERT INTO OrderShippingPayment (order_id, shipping_address, receiver_name, phone, payment_method, payment_status) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertItems = "INSERT INTO OrderItems (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
 
-    try (Connection conn = DBConnect.connect()) {
-        conn.setAutoCommit(false);
+        try (Connection conn = DBConnect.connect()) {
+            conn.setAutoCommit(false);
 
-        try (PreparedStatement ps = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, order.getUserId());
-            ps.setString(2, order.getStatus());
-            ps.setDouble(3, order.getTotalPrice());
-            ps.setTimestamp(4, new Timestamp(order.getCreatedAt().getTime()));
-            ps.executeUpdate();
+            try (PreparedStatement ps = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, order.getUserId());
+                ps.setString(2, order.getStatus());
+                ps.setDouble(3, order.getTotalPrice());
+                ps.setTimestamp(4, new Timestamp(order.getCreatedAt().getTime()));
+                ps.executeUpdate();
 
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int orderId = rs.getInt(1);
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    int orderId = rs.getInt(1);
 
-                // Insert shipping info
-                ShippingInfo ship = order.getShippingInfo();
-                try (PreparedStatement ps2 = conn.prepareStatement(insertShipping)) {
-                    ps2.setInt(1, orderId);
-                    ps2.setString(2, ship.getShippingAddress());
-                    ps2.setString(3, ship.getReceiverName());
-                    ps2.setString(4, ship.getPhone());
-                    ps2.setString(5, ship.getPaymentMethod());
-                    ps2.setString(6, ship.getPaymentStatus());
-                    ps2.executeUpdate();
-                }
-
-                // Insert order items
-                try (PreparedStatement ps3 = conn.prepareStatement(insertItems)) {
-                    for (Cart item : cartItems) {
-                        ps3.setInt(1, orderId);
-                        ps3.setInt(2, item.getProductId());
-                        ps3.setInt(3, item.getQuantity());
-                        ps3.setDouble(4, item.getPrice());
-                        ps3.addBatch();
+                    // Insert shipping info
+                    ShippingInfo ship = order.getShippingInfo();
+                    try (PreparedStatement ps2 = conn.prepareStatement(insertShipping)) {
+                        ps2.setInt(1, orderId);
+                        ps2.setString(2, ship.getShippingAddress());
+                        ps2.setString(3, ship.getReceiverName());
+                        ps2.setString(4, ship.getPhone());
+                        ps2.setString(5, ship.getPaymentMethod());
+                        ps2.setString(6, ship.getPaymentStatus());
+                        ps2.executeUpdate();
                     }
-                    ps3.executeBatch();
+
+                    // Insert order items
+                    try (PreparedStatement ps3 = conn.prepareStatement(insertItems)) {
+                        for (Cart item : cartItems) {
+                            ps3.setInt(1, orderId);
+                            ps3.setInt(2, item.getProductId());
+                            ps3.setInt(3, item.getQuantity());
+                            ps3.setDouble(4, item.getPrice());
+                            ps3.addBatch();
+                        }
+                        ps3.executeBatch();
+                    }
                 }
+
+                conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
             }
 
-            conn.commit();
         } catch (Exception e) {
-            conn.rollback();
-            throw e;
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
     
 }

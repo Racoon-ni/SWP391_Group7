@@ -1,7 +1,7 @@
 package controller;
 
-
 import DAO.CartDAO;
+import DAO.UserAddressDAO;
 import DAO.UserDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -10,11 +10,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Cart;
+import model.User;
+import model.UserAddress;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Cart;
-import model.User;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
@@ -52,7 +54,7 @@ public class CheckoutServlet extends HttpServlet {
                     }
                 }
             } catch (NumberFormatException e) {
-                // Ignore invalid IDs
+                e.printStackTrace();
             }
         }
 
@@ -61,9 +63,14 @@ public class CheckoutServlet extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         User fullUser = userDAO.getUserByIdForCheckout(userId);
 
+        // ✅ Lấy địa chỉ mặc định
+        UserAddressDAO addressDAO = new UserAddressDAO();
+        UserAddress defaultAddress = addressDAO.getDefaultAddress(userId);
+
         request.setAttribute("userInfo", fullUser);
         session.setAttribute("cartItems", selectedItems);
         request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("defaultAddress", defaultAddress);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/include/checkout.jsp");
         dispatcher.forward(request, response);
