@@ -8,10 +8,9 @@
 <!-- Main Content -->
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
-        <%@include file="/WEB-INF/include/side-bar.jsp" %>
+
         <!-- Main Panel -->
-        <div class="col-md-9 mt-5">
+        <div class="">
             <!-- Carousel -->
             <%@include file="/WEB-INF/include/carousel.jsp" %>
             <!-- PC Best Seller -->
@@ -19,5 +18,4 @@
         </div>
     </div>
 </div>
-
 <%@include file="/WEB-INF/include/footer.jsp" %>

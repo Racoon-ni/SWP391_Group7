@@ -52,7 +52,7 @@
                 <i class="fas fa-shopping-cart fa-2x mb-3"></i><br>
                 Giỏ hàng của bạn đang trống.
                 <div class="mt-3">
-                    <a href="products.jsp" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Tiếp tục mua sắm</a>
+                    <a href="http://localhost:8080/SWP391_Group7/home" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Tiếp tục mua sắm</a>
                 </div>
             </div>
         </c:when>
