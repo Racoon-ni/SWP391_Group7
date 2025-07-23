@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.CartDAO;
+import DAO.UserAddressDAO;
 import DAO.orderDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,6 +10,7 @@ import model.Cart;
 import model.Order;
 import model.ShippingInfo;
 import model.User;
+import model.UserAddress;
 
 import java.io.IOException;
 import java.util.Date;
@@ -27,51 +29,74 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        String fullname = request.getParameter("fullname");
-        String address = request.getParameter("address");
-        String phone = request.getParameter("phone");
+        // ✅ Nhận addressId từ form
+        String addressIdStr = request.getParameter("addressId");
+        int addressId = 0;
+        try {
+            addressId = Integer.parseInt(addressIdStr);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("checkout.jsp");
+            return;
+        }
+
+        // ✅ Lấy địa chỉ giao hàng từ DB
+        UserAddressDAO addressDAO = new UserAddressDAO();
+        List<UserAddress> addresses = addressDAO.getAddressesByUserId(user.getId());
+        UserAddress selectedAddress = null;
+        for (UserAddress addr : addresses) {
+            if (addr.getId() == addressId) {
+                selectedAddress = addr;
+                break;
+            }
+        }
+
+        if (selectedAddress == null) {
+            response.sendRedirect("checkout.jsp");
+            return;
+        }
+
+        // ✅ Lấy hình thức thanh toán
         String paymentMethod = request.getParameter("paymentMethod");
 
-        // Tạo thông tin giao hàng
+        // ✅ Tạo thông tin giao hàng
         ShippingInfo shipping = new ShippingInfo();
-        shipping.setReceiverName(fullname);
-        shipping.setShippingAddress(address);
-        shipping.setPhone(phone);
+        shipping.setReceiverName(selectedAddress.getFullName());
+        shipping.setShippingAddress(selectedAddress.getSpecificAddress());
+        shipping.setPhone(selectedAddress.getPhone());
         shipping.setPaymentMethod(paymentMethod);
         shipping.setPaymentStatus("Pending");
 
-        // ✅ Lấy cart đã chọn từ session (đã được set ở CheckoutServlet)
+        // ✅ Lấy giỏ hàng từ session
         @SuppressWarnings("unchecked")
         List<Cart> cartItems = (List<Cart>) session.getAttribute("cartItems");
-
         if (cartItems == null || cartItems.isEmpty()) {
-            // fallback: lấy toàn bộ cart (nếu không chọn gì ở bước trước)
             CartDAO cartDAO = new CartDAO();
             cartItems = cartDAO.getCartItemsByUserId(user.getId());
         }
 
+        // ✅ Tính tổng tiền
         double total = 0;
         for (Cart item : cartItems) {
             total += item.getPrice() * item.getQuantity();
         }
 
+        // ✅ Tạo đơn hàng
         Order order = new Order(0, user.getId(), "Pending", total, new Date());
         order.setShippingInfo(shipping);
 
+        // ✅ Lưu đơn hàng vào DB
         orderDAO orderDAO = new orderDAO();
-        orderDAO.placeOrder(order, cartItems); // Gửi vào cả giỏ hàng đã chọn
+        orderDAO.placeOrder(order, cartItems);
 
-        // ❗ Option: xóa cart
+        // ✅ Xóa giỏ hàng sau khi đặt (nếu muốn)
         // new CartDAO().clearCartByUserId(user.getId());
 
-        // ✅ Xóa cartItems khỏi session sau khi đặt hàng
+        // ✅ Xóa session cart
         session.removeAttribute("cartItems");
 
-        // Sau khi orderDAO.placeOrder(...)
-request.setAttribute("orderSuccess", true); // Gửi cờ báo thành công
-RequestDispatcher dispatcher = request.getRequestDispatcher("checkout.jsp");
-dispatcher.forward(request, response);
-
+        // ✅ Hiển thị thông báo đặt hàng thành công
+        request.setAttribute("orderSuccess", true);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("checkout.jsp");
+        dispatcher.forward(request, response);
     }
 }
-

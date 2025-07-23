@@ -24,6 +24,7 @@
         <div class="carousel-item active">
             <img src="${pageContext.request.contextPath}/assets/images/pc-gaming.png" 
                  alt="Banner2" class="d-block" style="width:100%">
+            
         </div>
         <div class="carousel-item">
             <img src="${pageContext.request.contextPath}/assets/images/pc-3.jpg" 
