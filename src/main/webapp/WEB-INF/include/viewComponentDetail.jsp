@@ -48,7 +48,7 @@
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800 mb-4"><c:out value="${product.name}"/></h1>
                             <p class="text-gray-600 text-lg mb-4"><c:out value="${product.description}" default="Không có mô tả"/></p>
-                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/> USD</p>
+                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/>VNÐ</p>
                             <p class="text-gray-500 mb-4">Tồn kho: <c:out value="${product.stock}"/></p>
                             <p class="text-gray-500 mb-4">Loại sản phẩm: <c:out value="${product.productType}" default="Không xác định"/></p>
                             <p class="text-gray-500 mb-4">Danh mục ID: <c:out value="${product.categoryId}"/></p>

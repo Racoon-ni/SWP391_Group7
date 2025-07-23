@@ -49,7 +49,7 @@
                             <h3 class="text-lg font-semibold text-gray-800 truncate">${product.name}</h3>
                             <p class="text-xs text-gray-500 mt-1">${product.category.name}</p>
                             <p class="text-gray-600 text-sm mt-2 h-12 overflow-hidden">${product.description}</p>
-                            <p class="text-pink-600 font-bold text-lg mt-2">${product.price} USD</p>
+                            <p class="text-pink-600 font-bold text-lg mt-2">${product.price} VNÐ</p>
                             <p class="text-gray-500 text-sm mt-1">Tồn kho: ${product.stock}</p>
                             <div class="mt-4 flex space-x-2">
                                 <a href="${pageContext.request.contextPath}/ViewComponentDetail?productId=${product.productId}" 
