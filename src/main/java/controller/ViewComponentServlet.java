@@ -35,15 +35,6 @@ public class ViewComponentServlet extends HttpServlet {
         categoryMap.put("Bàn phím", 12);
         categoryMap.put("Chuột", 13);
 
-//        Map<String, Integer> parentCategoryMap = new HashMap<>();
-//        parentCategoryMap.put("PC", 13);
-//        parentCategoryMap.put("CPU", 4);
-//        parentCategoryMap.put("Mainboard", 5);
-//        parentCategoryMap.put("RAM", 3);
-//        parentCategoryMap.put("Storage", 2);
-//        parentCategoryMap.put("GPU", 6);
-//        parentCategoryMap.put("PSU", 7);
-//        parentCategoryMap.put("Case", 8);
 
         String categoryKey = request.getParameter("category");
         Integer categoryId = categoryMap.get(categoryKey);
@@ -57,7 +48,7 @@ public class ViewComponentServlet extends HttpServlet {
             } else {
                 try {
                     productList = new CategoriesDAO().getProductsByCategoryId(categoryId);
-//                    productList = new CategoriesDAO().getProductsByParentCategoryId(parentId);
+                   
 
                     // ✅ Gán đánh giá trung bình và lượt đánh giá vào từng sản phẩm
                     RatingDAO ratingDAO = new RatingDAO();
