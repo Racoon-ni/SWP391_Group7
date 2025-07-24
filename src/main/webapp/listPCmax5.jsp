@@ -59,7 +59,7 @@
                 if (count >= maxShow) break;
     %>
         <div class="pc-card">
-            <img class="pc-img" src="<%= (pc.getImageUrl() == null ? "images/default-pc.png" : "images/" + pc.getImageUrl()) %>" alt="<%= pc.getName() %>">
+            <img class="pc-img" src="<%= (pc.getImageUrl() == null ? "images/default-pc.png" : "images" + pc.getImageUrl()) %>" alt="<%= pc.getName() %>">
             <div class="pc-title"><%= pc.getName() %></div>
             <div class="pc-desc"><%= pc.getDescription() %></div>
             <div class="pc-price">Giá: <%= String.format("%,.0f", pc.getPrice()) %> VNĐ</div>

@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Product" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="/WEB-INF/include/header.jsp" %>
+       <%@ include file="/WEB-INF/include/footer.jsp" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -77,5 +79,6 @@
                 %>
             </div>
         </div>
+      
     </body>
 </html>

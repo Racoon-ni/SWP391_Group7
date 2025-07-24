@@ -20,59 +20,73 @@ import java.util.List;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+       HttpSession session = request.getSession(false);
+       if (session == null || session.getAttribute("user") == null) {
+           response.sendRedirect("login.jsp");
+           return;
+       }
 
-        User sessionUser = (User) session.getAttribute("user");
-        int userId = sessionUser.getId();
+       User sessionUser = (User) session.getAttribute("user");
+       int userId = sessionUser.getId();
 
-        String[] selectedItemIds = request.getParameterValues("selectedItems");
-        if (selectedItemIds == null || selectedItemIds.length == 0) {
-            request.setAttribute("error", "Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
-            response.sendRedirect("cart.jsp");
-            return;
-        }
+       String productIdParam = request.getParameter("productId");
+       String[] selectedItemIds = request.getParameterValues("selectedItems");
 
-        CartDAO cartDAO = new CartDAO();
-        List<Cart> allItems = cartDAO.getCartItemsByUserId(userId);
-        List<Cart> selectedItems = new ArrayList<>();
+       List<Cart> selectedItems = new ArrayList<>();
+       CartDAO cartDAO = new CartDAO();
 
-        for (String idStr : selectedItemIds) {
-            try {
-                int id = Integer.parseInt(idStr);
-                for (Cart item : allItems) {
-                    if (item.getCartItemId() == id) {
-                        selectedItems.add(item);
-                        break;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
+       if (productIdParam != null) {
+           // ✅ Mua ngay: chỉ lấy 1 sản phẩm
+           try {
+               int productId = Integer.parseInt(productIdParam);
+               Cart singleItem = cartDAO.getCartItemForBuyNow(productId);
+               if (singleItem != null) {
+                   selectedItems.add(singleItem);
+               }
+           } catch (NumberFormatException e) {
+               e.printStackTrace();
+           }
 
-        double totalAmount = cartDAO.calculateTotal(selectedItems);
+       } else if (selectedItemIds != null && selectedItemIds.length > 0) {
+           // ✅ Mua từ giỏ hàng: lấy sản phẩm được chọn
+           List<Cart> allItems = cartDAO.getCartItemsByUserId(userId);
+           for (String idStr : selectedItemIds) {
+               try {
+                   int id = Integer.parseInt(idStr);
+                   for (Cart item : allItems) {
+                       if (item.getCartItemId() == id) {
+                           selectedItems.add(item);
+                           break;
+                       }
+                   }
+               } catch (NumberFormatException e) {
+                   e.printStackTrace();
+               }
+           }
 
-        UserDAO userDAO = new UserDAO();
-        User fullUser = userDAO.getUserByIdForCheckout(userId);
+       } else {
+           // ✅ fallback: mua toàn bộ giỏ hàng
+           selectedItems = cartDAO.getCartItemsByUserId(userId);
+       }
 
-        // ✅ Lấy địa chỉ mặc định
-        UserAddressDAO addressDAO = new UserAddressDAO();
-        UserAddress defaultAddress = addressDAO.getDefaultAddress(userId);
+       double totalAmount = cartDAO.calculateTotal(selectedItems);
 
-        request.setAttribute("userInfo", fullUser);
-        session.setAttribute("cartItems", selectedItems);
-        request.setAttribute("totalAmount", totalAmount);
-        request.setAttribute("defaultAddress", defaultAddress);
+       UserDAO userDAO = new UserDAO();
+       User fullUser = userDAO.getUserByIdForCheckout(userId);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/include/checkout.jsp");
-        dispatcher.forward(request, response);
-    }
+       UserAddressDAO addressDAO = new UserAddressDAO();
+       List<UserAddress> addressList = addressDAO.getAddressesByUserId(userId);
+
+       request.setAttribute("userInfo", fullUser);
+       request.setAttribute("addressList", addressList);
+       request.setAttribute("totalAmount", totalAmount);
+       session.setAttribute("cartItems", selectedItems);
+
+       RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/include/checkout.jsp");
+       dispatcher.forward(request, response);
+   }
 }

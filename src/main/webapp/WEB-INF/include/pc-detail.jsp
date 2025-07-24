@@ -1,9 +1,3 @@
-<%-- 
-    Document   : pc-detail
-    Created on : Jun 29, 2025, 11:54:53 PM
-    Author     : ThinhLVCE181726 <your.name at your.org>
---%>
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Product" %>
@@ -112,8 +106,17 @@
                     </a>
                     <button class="btn btn-success ms-2"
                             onclick="alert('Chức năng thêm vào giỏ sẽ sớm hoàn thiện!')">
-                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng 
                     </button>
+
+                    <!-- Nút mua ngay -->
+                    <form method="post" action="${pageContext.request.contextPath}/checkout" class="ms-2">
+                        <input type="hidden" name="productId" value="<%= pc.getProductId()%>" />
+                        <button type="submit" class="btn btn-primary">
+                            Mua ngay
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -139,7 +142,6 @@
                         <strong class="me-3"><%= r.getUserName()%></strong>
 
                         <!-- Sao đánh giá -->
-                        <!-- Sao đánh giá -->
                         <div class="text-warning me-3">
                             <% for (int i = 1; i <= 5; i++) { %>
                             <% if (i <= r.getStars()) { %>
@@ -149,7 +151,6 @@
                             <% } %>
                             <% }%>
                         </div>
-
 
                         <!-- Thời gian -->
                         <small class="text-muted">
