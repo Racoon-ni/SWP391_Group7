@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserAddressDAO {
-
+    
     public List<UserAddress> getAddressesByUserId(int userId) {
         List<UserAddress> list = new ArrayList<>();
         String sql = "SELECT * FROM UserAddresses WHERE user_id = ?";
