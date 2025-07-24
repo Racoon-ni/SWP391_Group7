@@ -63,7 +63,7 @@ public class RegisterServlet extends HttpServlet {
         Date d = new Date();
 
         UserDAO uDAO = new UserDAO();
-        User user = new User(0, username, username + "@example.com", password, "", d, "", "", "", "Customer", true);
+       User user = new User(0, username,  password, username + "@example.com", "", d, "", "", "", "Customer", true);
 
         request.setAttribute("username", username);
         if (password.equals(validPass)) {
