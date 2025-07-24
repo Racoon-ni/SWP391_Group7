@@ -1,7 +1,8 @@
+<%@page import="DAO.NotificationDAO"%>
 <%@page import="java.util.List"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
-<%@page import="DAO.NotificationDAO" %>
+
 <%@page import="model.User" %>
 <%@page import="model.Notification" %>
 <%@page import="java.util.*" %>
