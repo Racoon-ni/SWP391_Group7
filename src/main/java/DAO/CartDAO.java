@@ -48,9 +48,6 @@ public class CartDAO {
                 );
                 cartItems.add(item);
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw e;
         }
 
         return cartItems;
@@ -142,5 +139,31 @@ public class CartDAO {
             total += item.getPrice() * item.getQuantity();
         }
         return total;
+    }
+
+    // ✅ Hỗ trợ "Mua ngay" 1 sản phẩm (không dùng CartItems table)
+    public Cart getCartItemForBuyNow(int productId) {
+        String sql = "SELECT product_id, name, image_url, price, stock FROM Products WHERE product_id = ?";
+        try (Connection con = DBConnect.connect();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Cart(
+                    0, // cartItemId giả định
+                    rs.getInt("product_id"),
+                    rs.getString("name"),
+                    rs.getString("image_url"),
+                    1, // quantity mặc định
+                    rs.getInt("stock"),
+                    rs.getDouble("price")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -61,11 +61,16 @@
                                     </button>
                                 </form>
 
-                                <!-- Mua ngay button -->
-                                <a href="${pageContext.request.contextPath}/checkout?productId=${product.productId}" 
-                                   class="btn bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700">
-                                    Mua ngay
-                                </a>
+                                <form id="buyNowForm" method="post" action="${pageContext.request.contextPath}/checkout" class="flex-1">
+                                    <input type="hidden" name="productId" value="${product.productId}" />
+                                    <button type="button"
+                                            onclick="handleBuyNow()"
+                                            class="btn w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                                        Mua ngay
+                                    </button>
+                                </form>
+
+
                                 <button onclick="addToWishlist(${product.productId})" 
                                         class="btn bg-red-100 text-red-600 py-3 px-4 rounded-md hover:bg-red-200">
                                     <svg class="w-6 h-6 inline-block" fill="currentColor" viewBox="0 0 20 20">
@@ -87,38 +92,48 @@
     </div>
 
     <script>
-        // Kiểm tra đăng nhập từ server, gán biến JS dạng string "true"/"false"
-        const isLoggedIn = "${not empty sessionScope.user}";
+    const isLoggedIn = "${not empty sessionScope.user}";
 
-        function addToCart(productId) {
-            if (isLoggedIn !== "true") {
-                alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
-                window.location.href = '${pageContext.request.contextPath}/login';
-                return;
-            }
-
-            fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
-                method: 'POST'
-            })
-                    .then(response => response.text())
-                    .then(text => {
-                        try {
-                            const data = JSON.parse(text);
-                            if (data.success) {
-                                alert('Đã thêm sản phẩm vào giỏ hàng!');
-                            } else {
-                                alert('Lỗi: ' + data.message);
-                            }
-                        } catch (e) {
-                            alert('Lỗi định dạng phản hồi từ server.');
-                        }
-                    })
-                    .catch(error => {
-                        alert('Lỗi khi thêm vào giỏ hàng: ' + error);
-                    });
+    function addToCart(productId) {
+        if (isLoggedIn !== "true") {
+            alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+            window.location.href = '${pageContext.request.contextPath}/login';
+            return;
         }
-    </script>
 
-<%@ include file="/WEB-INF/include/footer.jsp" %>
+        fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
+            method: 'POST'
+        })
+        .then(response => response.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                if (data.success) {
+                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            } catch (e) {
+                alert('Lỗi định dạng phản hồi từ server.');
+            }
+        })
+        .catch(error => {
+            alert('Lỗi khi thêm vào giỏ hàng: ' + error);
+        });
+    }
+
+    function handleBuyNow() {
+        if (isLoggedIn !== "true") {
+            // ✅ Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+            window.location.href = '${pageContext.request.contextPath}/login';
+        } else {
+            // ✅ Nếu đã đăng nhập thì gửi form mua hàng
+            document.getElementById("buyNowForm").submit();
+        }
+    }
+</script>
+
+
+    <%@ include file="/WEB-INF/include/footer.jsp" %>
 </body>
 </html>
