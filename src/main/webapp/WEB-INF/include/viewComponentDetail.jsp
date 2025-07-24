@@ -6,39 +6,91 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<title>Chi tiết sản phẩm -
-    <c:out value="${product.name}" default="Sản phẩm" />
-</title>
+<title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm" /></title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<% List<Voucher> vouchers = (List<Voucher>) request.getAttribute("vouchers");
+<%
+    List<Voucher> vouchers = (List<Voucher>) request.getAttribute("vouchers");
     Integer userId = (Integer) session.getAttribute("userId"); // từ session sau khi login
 %>
 <style>
     .btn {
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
     .btn:hover {
         transform: scale(1.05);
     }
-
     .error-message {
         animation: fadeIn 0.5s ease-in-out;
     }
-
     @keyframes fadeIn {
         0% {
             opacity: 0;
         }
-
         100% {
             opacity: 1;
         }
     }
-
     .product-image {
         max-height: 400px;
         object-fit: contain;
+    }
+    /* Ảnh review hình vuông, to */
+    .review-thumb {
+        width: 180px;
+        height: 180px;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        box-shadow: 0 1px 8px #0002;
+        cursor: pointer;
+        transition: box-shadow .2s;
+    }
+    .review-thumb:hover {
+        box-shadow: 0 4px 20px #0003;
+        border-color: #3b82f6;
+    }
+    /* Modal phóng to ảnh */
+    #imageModal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.8);
+        align-items: center;
+        justify-content: center;
+    }
+    #imageModal img {
+        max-width: 92vw;
+        max-height: 92vh;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 0 32px #222;
+        display: block;
+        margin: auto;
+        animation: zoomIn .25s;
+    }
+    @keyframes zoomIn {
+        from {
+            transform:scale(0.8);
+        }
+        to {
+            transform:scale(1);
+        }
+    }
+    #imageModal .close-btn {
+        position: absolute;
+        top: 44px;
+        right: 60px;
+        font-size: 48px;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10001;
+        text-shadow: 0 2px 8px #000;
     }
 </style>
 </head>
@@ -47,8 +99,7 @@
 
     <div class="container mx-auto px-4 py-8">
         <c:if test="${not empty errorMessage}">
-            <div
-                class="error-message bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg text-center">
+            <div class="error-message bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg text-center">
                 <c:out value="${errorMessage}" />
             </div>
         </c:if>
@@ -65,8 +116,7 @@
                                 <c:out value="${product.name}" />
                             </h1>
                             <p class="text-gray-600 text-lg mb-4">
-                                <c:out value="${product.description}"
-                                       default="Không có mô tả" />
+                                <c:out value="${product.description}" default="Không có mô tả" />
                             </p>
                             <p class="text-pink-600 font-bold text-2xl mb-4">
                                 <c:out value="${product.price}" /> USD
@@ -75,8 +125,7 @@
                                 <c:out value="${product.stock}" />
                             </p>
                             <p class="text-gray-500 mb-4">Loại sản phẩm:
-                                <c:out value="${product.productType}"
-                                       default="Không xác định" />
+                                <c:out value="${product.productType}" default="Không xác định" />
                             </p>
                             <p class="text-gray-500 mb-4">Danh mục ID:
                                 <c:out value="${product.categoryId}" />
@@ -92,8 +141,6 @@
                                         Thêm vào giỏ hàng
                                     </button>
                                 </form>
-
-                                <!-- Mua ngay button -->
                                 <a href="${pageContext.request.contextPath}/checkout?productId=${product.productId}"
                                    class="btn bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700">
                                     Mua ngay
@@ -114,8 +161,7 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <div
-                    class="bg-white p-8 rounded-lg shadow-md text-center text-gray-600 text-lg">
+                <div class="bg-white p-8 rounded-lg shadow-md text-center text-gray-600 text-lg">
                     Không tìm thấy sản phẩm.
                 </div>
             </c:otherwise>
@@ -125,15 +171,11 @@
     <% if (vouchers != null && !vouchers.isEmpty()) { %>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <% for (Voucher v : vouchers) {%>
-        <div
-            class="bg-white p-4 shadow-md rounded-lg flex flex-col justify-between border border-gray-200">
+        <div class="bg-white p-4 shadow-md rounded-lg flex flex-col justify-between border border-gray-200">
             <div>
-                <h4 class="text-lg font-bold text-red-600 mb-1">
-                    <%= v.getCode()%>
-                </h4>
+                <h4 class="text-lg font-bold text-red-600 mb-1"><%= v.getCode()%></h4>
                 <p class="text-sm text-gray-700 mb-1">
-                    Giảm <%= v.getDiscountPercent()%>% cho đơn từ <span
-                        class="font-medium">
+                    Giảm <%= v.getDiscountPercent()%>% cho đơn từ <span class="font-medium">
                         <%= String.format("%,.0f", v.getMinOrderValue())%> đ
                     </span>
                 </p>
@@ -141,8 +183,7 @@
                 </p>
             </div>
             <form action="GetVoucher" method="post" class="mt-4 text-right">
-                <input type="hidden" name="voucherId"
-                       value="<%= v.getVoucherId()%>">
+                <input type="hidden" name="voucherId" value="<%= v.getVoucherId()%>">
                 <button type="submit"
                         class="px-4 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition">
                     Nhận ngay
@@ -178,6 +219,20 @@
                                 </span>
                             </div>
                             <div class="text-gray-800">${rating.comment}</div>
+                            <!-- Hiển thị ảnh review nếu có -->
+                            <c:if test="${not empty rating.imageUrls}">
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <c:forEach var="img" items="${rating.imageUrls}">
+                                        <c:if test="${not empty img}">
+                                            <img src="${pageContext.request.contextPath}/${img}"
+                                                 alt="review image"
+                                                 class="review-thumb"
+                                                 onclick="showFullImage(this.src)"
+                                                 />
+                                        </c:if>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </c:forEach>
@@ -187,6 +242,31 @@
             </c:otherwise>
         </c:choose>
     </div>
+
+    <!-- Modal/phóng to ảnh -->
+    <div id="imageModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;">
+        <span class="close-btn" onclick="closeImageModal()">&times;</span>
+        <img id="fullImage" src="" />
+    </div>
+    <script>
+        function showFullImage(src) {
+            document.getElementById("fullImage").src = src;
+            document.getElementById("imageModal").style.display = "flex";
+        }
+        function closeImageModal() {
+            document.getElementById("imageModal").style.display = "none";
+            document.getElementById("fullImage").src = "";
+        }
+        document.getElementById("imageModal").onclick = function (e) {
+            if (e.target === this)
+                closeImageModal();
+        }
+        document.addEventListener('keydown', function (evt) {
+            if (evt.key === "Escape")
+                closeImageModal();
+        });
+    </script>
+
     <script>
         // Kiểm tra đăng nhập từ server, gán biến JS dạng string "true"/"false"
         const isLoggedIn = "${not empty sessionScope.user}";
@@ -197,7 +277,6 @@
                 window.location.href = '${pageContext.request.contextPath}/login';
                 return;
             }
-
             fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
                 method: 'POST'
             })
@@ -236,6 +315,4 @@
                     });
         }
     </script>
-
     <%@ include file="/WEB-INF/include/footer.jsp" %>
-
