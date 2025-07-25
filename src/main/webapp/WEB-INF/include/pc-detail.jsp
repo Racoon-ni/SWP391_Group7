@@ -175,8 +175,17 @@
                     </a>
                     <button class="btn btn-success ms-2"
                             onclick="alert('Chức năng thêm vào giỏ sẽ sớm hoàn thiện!')">
-                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+                        <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng 
                     </button>
+
+                    <!-- Nút mua ngay -->
+                    <form method="post" action="${pageContext.request.contextPath}/checkout" class="ms-2">
+                        <input type="hidden" name="productId" value="<%= pc.getProductId()%>" />
+                        <button type="submit" class="btn btn-primary">
+                            Mua ngay
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>

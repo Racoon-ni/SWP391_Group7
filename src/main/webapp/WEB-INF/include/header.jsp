@@ -143,9 +143,9 @@
             <%@include file="../include/top-nav.jsp" %>
 
             <!-- SEARCH BAR -->
-            <form action="/search" method="GET" class="flex-grow-1 mx-3" style="max-width: 500px;">
+            <form action="${pageContext.request.contextPath}/search" method="GET" class="flex-grow-1 mx-3" style="max-width: 500px;">
                 <div class="position-relative">
-                    <input type="text" name="query" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px" />
+                    <input type="text" name="keyword" class="form-control pe-5" placeholder="Bạn cần tìm kiếm gì?" required style="border-radius: 16px" />
                     <button type="submit" class="btn position-absolute top-50 end-0 translate-middle-y pe-3 border-0 bg-transparent">
                         <i class="fas fa-search text-muted"></i>
                     </button>
@@ -220,8 +220,7 @@
                                 </a>
                             </li>
                             <% }
-                            }%>
-                            
+
                         </ul>
                     </div>
                 </c:if>
@@ -229,18 +228,23 @@
         </div>
     </nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 
-    <script>
-        document.getElementById('notificationDropdown')?.addEventListener('click', function () {
-            fetch('<%= contextPath%>/notification/mark-all-read', {method: 'POST'})
-                    .then(() => {
-                        const badge = document.getElementById('notificationBadge');
-                        if (badge) {
-                            badge.style.display = 'none';
-                        }
-                    });
-        });
-    </script>
+</div>
+</div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    document.getElementById('notificationDropdown')?.addEventListener('click', function () {
+        fetch('<%= contextPath%>/notification/mark-all-read', {method: 'POST'})
+                .then(() => {
+                    const badge = document.getElementById('notificationBadge');
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+                });
+    });
+</script>
 </body>
