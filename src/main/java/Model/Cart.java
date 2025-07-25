@@ -27,6 +27,17 @@ public class Cart {
         this.stock = stock;
         this.price = price;
     }
+    
+    // Constructor, getters and setters
+    public Cart(int cartItemId, int productId, String productName, String imageUrl,
+                int quantity, double price) {
+        this.cartItemId = cartItemId;
+        this.productId = productId;
+        this.productName = productName;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public Cart() {
     }

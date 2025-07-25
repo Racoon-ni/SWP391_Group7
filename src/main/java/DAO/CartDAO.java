@@ -9,13 +9,13 @@ import java.util.List;
 
 public class CartDAO {
 
-    public void clearCartByUserId(int userId) throws Exception {
-        String sql = "DELETE FROM CartItems WHERE user_id = ?";
-        try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.executeUpdate();
-        }
-    }
+//    public void clearCartByUserId(int userId) throws Exception {
+//        String sql = "DELETE FROM CartItems WHERE user_id = ?";
+//        try (Connection conn = DBConnect.connect(); PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, userId);
+//            ps.executeUpdate();
+//        }
+//    }
 
     public List<Cart> getCartByUserId(int userId) throws SQLException, ClassNotFoundException {
         List<Cart> cartItems = new ArrayList<>();
@@ -106,7 +106,37 @@ public class CartDAO {
         }
     }
 
+    // Lấy tất cả sản phẩm trong giỏ hàng của người dùng
     public List<Cart> getCartItemsByUserId(int userId) {
+        List<Cart> cartItems = new ArrayList<>();
+        String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, c.quantity, p.price " +
+                     "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
+
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Cart item = new Cart(
+                    rs.getInt("cart_item_id"),
+                    rs.getInt("product_id"),
+                    rs.getString("name"),
+                    rs.getString("image_url"),
+                    rs.getInt("quantity"),
+                    rs.getDouble("price")
+                );
+                cartItems.add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cartItems;
+    }
+    
+    public List<Cart> getCartItemsByUserId2(int userId) {
         List<Cart> cartItems = new ArrayList<>();
         String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, p.stock, c.quantity, p.price " +
                      "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
@@ -166,4 +196,28 @@ public class CartDAO {
         }
         return null;
     }
+   
+
+    // Phương thức xóa tất cả sản phẩm trong giỏ hàng của người dùng
+    public void clearCartByUserId(int userId) {
+        String sql = "DELETE FROM CartItems WHERE user_id = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Set userId cho câu lệnh SQL
+            ps.setInt(1, userId);
+            int affectedRows = ps.executeUpdate(); // Thực thi câu lệnh SQL
+            if (affectedRows > 0) {
+                System.out.println("All items in cart cleared successfully for user: " + userId);
+            } else {
+                System.out.println("No items found in the cart for user: " + userId);
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

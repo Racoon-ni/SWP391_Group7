@@ -53,7 +53,7 @@
         <!-- Thông tin khách hàng -->
         <div class="col-md-6">
             <h4 class="section-title mb-4">Thông tin giao hàng</h4>
-            <form method="post" action="place-order" id="orderForm">
+            <form method="post" action="${pageContext.request.contextPath}/place-order" id="orderForm">
                 <!-- Danh sách địa chỉ -->
                 <div class="mb-3">
                     <label>Chọn địa chỉ nhận hàng</label>
