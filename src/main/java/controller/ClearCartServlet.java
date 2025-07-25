@@ -7,7 +7,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import model.User;
-
+//Clear
 @WebServlet(name = "ClearCartServlet", urlPatterns = {"/clearCart"})
 public class ClearCartServlet extends HttpServlet {
     @Override

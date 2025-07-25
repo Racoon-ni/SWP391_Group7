@@ -4,7 +4,7 @@ import config.DBConnect;
 import model.ShippingInfo;
 
 import java.sql.*;
-
+//DAO
 public class ShippingInfoDAO {
 
     public void insertShippingInfo(int orderId, ShippingInfo shippingInfo) {

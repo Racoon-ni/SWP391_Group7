@@ -11,7 +11,7 @@ import java.util.*;
 import model.Cart;
 
 public class orderDAO {
-
+//orderDAO
     public List<Order> getOrdersByUserId(int userId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM Orders WHERE user_id = ?";

@@ -110,7 +110,7 @@ public class PlaceOrderServlet extends HttpServlet {
         }
 
         // Xóa giỏ hàng sau khi đặt (nếu muốn)
-        // new CartDAO().clearCartByUserId(user.getId());
+        //new CartDAO().clearCartByUserId(user.getId());
 
         // Xóa session cart
         session.removeAttribute("cartItems");
