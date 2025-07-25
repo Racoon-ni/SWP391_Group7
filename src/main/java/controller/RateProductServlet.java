@@ -6,12 +6,17 @@ import model.OrderDetail;
 import model.User;
 import model.Rating;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Paths;
+import java.util.*;
 
 @WebServlet("/rateProduct")
+@MultipartConfig
 public class RateProductServlet extends HttpServlet {
 
     @Override
@@ -27,7 +32,6 @@ public class RateProductServlet extends HttpServlet {
             User user = (User) session.getAttribute("user");
             int userId = user.getId();
 
-            // Lấy danh sách các sản phẩm trong đơn hàng, check rated cho từng sp
             orderDAO dao = new orderDAO();
             List<OrderDetail> orderDetails = dao.getOrderDetails(orderId, userId);
 
@@ -65,8 +69,19 @@ public class RateProductServlet extends HttpServlet {
             int orderId = Integer.parseInt(orderIdStr);
 
             RatingDAO ratingDAO = new RatingDAO();
-            boolean allRatedAlready = true; // flag: tất cả sản phẩm đã đánh giá rồi?
-            boolean hasRatedNew = false;    // flag: có cái nào vừa đánh giá thành công?
+            boolean allRatedAlready = true;
+            boolean hasRatedNew = false;
+
+            // Chuẩn hóa đường dẫn: ĐÚNG CHUẨN LUÔN LÀ /include/img (không có dấu +)
+            String uploadPath = getServletContext().getRealPath("/include/img");
+            System.out.println("Upload path: " + uploadPath); // Log ra để kiểm tra
+
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            Collection<Part> parts = request.getParts();
 
             for (int i = 0; i < productIds.length; i++) {
                 if (starsArr[i] == null || starsArr[i].isEmpty() || comments[i] == null) {
@@ -74,7 +89,7 @@ public class RateProductServlet extends HttpServlet {
                 }
                 int productId = Integer.parseInt(productIds[i]);
                 if (ratingDAO.hasUserRatedInOrder(userId, orderId, productId)) {
-                    continue; // đã đánh giá rồi thì bỏ qua, không lưu
+                    continue;
                 }
 
                 int stars = Integer.parseInt(starsArr[i]);
@@ -84,19 +99,35 @@ public class RateProductServlet extends HttpServlet {
                     continue;
                 }
 
+                // XỬ LÝ ẢNH UPLOAD: Tên input = "images_" + productId
+                List<String> imageUrls = new ArrayList<>();
+                String inputName = "images_" + productId;
+                for (Part part : parts) {
+                    if (part.getName().equals(inputName) && part.getSize() > 0) {
+                        String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                        String cleanFileName = fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
+                        String uniqueFileName = System.currentTimeMillis() + "_" + cleanFileName;
+                        String filePath = uploadPath + File.separator + uniqueFileName;
+                        part.write(filePath);
+                        System.out.println("File saved: " + filePath); // Log kiểm tra đường dẫn
+                        imageUrls.add("include/img/" + uniqueFileName);
+                    }
+                }
+
                 Rating rating = new Rating();
                 rating.setUserId(userId);
-                rating.setOrderId(orderId); // Lưu cả orderId vào Rating
+                rating.setOrderId(orderId);
                 rating.setProductId(productId);
                 rating.setStars(stars);
                 rating.setComment(comment);
+                rating.setImageUrls(imageUrls);
 
                 boolean success = ratingDAO.addRating(rating);
                 if (success) {
                     hasRatedNew = true;
                     allRatedAlready = false;
                 } else {
-                    allRatedAlready = false; // Có cái chưa đánh giá nhưng lỗi khi thêm
+                    allRatedAlready = false;
                 }
             }
             if (hasRatedNew) {
@@ -111,5 +142,4 @@ public class RateProductServlet extends HttpServlet {
             response.sendRedirect("my-orders?msg=error");
         }
     }
-
 }
