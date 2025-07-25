@@ -4,8 +4,12 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm"/></title>
+<title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm" /></title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<%
+    List<Voucher> vouchers = (List<Voucher>) request.getAttribute("vouchers");
+    Integer userId = (Integer) session.getAttribute("userId"); // từ session sau khi login
+%>
 <style>
     .btn {
         transition: background-color 0.3s ease, transform 0.2s ease;
@@ -28,6 +32,64 @@
         max-height: 400px;
         object-fit: contain;
     }
+    /* Ảnh review hình vuông, to */
+    .review-thumb {
+        width: 180px;
+        height: 180px;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        box-shadow: 0 1px 8px #0002;
+        cursor: pointer;
+        transition: box-shadow .2s;
+    }
+    .review-thumb:hover {
+        box-shadow: 0 4px 20px #0003;
+        border-color: #3b82f6;
+    }
+    /* Modal phóng to ảnh */
+    #imageModal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.8);
+        align-items: center;
+        justify-content: center;
+    }
+    #imageModal img {
+        max-width: 92vw;
+        max-height: 92vh;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 0 32px #222;
+        display: block;
+        margin: auto;
+        animation: zoomIn .25s;
+    }
+    @keyframes zoomIn {
+        from {
+            transform:scale(0.8);
+        }
+        to {
+            transform:scale(1);
+        }
+    }
+    #imageModal .close-btn {
+        position: absolute;
+        top: 44px;
+        right: 60px;
+        font-size: 48px;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10001;
+        text-shadow: 0 2px 8px #000;
+    }
 </style>
 </head>
 <body class="bg-gray-100">
@@ -35,7 +97,7 @@
     <div class="container mx-auto px-4 py-8">
         <c:if test="${not empty errorMessage}">
             <div class="error-message bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg text-center">
-                <c:out value="${errorMessage}"/>
+                <c:out value="${errorMessage}" />
             </div>
         </c:if>
         <c:choose>
@@ -46,12 +108,24 @@
                             <img src="${product.imageUrl}" alt="${product.name}" class="product-image w-full rounded-lg"/>
                         </div>
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-800 mb-4"><c:out value="${product.name}"/></h1>
-                            <p class="text-gray-600 text-lg mb-4"><c:out value="${product.description}" default="Không có mô tả"/></p>
-                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/>VNÐ</p>
-                            <p class="text-gray-500 mb-4">Tồn kho: <c:out value="${product.stock}"/></p>
-                            <p class="text-gray-500 mb-4">Loại sản phẩm: <c:out value="${product.productType}" default="Không xác định"/></p>
-                            <p class="text-gray-500 mb-4">Danh mục ID: <c:out value="${product.categoryId}"/></p>
+                            <h1 class="text-3xl font-bold text-gray-800 mb-4">
+                                <c:out value="${product.name}" />
+                            </h1>
+                            <p class="text-gray-600 text-lg mb-4">
+                                <c:out value="${product.description}" default="Không có mô tả" />
+                            </p>
+                            <p class="text-pink-600 font-bold text-2xl mb-4">
+                                <c:out value="${product.price}" /> USD
+                            </p>
+                            <p class="text-gray-500 mb-4">Tồn kho:
+                                <c:out value="${product.stock}" />
+                            </p>
+                            <p class="text-gray-500 mb-4">Loại sản phẩm:
+                                <c:out value="${product.productType}" default="Không xác định" />
+                            </p>
+                            <p class="text-gray-500 mb-4">Danh mục ID:
+                                <c:out value="${product.categoryId}" />
+                            </p>
                             <div class="flex space-x-4">
                                 <form method="post" action="${pageContext.request.contextPath}/AddToCart" class="flex-1">
                                     <input type="hidden" name="productId" value="${product.productId}" />
@@ -60,18 +134,11 @@
                                         Thêm vào giỏ hàng
                                     </button>
                                 </form>
-
-                                <form id="buyNowForm" method="post" action="${pageContext.request.contextPath}/checkout" class="flex-1">
-                                    <input type="hidden" name="productId" value="${product.productId}" />
-                                    <button type="button"
-                                            onclick="handleBuyNow()"
-                                            class="btn w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
-                                        Mua ngay
-                                    </button>
-                                </form>
-
-
-                                <button onclick="addToWishlist(${product.productId})" 
+                                <a href="${pageContext.request.contextPath}/checkout?productId=${product.productId}"
+                                   class="btn bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700">
+                                    Mua ngay
+                                </a>
+                                <button onclick="addToWishlist(${product.productId})"
                                         class="btn bg-red-100 text-red-600 py-3 px-4 rounded-md hover:bg-red-200">
                                     <svg class="w-6 h-6 inline-block" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
@@ -90,50 +157,151 @@
             </c:otherwise>
         </c:choose>
     </div>
+    <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800">Voucher đang có</h3>
+    <% if (vouchers != null && !vouchers.isEmpty()) { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% for (Voucher v : vouchers) {%>
+        <div class="bg-white p-4 shadow-md rounded-lg flex flex-col justify-between border border-gray-200">
+            <div>
+                <h4 class="text-lg font-bold text-red-600 mb-1"><%= v.getCode()%></h4>
+                <p class="text-sm text-gray-700 mb-1">
+                    Giảm <%= v.getDiscountPercent()%>% cho đơn từ <span class="font-medium">
+                        <%= String.format("%,.0f", v.getMinOrderValue())%> đ
+                    </span>
+                </p>
+                <p class="text-xs text-gray-500">Hạn: <%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(v.getExpiredAt())%>
+                </p>
+            </div>
+            <form action="GetVoucher" method="post" class="mt-4 text-right">
+                <input type="hidden" name="voucherId" value="<%= v.getVoucherId()%>">
+                <button type="submit"
+                        class="px-4 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition">
+                    Nhận ngay
+                </button>
+            </form>
+        </div>
+        <% } %>
+    </div>
+    <% } else { %>
+    <p class="text-gray-500">Hiện chưa có voucher nào khả dụng.</p>
+    <% }%>
+
+    <!-- Đánh giá sản phẩm -->
+    <div class="bg-white mt-8 rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá sản phẩm</h2>
+        <c:choose>
+            <c:when test="${not empty ratingList}">
+                <c:forEach var="rating" items="${ratingList}">
+                    <div class="border-b border-gray-200 py-4 flex">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-2xl text-gray-400"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="font-bold text-gray-700 mr-2">${rating.userName}</span>
+                                <span class="text-yellow-500 font-bold mr-2">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <i class="fa${i <= rating.stars ? 's' : 'r'} fa-star"></i>
+                                    </c:forEach>
+                                </span>
+                                <span class="text-gray-400 text-xs ml-2">
+                                    <fmt:formatDate value="${rating.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+                                </span>
+                            </div>
+                            <div class="text-gray-800">${rating.comment}</div>
+                            <!-- Hiển thị ảnh review nếu có -->
+                            <c:if test="${not empty rating.imageUrls}">
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <c:forEach var="img" items="${rating.imageUrls}">
+                                        <c:if test="${not empty img}">
+                                            <img src="${pageContext.request.contextPath}/${img}"
+                                                 alt="review image"
+                                                 class="review-thumb"
+                                                 onclick="showFullImage(this.src)"
+                                                 />
+                                        </c:if>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="text-gray-500 italic">Chưa có đánh giá nào cho sản phẩm này.</div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <!-- Modal/phóng to ảnh -->
+    <div id="imageModal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;">
+        <span class="close-btn" onclick="closeImageModal()">&times;</span>
+        <img id="fullImage" src="" />
+    </div>
+    <script>
+        function showFullImage(src) {
+            document.getElementById("fullImage").src = src;
+            document.getElementById("imageModal").style.display = "flex";
+        }
+        function closeImageModal() {
+            document.getElementById("imageModal").style.display = "none";
+            document.getElementById("fullImage").src = "";
+        }
+        document.getElementById("imageModal").onclick = function (e) {
+            if (e.target === this)
+                closeImageModal();
+        }
+        document.addEventListener('keydown', function (evt) {
+            if (evt.key === "Escape")
+                closeImageModal();
+        });
+    </script>
 
     <script>
     const isLoggedIn = "${not empty sessionScope.user}";
 
-    function addToCart(productId) {
-        if (isLoggedIn !== "true") {
-            alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
-            window.location.href = '${pageContext.request.contextPath}/login';
-            return;
-        }
-
-        fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
-            method: 'POST'
-        })
-        .then(response => response.text())
-        .then(text => {
-            try {
-                const data = JSON.parse(text);
-                if (data.success) {
-                    alert('Đã thêm sản phẩm vào giỏ hàng!');
-                } else {
-                    alert('Lỗi: ' + data.message);
-                }
-            } catch (e) {
-                alert('Lỗi định dạng phản hồi từ server.');
+        function addToCart(productId) {
+            if (isLoggedIn !== "true") {
+                alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+                window.location.href = '${pageContext.request.contextPath}/login';
+                return;
             }
-        })
-        .catch(error => {
-            alert('Lỗi khi thêm vào giỏ hàng: ' + error);
-        });
-    }
-
-    function handleBuyNow() {
-        if (isLoggedIn !== "true") {
-            // ✅ Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
-            window.location.href = '${pageContext.request.contextPath}/login';
-        } else {
-            // ✅ Nếu đã đăng nhập thì gửi form mua hàng
-            document.getElementById("buyNowForm").submit();
+            fetch('${pageContext.request.contextPath}/AddToCart?productId=' + productId, {
+                method: 'POST'
+            })
+                    .then(response => response.text())
+                    .then(text => {
+                        try {
+                            const data = JSON.parse(text);
+                            if (data.success) {
+                                alert('Đã thêm sản phẩm vào giỏ hàng!');
+                            } else {
+                                alert('Lỗi: ' + data.message);
+                            }
+                        } catch (e) {
+                            alert('Lỗi định dạng phản hồi từ server.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Lỗi khi thêm vào giỏ hàng: ' + error);
+                    });
         }
-    }
-</script>
-
-
+        function addToWishlist(productId) {
+            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Đã thêm sản phẩm vào danh sách yêu thích!');
+                        } else {
+                            alert('Lỗi: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
+                    });
+        }
+    </script>
     <%@ include file="/WEB-INF/include/footer.jsp" %>
-</body>
-</html>

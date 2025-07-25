@@ -77,6 +77,75 @@
                     font-size: 1.4em;
                 }
             }
+            /* Ảnh review vuông, lớn, phóng to khi hover */
+            .review-images img {
+                width: 180px;
+                height: 180px;
+                aspect-ratio: 1/1;
+                object-fit: cover;
+                border-radius: 12px;
+                border: 1.5px solid #dadada;
+                margin-right: 16px;
+                margin-top: 10px;
+                margin-bottom: 5px;
+                box-shadow: 0 1px 8px #0001;
+                transition: transform 0.2s cubic-bezier(.18,.89,.32,1.28);
+                background: #f7f7f7;
+                cursor: pointer;
+            }
+            .review-images img:hover {
+                transform: scale(1.08);
+                z-index: 10;
+                box-shadow: 0 4px 24px #0002;
+            }
+            /* Modal ảnh lớn */
+            #imgModal {
+                display: none;
+                position: fixed;
+                z-index: 9999;
+                left: 0;
+                top: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.85);
+                align-items: center;
+                justify-content: center;
+            }
+            #imgModal.open {
+                display: flex;
+            }
+            #imgModalContent {
+                max-width: 92vw;
+                max-height: 92vh;
+                border-radius: 16px;
+                box-shadow: 0 0 32px #222;
+                background: #fff;
+                animation: zoomIn .2s;
+            }
+            #imgModalCloseBtn {
+                position: absolute;
+                top: 38px;
+                right: 54px;
+                font-size: 54px;
+                color: #fff;
+                background: none;
+                border: none;
+                cursor: pointer;
+                z-index: 10001;
+                font-weight: bold;
+                transition: color .16s;
+            }
+            #imgModalCloseBtn:hover {
+                color: #f44;
+            }
+            @keyframes zoomIn {
+                from {
+                    transform:scale(.8);
+                }
+                to{
+                    transform:scale(1);
+                }
+            }
         </style>
     </head>
     <body>
@@ -160,12 +229,52 @@
 
                     <!-- Comment -->
                     <div class="text-dark"><%= r.getComment()%></div>
+
+                    <!-- Ảnh review (Click để phóng to) -->
+                    <% if (r.getImageUrls() != null && !r.getImageUrls().isEmpty()) { %>
+                    <div class="review-images d-flex flex-wrap">
+                        <% for (String img : r.getImageUrls()) {
+                                if (img != null && !img.trim().isEmpty()) {%>
+                        <img src="<%= request.getContextPath() + "/" + img%>"
+                             alt="review image"
+                             onclick="showReviewImgModal(this.src)" />
+                        <% }
+                            } %>
+                    </div>
+                    <% } %>
                 </div>
             </div>
             <% }
                 } %>
         </div>
         <% }%>
+
+        <!-- Modal phóng to ảnh -->
+        <div id="imgModal">
+            <button id="imgModalCloseBtn" onclick="closeImgModal()">&times;</button>
+            <img id="imgModalContent" src="" alt="Ảnh review lớn" />
+        </div>
+        <script>
+            function showReviewImgModal(src) {
+                var modal = document.getElementById('imgModal');
+                var img = document.getElementById('imgModalContent');
+                img.src = src;
+                modal.classList.add("open");
+            }
+            function closeImgModal() {
+                var modal = document.getElementById('imgModal');
+                modal.classList.remove("open");
+                document.getElementById('imgModalContent').src = '';
+            }
+            document.getElementById('imgModal').onclick = function (e) {
+                if (e.target === this)
+                    closeImgModal();
+            };
+            document.addEventListener('keydown', function (e) {
+                if (e.key === "Escape")
+                    closeImgModal();
+            });
+        </script>
 
     </body>
 </html>
