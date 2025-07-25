@@ -15,7 +15,8 @@ public class NotificationDAO {
 
     // Gửi thông báo đầy đủ (có link)
     public void sendNotification(int userId, String title, String message, String link) {
-        String sql = "INSERT INTO Notifications (user_id, title, message, link, is_read, created_at) VALUES (?, ?, ?, ?, 0, GETDATE())";
+        String sql = "INSERT INTO Notifications (user_id, title, message, link, is_read, created_at) "
+                + "VALUES (?, ?, ?, ?, 0, GETDATE())";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setString(2, title);
@@ -27,13 +28,22 @@ public class NotificationDAO {
         }
     }
 
-    // Gửi thông báo sản phẩm mới đến tất cả khách hàng với link chi tiết
+   // Gửi thông báo cập nhật đơn hàng
+public void sendOrderUpdateNotification(int userId, int orderId, String newStatus) {
+    String title = "Cập nhật đơn hàng";
+    String message = "Đơn hàng #" + orderId + " của bạn đã được cập nhật trạng thái: " + newStatus;
+    String link = "/order-details?order_id=" + orderId;
+
+    sendNotification(userId, title, message, link);
+}
+
+    // Gửi thông báo sản phẩm mới đến tất cả khách hàng
     public void sendProductUpdateToAllUsers(String productName, String productType, int productId) {
         String sqlGetUsers = "SELECT user_id FROM Users WHERE role = 'Customer'";
         String title = "Sản phẩm mới";
         String message = "Sản phẩm mới '" + productName + "' đã được cập nhật!";
+        String link;
 
-        String link = "";
         switch (productType.toLowerCase()) {
             case "pc":
                 link = "/pcDetail?pcId=" + productId;
@@ -103,7 +113,7 @@ public class NotificationDAO {
         return list;
     }
 
-    // Đánh dấu 1 thông báo là đã đọc
+    // Đánh dấu một thông báo là đã đọc
     public void markRead(int id) {
         String sql = "UPDATE Notifications SET is_read = 1 WHERE notification_id = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -125,7 +135,7 @@ public class NotificationDAO {
         }
     }
 
-    // Đếm số thông báo chưa đọc
+    // Đếm số lượng thông báo chưa đọc của user
     public int countUnreadByUser(int userId) {
         String sql = "SELECT COUNT(*) FROM Notifications WHERE user_id = ? AND is_read = 0";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -140,9 +150,10 @@ public class NotificationDAO {
         return 0;
     }
 
-    // Gửi thủ công thông báo bằng đối tượng Notification
+    // Gửi thủ công một đối tượng Notification
     public void createNotification(Notification noti) {
-        String sql = "INSERT INTO Notifications (user_id, title, message, link, is_read, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Notifications (user_id, title, message, link, is_read, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, noti.getUserId());
             ps.setString(2, noti.getTitle());
@@ -156,6 +167,7 @@ public class NotificationDAO {
         }
     }
 
+    // Lấy một thông báo theo ID
     public Notification getById(int id) {
         String sql = "SELECT * FROM Notifications WHERE notification_id = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -177,5 +189,4 @@ public class NotificationDAO {
         }
         return null;
     }
-
 }

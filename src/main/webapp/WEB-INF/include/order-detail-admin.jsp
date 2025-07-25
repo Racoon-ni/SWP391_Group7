@@ -12,106 +12,106 @@
         <title>Chi tiết đơn hàng</title>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f5f6fa;
-        color: #2f3640;
-    }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f5f6fa;
+                color: #2f3640;
+            }
 
-    .container {
-        background-color: #ffffff;
-        border-radius: 8px;
-        padding: 30px;
-        margin-top: 40px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
+            .container {
+                background-color: #ffffff;
+                border-radius: 8px;
+                padding: 30px;
+                margin-top: 40px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
 
-    h2, h4, h5 {
-        color: #2d3436;
-        margin-bottom: 20px;
-    }
+            h2, h4, h5 {
+                color: #2d3436;
+                margin-bottom: 20px;
+            }
 
-    .mb-3, .mb-4 {
-        margin-bottom: 20px;
-        font-size: 16px;
-    }
+            .mb-3, .mb-4 {
+                margin-bottom: 20px;
+                font-size: 16px;
+            }
 
-    .mb-3 strong,
-    .mb-4 strong {
-        display: inline-block;
-        min-width: 150px;
-        color: #2c3e50;
-    }
+            .mb-3 strong,
+            .mb-4 strong {
+                display: inline-block;
+                min-width: 150px;
+                color: #2c3e50;
+            }
 
-    .table {
-        background-color: #ffffff;
-        border-radius: 6px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    }
+            .table {
+                background-color: #ffffff;
+                border-radius: 6px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            }
 
-    .table thead {
-        background-color: #f1f2f6;
-        font-weight: 600;
-        text-align: center;
-    }
+            .table thead {
+                background-color: #f1f2f6;
+                font-weight: 600;
+                text-align: center;
+            }
 
-    .table td, .table th {
-        vertical-align: middle;
-        text-align: center;
-        padding: 12px;
-    }
+            .table td, .table th {
+                vertical-align: middle;
+                text-align: center;
+                padding: 12px;
+            }
 
-    .table img {
-        width: 60px;
-        border-radius: 6px;
-    }
+            .table img {
+                width: 60px;
+                border-radius: 6px;
+            }
 
-    .form-select {
-        width: 300px;
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid #ced4da;
-    }
+            .form-select {
+                width: 300px;
+                padding: 8px 12px;
+                border-radius: 6px;
+                border: 1px solid #ced4da;
+            }
 
-    .btn-edit {
-        background-color: #00b894;
-        color: white;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 6px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        margin-top: 10px;
-    }
+            .btn-edit {
+                background-color: #00b894;
+                color: white;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 6px;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                margin-top: 10px;
+            }
 
-    .btn-edit:hover {
-        background-color: #019875;
-    }
+            .btn-edit:hover {
+                background-color: #019875;
+            }
 
-    .btn-secondary {
-        background-color: #636e72;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 6px;
-        border: none;
-        text-decoration: none;
-        transition: background-color 0.3s;
-    }
+            .btn-secondary {
+                background-color: #636e72;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 6px;
+                border: none;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
 
-    .btn-secondary:hover {
-        background-color: #4b5254;
-    }
+            .btn-secondary:hover {
+                background-color: #4b5254;
+            }
 
-    .flash-success {
-        padding: 12px 16px;
-        background-color: #dff9fb;
-        color: #0984e3;
-        border-left: 4px solid #74b9ff;
-        border-radius: 5px;
-        margin-bottom: 20px;
-    }
-</style>
+            .flash-success {
+                padding: 12px 16px;
+                background-color: #dff9fb;
+                color: #0984e3;
+                border-left: 4px solid #74b9ff;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+        </style>
 
 
     </head>
@@ -162,7 +162,7 @@
                 </tr>
             </thead>
             <h4>Cập nhật trạng thái đơn hàng</h4>
-            <form action="admin/manage-orders/update-status" method="post" style="margin-top: 20px;">
+            <form action="manage-orders" method="post" style="margin-top: 20px;">
                 <input type="hidden" name="orderId" value="${order.orderId}" />
 
                 <label for="status">Trạng thái mới:</label>

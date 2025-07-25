@@ -334,7 +334,7 @@ public class orderDAO {
                 // Gửi thông báo
                 String title = "Cập nhật đơn hàng";
                 String message = "Đơn hàng #" + orderId + " đã được cập nhật trạng thái: " + newStatus;
-                String link = "/order-detail?id=" + orderId;
+                String link = "/order-details?order_id=" + orderId;
 
                 NotificationDAO dao = new NotificationDAO();
                 dao.sendNotification(userId, title, message, link);

@@ -6,7 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm" /></title>
+<title>Chi tiết sản phẩm. - <c:out value="${product.name}" default="Sản phẩm" /></title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <%
     List<Voucher> vouchers = (List<Voucher>) request.getAttribute("vouchers");
