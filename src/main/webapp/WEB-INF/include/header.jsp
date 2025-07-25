@@ -220,28 +220,31 @@
                                 </a>
                             </li>
                             <% }
-                            }%>
-                            
+
                         </ul>
                     </div>
                 </c:if>
             </div>
         </div>
     </nav>
-                 
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 
-    <script>
-        document.getElementById('notificationDropdown')?.addEventListener('click', function () {
-            fetch('<%= contextPath%>/notification/mark-all-read', {method: 'POST'})
-                    .then(() => {
-                        const badge = document.getElementById('notificationBadge');
-                        if (badge) {
-                            badge.style.display = 'none';
-                        }
-                    });
-        });
-    </script>
+</div>
+</div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    document.getElementById('notificationDropdown')?.addEventListener('click', function () {
+        fetch('<%= contextPath%>/notification/mark-all-read', {method: 'POST'})
+                .then(() => {
+                    const badge = document.getElementById('notificationBadge');
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+                });
+    });
+</script>
 </body>

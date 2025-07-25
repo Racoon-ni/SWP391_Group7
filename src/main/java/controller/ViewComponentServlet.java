@@ -48,7 +48,6 @@ public class ViewComponentServlet extends HttpServlet {
             } else {
                 try {
                     productList = new CategoriesDAO().getProductsByCategoryId(categoryId);
-                   
 
                     // ✅ Gán đánh giá trung bình và lượt đánh giá vào từng sản phẩm
                     RatingDAO ratingDAO = new RatingDAO();
