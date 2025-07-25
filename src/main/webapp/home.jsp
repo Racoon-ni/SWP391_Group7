@@ -5,6 +5,8 @@
 --%>
 
 <%@include file="WEB-INF/include/header.jsp" %>
+<%@ include file="/WEB-INF/include/filter.jsp" %>
+
 <!-- Main Content -->
 <div class="container-fluid">
     <div class="row">
