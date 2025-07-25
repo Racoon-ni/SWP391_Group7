@@ -106,7 +106,7 @@ public class CartDAO {
         }
     }
 
-    // Lấy tất cả sản phẩm trong giỏ hàng của người dùng
+    // Lấy tất cả sản phẩm trong giỏ hàng của người dùng44
     public List<Cart> getCartItemsByUserId(int userId) {
         List<Cart> cartItems = new ArrayList<>();
         String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, c.quantity, p.price " +

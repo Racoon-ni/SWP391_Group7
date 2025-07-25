@@ -6,7 +6,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ include file="/WEB-INF/include/header.jsp" %>
-
+  <!-- checkout-->
 <%
     DecimalFormat df = new DecimalFormat("#,###");
     List<Cart> cartItems = (List<Cart>) request.getAttribute("cartItems");
