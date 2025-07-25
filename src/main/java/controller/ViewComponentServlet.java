@@ -35,6 +35,7 @@ public class ViewComponentServlet extends HttpServlet {
         categoryMap.put("Bàn phím", 12);
         categoryMap.put("Chuột", 13);
 
+
         String categoryKey = request.getParameter("category");
         Integer categoryId = categoryMap.get(categoryKey);
 

@@ -28,6 +28,9 @@ public class Cart {
         this.price = price;
     }
 
+    public Cart() {
+    }
+
     // Getters và setters
     public int getCartItemId() { return cartItemId; }
     public int getProductId() { return productId; }
@@ -38,5 +41,30 @@ public class Cart {
     public double getPrice() { return price; }
 
     public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    public void setCartItemId(int cartItemId) {
+        this.cartItemId = cartItemId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
 }
 

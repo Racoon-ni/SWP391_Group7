@@ -207,7 +207,7 @@
 <div class="sidebar">
     <a href="view-profile">Thông tin tài khoản</a>
     <a href="#">Quản lý đơn hàng</a>
-    <a href="#">Sở địa chỉ</a>
+    <a href="ViewAddress">Sở địa chỉ</a>
     <a href="#">Thông báo</a>
     <a href="#">Điểm thành viên</a>
     <!-- Thêm mục Kho voucher -->

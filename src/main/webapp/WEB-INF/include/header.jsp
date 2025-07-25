@@ -220,18 +220,14 @@
                                 </a>
                             </li>
                             <% }
-                                }%>
-                            <li>
-                                <a class="notification-view-all" href="${pageContext.request.contextPath}/notifications">
-                                    🔎 Xem tất cả
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                 </c:if>
             </div>
         </div>
     </nav>
+
 
 </div>
 </div>

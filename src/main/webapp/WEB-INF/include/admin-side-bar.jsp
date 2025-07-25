@@ -94,7 +94,7 @@
 
 
     <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role == 'Admin'}">--%>
-    <a href="${pageContext.request.contextPath}/adminstaff-sales-stats">
+    <a href="${pageContext.request.contextPath}/adminstaff-">
         <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
 
     </a>
