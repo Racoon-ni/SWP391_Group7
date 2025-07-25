@@ -1,8 +1,10 @@
 <%@ include file="/WEB-INF/include/header.jsp" %>
 <c:set var="isLoggedIn" value="${not empty sessionScope.user}" />
-
+<%@ page import="java.util.List" %>
+<%@ page import="model.Voucher" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm" /></title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -92,6 +94,7 @@
     }
 </style>
 </head>
+
 <body class="bg-gray-100">
 
     <div class="container mx-auto px-4 py-8">
@@ -105,7 +108,8 @@
                 <div class="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="flex justify-center">
-                            <img src="${product.imageUrl}" alt="${product.name}" class="product-image w-full rounded-lg"/>
+                            <img src="${product.imageUrl}" alt="${product.name}"
+                                 class="product-image w-full rounded-lg" />
                         </div>
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800 mb-4">
@@ -127,8 +131,11 @@
                                 <c:out value="${product.categoryId}" />
                             </p>
                             <div class="flex space-x-4">
-                                <form method="post" action="${pageContext.request.contextPath}/AddToCart" class="flex-1">
-                                    <input type="hidden" name="productId" value="${product.productId}" />
+                                <form method="post"
+                                      action="${pageContext.request.contextPath}/AddToCart"
+                                      class="flex-1">
+                                    <input type="hidden" name="productId"
+                                           value="${product.productId}" />
                                     <button type="submit"
                                             class="btn w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
                                         Thêm vào giỏ hàng
@@ -140,8 +147,11 @@
                                 </a>
                                 <button onclick="addToWishlist(${product.productId})"
                                         class="btn bg-red-100 text-red-600 py-3 px-4 rounded-md hover:bg-red-200">
-                                    <svg class="w-6 h-6 inline-block" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                    <svg class="w-6 h-6 inline-block" fill="currentColor"
+                                         viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                          clip-rule="evenodd" />
                                     </svg>
                                     Yêu thích
                                 </button>
@@ -258,7 +268,8 @@
     </script>
 
     <script>
-    const isLoggedIn = "${not empty sessionScope.user}";
+        // Kiểm tra đăng nhập từ server, gán biến JS dạng string "true"/"false"
+        const isLoggedIn = "${not empty sessionScope.user}";
 
         function addToCart(productId) {
             if (isLoggedIn !== "true") {

@@ -5,6 +5,7 @@
 
 <title>Danh sách linh kiện - ${category}</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     .component-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -47,6 +48,37 @@
                         <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-contain p-4"/>
                         <div class="p-4">
                             <h3 class="text-lg font-semibold text-gray-800 truncate">${product.name}</h3>
+
+                            <!-- Đánh giá sản phẩm -->
+                            <div class="rating-info flex items-center mt-1 mb-1">
+                                <c:choose>
+                                    <c:when test="${product.totalRatings > 0}">
+                                        <c:set var="avg" value="${product.avgStars}" />
+                                        <c:set var="fullStars" value="${avg - (avg % 1)}" />
+                                        <c:set var="hasHalf" value="${avg - fullStars >= 0.25 && avg - fullStars < 0.75}" />
+                                        <c:set var="emptyStars" value="${5 - fullStars - (hasHalf ? 1 : 0)}" />
+
+                                        <c:forEach var="i" begin="1" end="${fullStars}">
+                                            <i class="fa-solid fa-star" style="color: orange;"></i>
+                                        </c:forEach>
+                                        <c:if test="${hasHalf}">
+                                            <i class="fa-solid fa-star-half-stroke" style="color: orange;"></i>
+                                        </c:if>
+                                        <c:forEach var="i" begin="1" end="${emptyStars}">
+                                            <i class="fa-regular fa-star" style="color: orange;"></i>
+                                        </c:forEach>
+                                        <span class="ml-2 font-semibold text-sm">
+                                            ${String.format("%.1f", avg)} / 5
+                                        </span>
+                                        <span class="ml-1 text-gray-400 text-xs">(${product.totalRatings} đánh giá)</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-gray-400 text-sm ml-1">Chưa có đánh giá</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <!-- Kết thúc đánh giá -->
+
                             <p class="text-xs text-gray-500 mt-1">${product.category.name}</p>
                             <p class="text-gray-600 text-sm mt-2 h-12 overflow-hidden">${product.description}</p>
                             <p class="text-pink-600 font-bold text-lg mt-2">${product.price} VNÐ</p>
@@ -100,4 +132,3 @@
 <%@ include file="/WEB-INF/include/footer.jsp" %>
 </body>
 </html>
-
