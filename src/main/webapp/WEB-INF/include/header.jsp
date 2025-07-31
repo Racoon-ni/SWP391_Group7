@@ -1,7 +1,8 @@
+<%@page import="DAO.NotificationDAO"%>
 <%@page import="java.util.List"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
-<%@page import="DAO.NotificationDAO" %>
+
 <%@page import="model.User" %>
 <%@page import="model.Notification" %>
 <%@page import="java.util.*" %>
@@ -220,7 +221,12 @@
                                 </a>
                             </li>
                             <% }
-
+                                }%>
+                            <li>
+                                <a class="notification-view-all" href="${pageContext.request.contextPath}/notifications">
+                                    🔎 Xem tất cả
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </c:if>
