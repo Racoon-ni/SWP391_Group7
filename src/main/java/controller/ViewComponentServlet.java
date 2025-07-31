@@ -21,7 +21,7 @@ public class ViewComponentServlet extends HttpServlet {
             throws ServletException, IOException {
         // Map ánh xạ key từ URL sang category_id trong DB
         Map<String, Integer> categoryMap = new HashMap<>();
-        categoryMap.put("PC", 1);
+        categoryMap.put("PC",  1);
         categoryMap.put("CPU", 2);
         categoryMap.put("RAM", 3);
         categoryMap.put("Mainboard", 4);
@@ -48,7 +48,6 @@ public class ViewComponentServlet extends HttpServlet {
             } else {
                 try {
                     productList = new CategoriesDAO().getProductsByCategoryId(categoryId);
-                   
 
                     // ✅ Gán đánh giá trung bình và lượt đánh giá vào từng sản phẩm
                     RatingDAO ratingDAO = new RatingDAO();

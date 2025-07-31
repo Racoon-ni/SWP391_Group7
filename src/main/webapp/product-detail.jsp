@@ -1,11 +1,10 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ page import="model.Product" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="WEB-INF/include/header.jsp" %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <title>Chi tiết sản phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -16,8 +15,7 @@
             object-fit: contain;
         }
     </style>
-</head>
-<body>
+
     <div class="container py-5">
         <%
             Product product = (Product) request.getAttribute("product");
@@ -62,7 +60,7 @@
             </div>
         </div>
 
-        <a href="pc-list" class="btn btn-secondary mt-4">Quay lại danh sách sản phẩm</a>
+        <a href="http://localhost:8080/SWP391_Group7/home" class="btn btn-secondary mt-4">Quay Về trang chủ</a>
     </div>
-</body>
-</html>
+
+<%@include file="/WEB-INF/include/footer.jsp" %>

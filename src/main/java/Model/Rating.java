@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Rating {
 
@@ -8,8 +9,10 @@ public class Rating {
     private String comment, userName;
     private Timestamp createdAt;
     private int orderId;
-    // ... getter/setter
+    // Thêm thuộc tính để lưu nhiều ảnh cho mỗi rating
+    private List<String> imageUrls;
 
+    // ... getter/setter
     public int getRatingId() {
         return ratingId;
     }
@@ -72,5 +75,13 @@ public class Rating {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="java.util.*, java.text.SimpleDateFormat, model.Feedback" %>
+<%@ include file="/WEB-INF/include/header.jsp" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,4 +81,6 @@
     </div>
 
 </body>
+<%@ include file="/WEB-INF/include/footer.jsp" %>
+
 </html>

@@ -6,7 +6,7 @@ package model;
 
 /**
  *
- * @author NghiLTTCE182357
+ * @author NghiLTTCE182357_
  */
 public class Cart {
      private int cartItemId;
@@ -27,6 +27,20 @@ public class Cart {
         this.stock = stock;
         this.price = price;
     }
+    
+    // Constructor, getters and setters
+    public Cart(int cartItemId, int productId, String productName, String imageUrl,
+                int quantity, double price) {
+        this.cartItemId = cartItemId;
+        this.productId = productId;
+        this.productName = productName;
+        this.imageUrl = imageUrl;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public Cart() {
+    }
 
     // Getters và setters
     public int getCartItemId() { return cartItemId; }
@@ -38,5 +52,30 @@ public class Cart {
     public double getPrice() { return price; }
 
     public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    public void setCartItemId(int cartItemId) {
+        this.cartItemId = cartItemId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
 }
 

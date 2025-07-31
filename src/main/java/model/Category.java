@@ -13,6 +13,8 @@ public class Category {
     private Integer parentId;
     private String name;
     private String categoryType;
+    private String parentName; // tên danh mục cha (không lưu DB, chỉ dùng hiển thị)
+
 
     public Category() {
     }
@@ -55,6 +57,14 @@ public class Category {
 
     public void setCategoryType(String categoryType) {
         this.categoryType = categoryType;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
     
     

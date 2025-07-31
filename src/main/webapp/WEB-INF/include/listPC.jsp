@@ -6,6 +6,9 @@
 <%@ include file="/WEB-INF/include/header.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, model.Product" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="isLoggedIn" value="${not empty sessionScope.user}" />
 <!DOCTYPE html>
 <html>
     <head>
@@ -129,15 +132,12 @@
                             boolean hasHalf = (avg - fullStars) >= 0.25 && (avg - fullStars) < 0.75;
                             int emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
                     %>
-                    <%-- Sao đầy --%>
                     <% for (int i = 0; i < fullStars; i++) { %>
                     <i class="fa-solid fa-star" style="color: orange;"></i>
                     <% } %>
-                    <%-- Nửa sao nếu có --%>
                     <% if (hasHalf) { %>
                     <i class="fa-solid fa-star-half-stroke" style="color: orange;"></i>
                     <% } %>
-                    <%-- Sao rỗng --%>
                     <% for (int i = 0; i < emptyStars; i++) { %>
                     <i class="fa-regular fa-star" style="color: orange;"></i>
                     <% }%>
@@ -149,10 +149,11 @@
                     <% }%>
                 </div>
 
-
-
                 <a class="pc-detail-btn" href="pcDetail?pcId=<%= pc.getProductId()%>">Xem chi tiết</a>
-                <button type="submit" class="pc-detail-btn" style="background:#1dbf36;">Thêm vào giỏ</button>
+
+                <!-- Nút thêm vào giỏ hoạt động -->
+                <button type="button" class="pc-detail-btn" style="background:#1dbf36;" onclick="addToCart(<%= pc.getProductId() %>)">Thêm vào giỏ</button>
+
                 <button class="btn btn-wish" title="Yêu thích"><i class="fa fa-heart"></i></button>
             </div>
             <%
@@ -160,5 +161,50 @@
                 }
             %>
         </div>
+
+        <script>
+            const isLoggedIn = "${isLoggedIn}";
+
+function addToCart(productId) {
+    if (isLoggedIn !== "true") {
+        
+        window.location.href = '${contextPath}/login';
+        return;
+    }
+
+    fetch('${contextPath}/AddToCart?productId=' + productId, {
+        method: 'POST'
+    })
+    .then(response => {
+        if (response.redirected) {
+            // Nếu response là redirect (chuyển hướng)
+            window.location.href = response.url;  // Chuyển hướng người dùng tới URL mới
+            return; // Dừng thực thi để tránh lỗi tiếp theo
+        }
+
+        // Nếu không phải redirect, kiểm tra mã trạng thái của response
+        if (!response.ok) {
+            throw new Error('Lỗi khi thêm vào giỏ hàng, mã trạng thái: ' + response.status);
+        }
+
+        return response.text(); // Trả về nội dung phản hồi dưới dạng văn bản
+    })
+    .then(text => {
+        if (text) {
+            if (text.includes("error")) {
+                // Nếu phản hồi chứa từ khóa "error", có thể là lỗi
+                alert('Lỗi khi thêm vào giỏ hàng!');
+            } else {
+                // Nếu không có lỗi
+                alert('Đã thêm sản phẩm vào giỏ hàng!');
+            }
+        }
+    })
+    .catch(error => {
+        alert('Lỗi khi thêm vào giỏ hàng: ' + error.message);
+    });
+}
+
+        </script>
     </body>
 </html>
