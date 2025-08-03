@@ -120,7 +120,7 @@
         <i class="fa-solid fa-comment-dots"></i> Quản lý phản hồi
     </a>
 
-    <a href="#">
+    <a href="http://localhost:8080/SWP391_Group7/categories">
         <i class="fa-solid fa-tags"></i> Quản lý thể loại
     </a>
 

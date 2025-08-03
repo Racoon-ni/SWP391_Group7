@@ -113,7 +113,7 @@
             <a href="#">Sở địa chỉ</a>
             <a href="#">Thông báo</a>
             <a href="#">Điểm thành viên</a>
-            <a href="ViewVouchers">Kho voucher</a>
+            <a href="ViewMyVoucher">Kho voucher</a>
             <a href="ViewWishlist">Danh sách yêu thích</a>
         </div>
 

@@ -3,6 +3,7 @@
     Created on : Jul 25, 2025, 10:32:48 AM
     Author     : ThinhLVCE181726 <your.name at your.org>
 --%>
+        <%@include file="WEB-INF/include/admin-side-bar.jsp" %>
 
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

@@ -141,10 +141,14 @@
                                         Thêm vào giỏ hàng
                                     </button>
                                 </form>
-                                <a href="${pageContext.request.contextPath}/checkout?productId=${product.productId}"
-                                   class="btn bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700">
-                                    Mua ngay
-                                </a>
+                                <form id="buyNowForm" method="post" action="${pageContext.request.contextPath}/checkout" class="flex-1">
+                                    <input type="hidden" name="productId" value="${product.productId}" />
+                                    <button type="button"
+                                            onclick="handleBuyNow()"
+                                            class="btn w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                                        Mua ngay
+                                    </button>
+                                </form>
                                 <button onclick="addToWishlist(${product.productId})"
                                         class="btn bg-red-100 text-red-600 py-3 px-4 rounded-md hover:bg-red-200">
                                     <svg class="w-6 h-6 inline-block" fill="currentColor"
@@ -314,5 +318,18 @@
                         alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
                     });
         }
+
+        function handleBuyNow() {
+            if (isLoggedIn !== "true") {
+                // ✅ Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+                window.location.href = '${pageContext.request.contextPath}/login';
+            } else {
+                // ✅ Nếu đã đăng nhập thì gửi form mua hàng
+                document.getElementById("buyNowForm").submit();
+            }
+        }
+
     </script>
+
+
     <%@ include file="/WEB-INF/include/footer.jsp" %>
