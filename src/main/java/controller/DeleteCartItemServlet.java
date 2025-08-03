@@ -9,9 +9,10 @@ import java.io.IOException;
 
 @WebServlet(name = "DeleteCartItemServlet", urlPatterns = {"/DeleteCartItem"})
 public class DeleteCartItemServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         String idStr = request.getParameter("id");
 

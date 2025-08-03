@@ -10,9 +10,11 @@ package model;
  */
 public class Category {
     private int categoryId;
-    private int parentId;
+    private Integer parentId;
     private String name;
     private String categoryType;
+    private String parentName; // tên danh mục cha (không lưu DB, chỉ dùng hiển thị)
+
 
     public Category() {
     }
@@ -33,11 +35,11 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 
@@ -55,6 +57,14 @@ public class Category {
 
     public void setCategoryType(String categoryType) {
         this.categoryType = categoryType;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
     
     

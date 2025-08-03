@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.CategoryDAO;
+import DAO.NotificationDAO;
 import DAO.ProductAttributeDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -142,6 +143,7 @@ public class ManagePCServlet extends HttpServlet {
         if (act != null) {
             switch (act) {
                 case "create":
+                case "create":
                     String name = request.getParameter("name");
                     String description = request.getParameter("description");
                     String priceStr = request.getParameter("price");
@@ -231,7 +233,6 @@ public class ManagePCServlet extends HttpServlet {
                             request.getRequestDispatcher("add-pc.jsp").forward(request, response);
                         }
                     }
-
                     break;
 
                 case "edit":

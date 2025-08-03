@@ -6,31 +6,34 @@ package model;
 
 /**
  *
- * @author Huynh Trong Nguyen - CE190356
+ * @author ThinhLVCE181726 <your.name at your.org>
  */
 public class Attribute {
 
-    private int id;
+    private Integer attributeId;
     private String name;
-    private int categoryId;
+    private Integer categoryId;
     private String unit;
+    private String categoryName; // để join cho dễ hiển thị
 
     public Attribute() {
     }
 
-    public Attribute(int id, String name, int categoryId, String unit) {
-        this.id = id;
+    public Attribute(Integer attributeId, String name, Integer categoryId, String unit, String categoryName) {
+        this.attributeId = attributeId;
         this.name = name;
         this.categoryId = categoryId;
         this.unit = unit;
+        this.categoryName = categoryName;
     }
 
-    public int getId() {
-        return id;
+    // Getter/Setter
+    public Integer getAttributeId() {
+        return attributeId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAttributeId(Integer attributeId) {
+        this.attributeId = attributeId;
     }
 
     public String getName() {
@@ -41,11 +44,11 @@ public class Attribute {
         this.name = name;
     }
 
-    public int getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -57,4 +60,11 @@ public class Attribute {
         this.unit = unit;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

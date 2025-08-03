@@ -22,17 +22,22 @@ public class AdminOrderDetailServlet extends HttpServlet {
 
             orderDAO dao = new orderDAO();
             Order order = dao.getOrderById(orderId);
-            List<OrderDetail> orderDetails = dao.getOrderDetails(orderId, order.getUserId());
+            List<OrderDetail> orderDetails = dao.getOrderDetailsNoUser(orderId);
             ShippingInfo shipping = dao.getShippingInfoByOrderId(orderId);
 
-            if (order != null) {
+            System.out.println("Order: " + order);
+            System.out.println("OrderDetails: " + orderDetails);
+            System.out.println("Shipping: " + shipping);
+
+            if (order != null && orderDetails != null && shipping != null) {
                 request.setAttribute("order", order);
                 request.setAttribute("orderDetails", orderDetails);
                 request.setAttribute("shipping", shipping);
                 request.getRequestDispatcher("/WEB-INF/include/order-detail-admin.jsp").forward(request, response);
             } else {
-                response.sendRedirect("manage-orders?error=OrderNotFound");
+                response.sendRedirect("manage-orders?error=MissingData");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("manage-orders?error=InvalidOrderId");

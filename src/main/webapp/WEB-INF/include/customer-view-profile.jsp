@@ -88,7 +88,18 @@
     }
 </style>
 
-<%@include file="../include/user-side-bar.jsp" %>
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="view-profile">Thông tin tài khoản</a>
+    <a href="#">Quản lý đơn hàng</a>
+    <a href="ViewAddress">Sở địa chỉ</a>
+    <a href="#">Thông báo</a>
+    <a href="#">Điểm thành viên</a>
+    <a href="change-password">Đổi mật khẩu</a>
+    <a href="ViewVouchers">Kho voucher</a>
+    <a href="ViewWishlist">Danh sách yêu thích</a>
+</div>
+
 <!-- Main content -->
 <div class="main-content">
     <div class="container">

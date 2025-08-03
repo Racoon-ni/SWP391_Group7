@@ -10,6 +10,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+// THÊM import DAO/model nếu chưa có
+import DAO.AdminStaffSalesDAO;
+import model.AdminStaffSalesStats;
+import java.util.List;
 import jakarta.servlet.http.HttpSession;
 import model.User;
 
@@ -31,7 +36,9 @@ public class DashBoardServlet extends HttpServlet {
      */
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      *
      * @param request servlet request
      * @param response servlet response
@@ -39,6 +46,7 @@ public class DashBoardServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);

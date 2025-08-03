@@ -6,10 +6,9 @@ package DAO;
 
 /**
  *
- * @author ThinhLVCE181726 <your.name at your.org>
+ * @author ThinhLVCE181726
  */
 import config.DBConnect;
-import static config.DBConnect.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +25,7 @@ public class ProductDAO {
 
     private int pcId;
 
+    // Lấy tất cả PC
     public List<Product> getAllPC() throws Exception {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE product_type = 'PC' AND status = 1";
@@ -42,10 +42,9 @@ public class ProductDAO {
                 p.setProductType(rs.getString("product_type"));
                 p.setCategoryId(rs.getInt("category_id"));
                 p.setStatus(rs.getInt("status"));
-                // Thêm:
+                // Thêm rating
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
-                p.setStatus(rs.getInt("status"));
                 list.add(p);
             }
         } catch (Exception e) {
@@ -54,7 +53,7 @@ public class ProductDAO {
         return list;
     }
 
-    // lấy sản phẩm bằng ID 
+    // Lấy sản phẩm bằng ID 
     public Product getProductById(int productId) {
         Product product = null;
         String sql = "SELECT * FROM Products WHERE product_id = ?";
@@ -86,6 +85,7 @@ public class ProductDAO {
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 Product p = new Product(
                         rs.getInt("product_id"),
@@ -98,11 +98,9 @@ public class ProductDAO {
                         rs.getInt("category_id"),
                         rs.getInt("status")
                 );
-                // Lấy thêm rating trung bình và số lượng đánh giá
                 p.setAvgStars(getAverageStars(p.getProductId()));
                 p.setTotalRatings(getTotalRatings(p.getProductId()));
                 list.add(p);
-
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,7 +108,7 @@ public class ProductDAO {
         return list;
     }
 
-    // Lấy tất cả các linh kiện
+    // Lấy tất cả linh kiện
     public List<Product> getAllComponents() throws ClassNotFoundException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products p JOIN Categories c ON p.category_id = c.category_id WHERE p.product_type = 'Component' AND p.status = 1";
@@ -136,13 +134,13 @@ public class ProductDAO {
         return list;
     }
 
-    // Lấy sản phẩm theo category (ví dụ: RAM, CPU, Series)
+    // Lấy sản phẩm theo tên category
     public List<Product> getProductsByCategory(String category) throws ClassNotFoundException {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products p JOIN Categories c ON p.category_id = c.category_id WHERE c.name = ? AND p.status = 1";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, category);  // Set category name (RAM, CPU, etc.)
+            ps.setString(1, category);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -157,10 +155,8 @@ public class ProductDAO {
                         rs.getInt("category_id"),
                         rs.getInt("status")
                 );
-                // Lấy rating cho từng sản phẩm:
                 setRatingInfoForProduct(p, conn);
                 list.add(p);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,7 +182,6 @@ public class ProductDAO {
         }
     }
 
-    // Lấy rating trung bình và số lượt đánh giá của 1 sản phẩm
     public double getAverageStars(int productId) {
         String sql = "SELECT AVG(stars) FROM Ratings WHERE product_id = ?";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -259,7 +254,6 @@ public class ProductDAO {
     }
 
     public Product getPCById(int pcId) throws Exception {
-        // Sửa SQL cho đúng với bảng của bạn
         String sql = "SELECT * FROM Products WHERE product_id = ? AND product_type = 'PC'";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, pcId);
@@ -272,11 +266,156 @@ public class ProductDAO {
                 pc.setPrice(rs.getDouble("price"));
                 pc.setStock(rs.getInt("stock"));
                 pc.setImageUrl(rs.getString("image_url"));
-                // ...set các thuộc tính khác
                 return pc;
             }
         }
         return null;
     }
 
+    public void sendNewProductNotification(String productName) {
+        String message = "Sản phẩm mới \"" + productName + "\" đã được cập nhật!";
+        NotificationDAO notiDAO = new NotificationDAO();
+        String sql = "SELECT user_id FROM Users WHERE role = 'Customer'";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int userId = rs.getInt("user_id");
+                notiDAO.sendNotification(userId, message, "Product");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Product> searchProducts(String keyword) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE status = 1 AND (name LIKE ? OR description LIKE ?)";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            String searchValue = "%" + keyword + "%";
+            ps.setString(1, searchValue);
+            ps.setString(2, searchValue);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setProductType(rs.getString("product_type"));
+                p.setCategoryId(rs.getInt("category_id"));
+                p.setStatus(rs.getInt("status"));
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Product> filterProducts(String categoryId, String priceRange) {
+        List<Product> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Products WHERE status = 1");
+        List<Object> params = new ArrayList<>();
+
+        if (categoryId != null && !categoryId.isEmpty()) {
+            sql.append(" AND category_id = ?");
+            params.add(Integer.parseInt(categoryId));
+        }
+        if (priceRange != null && !priceRange.isEmpty()) {
+            switch (priceRange) {
+                case "1":
+                    sql.append(" AND price < 2000000");
+                    break;
+                case "2":
+                    sql.append(" AND price >= 2000000 AND price <= 5000000");
+                    break;
+                case "3":
+                    sql.append(" AND price > 5000000 AND price <= 10000000");
+                    break;
+                case "4":
+                    sql.append(" AND price > 10000000");
+                    break;
+            }
+        }
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setProductType(rs.getString("product_type"));
+                p.setCategoryId(rs.getInt("category_id"));
+                p.setStatus(rs.getInt("status"));
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int countAllProducts() {
+        String sql = "SELECT COUNT(*) FROM Products WHERE status=1";
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Product> getProductsByPage(int page, int pageSize) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE status=1 ORDER BY product_id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, (page - 1) * pageSize);
+            ps.setInt(2, pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                // set các trường cho p...
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Product> getAllProducts() throws Exception {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products ";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setProductType(rs.getString("product_type"));
+                p.setCategoryId(rs.getInt("category_id"));
+                p.setStatus(rs.getInt("status"));
+                // Thêm rating
+                p.setAvgStars(getAverageStars(p.getProductId()));
+                p.setTotalRatings(getTotalRatings(p.getProductId()));
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

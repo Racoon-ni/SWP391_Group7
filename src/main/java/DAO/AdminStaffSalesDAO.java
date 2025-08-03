@@ -58,4 +58,72 @@ public class AdminStaffSalesDAO {
         }
         return list;
     }
+    public double getTodayRevenue() {
+        String sql = "SELECT SUM(total_price) AS revenue FROM Orders WHERE DATE(created_at) = CURDATE()";
+        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("revenue");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // ✅ 2. Lấy doanh thu tháng hiện tại
+    public double getThisMonthRevenue() {
+        String sql = "SELECT SUM(total_price) AS revenue FROM Orders WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())";
+        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("revenue");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // ✅ 3. Lấy doanh thu 7 ngày gần nhất (cho biểu đồ & export)
+    public List<AdminStaffSalesStats> getLast7DaysRevenue() {
+        List<AdminStaffSalesStats> list = new ArrayList<>();
+        String sql = "SELECT DATE(created_at) AS date, SUM(total_price) AS revenue " +
+                     "FROM Orders WHERE created_at >= CURDATE() - INTERVAL 6 DAY " +
+                     "GROUP BY DATE(created_at) ORDER BY date DESC";
+        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Date date = rs.getDate("date");
+                double revenue = rs.getDouble("revenue");
+                list.add(new AdminStaffSalesStats(date, revenue));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // ✅ 4. Lấy doanh thu 6 tháng gần nhất (cho biểu đồ & export)
+    public List<AdminStaffSalesStats> getLast6MonthsRevenue() {
+        List<AdminStaffSalesStats> list = new ArrayList<>();
+        String sql = "SELECT YEAR(created_at) AS year, MONTH(created_at) AS month, SUM(total_price) AS revenue " +
+                     "FROM Orders " +
+                     "WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) " +
+                     "GROUP BY YEAR(created_at), MONTH(created_at) " +
+                     "ORDER BY year DESC, month DESC LIMIT 6";
+        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int year = rs.getInt("year");
+                int month = rs.getInt("month");
+                double revenue = rs.getDouble("revenue");
+                list.add(new AdminStaffSalesStats(year, month, revenue));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
+

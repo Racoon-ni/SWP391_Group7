@@ -10,6 +10,7 @@ public class Product {
     private String productType;
     private int categoryId;
     private int status;
+     private Category category;
     // getters, setters
 
     // --- THÊM 2 FIELD MỚI ---
@@ -122,4 +123,13 @@ public class Product {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    
 }

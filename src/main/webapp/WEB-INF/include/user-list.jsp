@@ -16,6 +16,11 @@
     ArrayList<User> userList = (ArrayList<User>) request.getAttribute("userList");
 %>
 <div class="main-content">
+<!--    <div class="d-flex justify-content-end">
+        <a href="${pageContext.request.contextPath}/manage-component?view=add" class="btn btn-success">
+            <i class="fa-solid fa-square-plus"></i> Thêm tài khoản
+        </a>
+    </div>-->
     <%
         if (!userList.isEmpty() && userList != null) {
     %>
@@ -25,6 +30,8 @@
                 <th scope="col" style="text-align: center">ID</th>
                 <th scope="col">Tên đăng nhập</th>
                 <th scope="col">Email</th>
+                <th scope="col">Họ và Tên</th>
+                <th scope="col">Ngày Sinh</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Số Điện Thoại</th>
                 <th scope="col">Trạng thái</th>
@@ -39,6 +46,8 @@
                 <th scope="row" style="text-align: center"><%= user.getId()%></th>
                 <td scope="row"><%= user.getUsername()%></td>
                 <td><%= user.getEmail()%></td>
+                <td><%= user.getFullname()%></td>
+                <td><%= user.getDateOfBirth()%></td>
                 <td><%= user.getAddress()%></td>
                 <td><%= user.getPhone()%></td>
                 <td><%= user.isStatus() ? "Còn hoạt động" : "Dừng hoạt động"%></td>

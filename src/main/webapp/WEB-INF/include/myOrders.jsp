@@ -1,5 +1,7 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ page import="java.util.*, model.Order, java.text.*" %>
+<%@ include file="/WEB-INF/include/header.jsp" %>
+
 <%
     if (session.getAttribute("user") == null) {
         response.sendRedirect(request.getContextPath() + "/login");
@@ -7,73 +9,104 @@
     }
     List<Order> orders = (List<Order>) request.getAttribute("orders");
 %>
+
 <!DOCTYPE html>
+
 <html>
+    
+
     <head>
+        
         <meta charset="UTF-8">
+
         <title>Đơn hàng của tôi</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <style>
-            .btn-cancel {
-                border-radius: 18px;
-                background: #ffe5e9;
-                color: #d90429;
-                border: none;
+            body {
+                background-color: #f8f9fa;
+            }
+
+            .order-header {
+                background-color: #0d6efd;
+                color: white;
+                padding: 16px;
+                border-radius: 8px;
+                margin-bottom: 24px;
+                display: flex;
+                align-items: center;
+                font-weight: 700;
+                font-size: 1.5rem;
+            }
+            
+
+            .order-header i {
+                margin-right: 12px;
+            }
+
+            .table thead {
+                background-color: #0d6efd;
+                color: white;
+            }
+
+            .btn-action {
+                border-radius: 20px;
                 font-weight: 500;
-                transition: 0.2s;
             }
-            .btn-cancel:hover {
-                background: #d90429;
-                color: #fff;
-                box-shadow: 0 2px 8px #d9042940;
-            }
+
             .badge-pending {
                 background: #fff3cd !important;
                 color: #664d03 !important;
                 font-weight: 600;
             }
-            .badge-success, .badge-danger {
-                font-weight: 600;
+
+            .alert {
+                border-radius: 8px;
             }
-            .btn-view {
-                border-radius: 18px;
-                font-weight: 500;
+
+            a.btn-back-home {
+                margin-top: 24px;
+                border-radius: 20px;
+                padding: 8px 20px;
             }
         </style>
     </head>
     <body>
         <div class="container mt-5">
-            <h2 class="mb-4" style="font-weight:700"><i class="fas fa-receipt"></i> Đơn hàng của tôi</h2>
+            <div class="order-header">
+                <i class="fas fa-receipt"></i> Đơn hàng của tôi
+            </div>
 
             <% String msg = request.getParameter("msg"); %>
+            <% if (msg != null) { %>
             <% if ("reorder_success".equals(msg)) { %>
-            <div class="alert alert-success mb-3 auto-dismiss">Đặt lại đơn hàng thành công! Đơn hàng mới đã được tạo.</div>
+            <div class="alert alert-success auto-dismiss">Đặt lại đơn hàng thành công! Đơn hàng mới đã được tạo.</div>
             <% } else if ("reorder_fail".equals(msg)) { %>
-            <div class="alert alert-danger mb-3 auto-dismiss">Không thể đặt lại đơn hàng. Vui lòng thử lại.</div>
+            <div class="alert alert-danger auto-dismiss">Không thể đặt lại đơn hàng. Vui lòng thử lại.</div>
             <% } else if ("cancel_success".equals(msg)) { %>
-            <div class="alert alert-warning mb-3 auto-dismiss">Đơn hàng đã được hủy thành công.</div>
+            <div class="alert alert-warning auto-dismiss">Đơn hàng đã được hủy thành công.</div>
             <% } else if ("cancel_fail".equals(msg)) { %>
-            <div class="alert alert-danger mb-3 auto-dismiss">Không thể hủy đơn hàng. Vui lòng thử lại.</div>
+            <div class="alert alert-danger auto-dismiss">Không thể hủy đơn hàng. Vui lòng thử lại.</div>
             <% } else if ("rating_success".equals(msg)) { %>
-            <div class="alert alert-success mb-3 auto-dismiss">Đánh giá thành công!</div>
+            <div class="alert alert-success auto-dismiss">Đánh giá thành công!</div>
             <% } else if ("already_rated".equals(msg)) { %>
-            <div class="alert alert-warning mb-3 auto-dismiss">Bạn đã đánh giá sản phẩm này trong đơn này rồi.</div>
+            <div class="alert alert-warning auto-dismiss">Bạn đã đánh giá sản phẩm này trong đơn này rồi.</div>
             <% } else if ("rating_fail".equals(msg)) { %>
-            <div class="alert alert-danger mb-3 auto-dismiss">Đánh giá thất bại!</div>
+            <div class="alert alert-danger auto-dismiss">Đánh giá thất bại!</div>
             <% } else if ("error".equals(msg)) { %>
-            <div class="alert alert-danger mb-3 auto-dismiss">Có lỗi xảy ra!</div>
+            <div class="alert alert-danger auto-dismiss">Có lỗi xảy ra!</div>
+            <% } %>
             <% } %>
 
-            <table class="table table-bordered text-center align-middle">
-                <thead class="table-dark">
+            <table class="table table-bordered text-center align-middle shadow-sm bg-white rounded">
+                <thead>
                     <tr>
                         <th style="width:8%;">Mã đơn</th>
                         <th style="width:14%;">Ngày đặt</th>
                         <th style="width:18%;">Tổng tiền</th>
                         <th style="width:14%;">Trạng thái</th>
                         <th style="width:12%;">Chi tiết</th>
-                        <th style="width:10%;">Tác vụ</th>
+                        <th style="width:20%;">Tác vụ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,9 +116,10 @@
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                         NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
                         for (Order order : orders) {
+                            String fullOrderId = String.format("DH%06d", order.getOrderId());
                     %>
                     <tr>
-                        <td>#<%= order.getOrderId()%></td>
+                        <td><%= fullOrderId%></td>
                         <td><%= df.format(order.getCreatedAt())%></td>
                         <td><%= nf.format(order.getTotalPrice())%></td>
                         <td>
@@ -102,47 +136,61 @@
                             <% }%>
                         </td>
                         <td>
-                            <a href="order-details?order_id=<%= order.getOrderId()%>" class="btn btn-outline-primary btn-view btn-sm">
+                            <a href="order-details?order_id=<%= order.getOrderId()%>"
+                               class="btn btn-outline-primary btn-action btn-sm">
                                 <i class="fas fa-eye"></i> Xem
                             </a>
                         </td>
                         <td>
-                            <% if ("Pending".equals(order.getStatus())) {%>
-                            <button type="button" class="btn btn-cancel btn-sm px-3" data-bs-toggle="modal" data-bs-target="#cancelOrderModal" data-order-id="<%= order.getOrderId()%>">
-                                <i class="fas fa-times"></i> Hủy
-                            </button>
-                            <% } else if ("Completed".equals(order.getStatus())) {%>
-                            <form action="rateProduct" method="get" style="display:inline;">
-                                <input type="hidden" name="orderId" value="<%= order.getOrderId()%>" />
-                                <button type="submit" class="btn btn-outline-success btn-sm">
-                                    <i class="fas fa-star"></i> Đánh giá sản phẩm
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                <% if ("Pending".equals(order.getStatus())) {%>
+                                <button type="button" class="btn btn-outline-danger btn-action btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#cancelOrderModal"
+                                        data-order-id="<%= order.getOrderId()%>">
+                                    <i class="fas fa-times"></i> Hủy
                                 </button>
-                            </form>
-                            <% } else {%>
-                            <form action="reorder" method="get" style="display:inline;">
-                                <input type="hidden" name="orderId" value="<%= order.getOrderId()%>" />
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="fas fa-redo"></i> Mua lại
-                                </button>
-                            </form>
-                            <% } %>
+                                <% } %>
+
+                                <% if ("Completed".equals(order.getStatus())) {%>
+                                <form action="rateProduct" method="get">
+                                    <input type="hidden" name="orderId" value="<%= order.getOrderId()%>" />
+                                    <button type="submit" class="btn btn-outline-success btn-action btn-sm">
+                                        <i class="fas fa-star"></i> Đánh giá
+                                    </button>
+                                </form>
+                                <% } %>
+
+                                <% if (!"Pending".equals(order.getStatus())) {%>
+                                <form action="reorder" method="get">
+                                    <input type="hidden" name="orderId" value="<%= order.getOrderId()%>" />
+                                    <button type="submit" class="btn btn-outline-secondary btn-action btn-sm">
+                                        <i class="fas fa-redo"></i> Mua lại
+                                    </button>
+                                </form>
+                                <% } %>
+                            </div>
                         </td>
                     </tr>
                     <% }
-                            }%>
+        }%>
                 </tbody>
+
             </table>
 
-            <a href="home.jsp" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Quay về Trang chủ</a>
+            <a href="home.jsp" class="btn btn-secondary btn-back-home">
+                <i class="fas fa-arrow-left"></i> Quay về Trang chủ
+            </a>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal hủy đơn -->
         <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="cancelOrderModalLabel"><i class="fas fa-times-circle text-danger"></i> Xác nhận hủy đơn</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                <div class="modal-content rounded-4">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="cancelOrderModalLabel">
+                            <i class="fas fa-times-circle"></i> Xác nhận hủy đơn
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
                     </div>
                     <div class="modal-body">
                         Bạn có chắc chắn muốn hủy đơn hàng này không?
@@ -150,7 +198,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                         <form id="cancelOrderForm" method="post" action="CancelOrderSevlet" style="display:inline;">
-                            <input type="hidden" name="orderId" id="modalOrderId" value=""/>
+                            <input type="hidden" name="orderId" id="modalOrderId" />
                             <button type="submit" class="btn btn-danger"><i class="fas fa-times"></i> Xác nhận hủy</button>
                         </form>
                     </div>
@@ -160,6 +208,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
         <script>
+            // Set order ID vào form khi mở modal
             var cancelOrderModal = document.getElementById('cancelOrderModal');
             cancelOrderModal.addEventListener('show.bs.modal', function (event) {
                 var button = event.relatedTarget;
@@ -167,6 +216,7 @@
                 document.getElementById('modalOrderId').value = orderId;
             });
 
+            // Tự động ẩn thông báo
             setTimeout(() => {
                 document.querySelectorAll('.auto-dismiss').forEach(alert => {
                     alert.style.transition = "opacity 0.5s ease";
@@ -175,5 +225,6 @@
                 });
             }, 5000);
         </script>
+        <%@ include file="/WEB-INF/include/footer.jsp" %>
     </body>
 </html>

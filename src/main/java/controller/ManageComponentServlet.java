@@ -6,6 +6,8 @@ package controller;
 
 import DAO.CategoryDAO;
 import DAO.ComponentDAO;
+import DAO.NotificationDAO;
+import DAO.ProductDAO;
 import DAO.ProductAttributeDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -66,12 +68,14 @@ public class ManageComponentServlet extends HttpServlet {
                         ComponentDAO comp = new ComponentDAO();
                         CategoryDAO c = new CategoryDAO();
 
-                        ArrayList<Component> componentList;
-                        String cateId = request.getParameter("cateId");
+            ArrayList<Component> componentList;
+            String cateId = request.getParameter("cateId");
 
-                        componentList = (cateId == null || cateId.isEmpty())
-                                ? comp.getAllComponents(null)
-                                : comp.getAllComponents(cateId);
+            if (cateId == null || cateId.isEmpty()) {
+                componentList = comp.getAllComponents(null);
+            } else {
+                componentList = comp.getAllComponents(cateId);
+            }
 
                         request.setAttribute("cateList", c.getAllCategories());
                         request.setAttribute("componentList", componentList);
@@ -172,7 +176,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 
         if (act != null) {
             switch (act) {
-                case "create": // not validate yet
+                case "create":
                     String name = request.getParameter("name");
                     String description = request.getParameter("description");
                     String priceStr = request.getParameter("price");
@@ -261,7 +265,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                             request.getRequestDispatcher("add-component.jsp").forward(request, response);
                         }
                     }
-
                     break;
 
                 case "edit":

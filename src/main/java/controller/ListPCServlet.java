@@ -9,6 +9,7 @@
 package controller;
 
 import DAO.ProductDAO;
+import DAO.RatingDAO;
 import model.Product;
 import java.io.*;
 import java.util.*;
@@ -16,17 +17,30 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
-
 @WebServlet("/listPC")
 public class ListPCServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
-        ProductDAO dao = new ProductDAO();
+            throws ServletException, IOException {
+        ProductDAO productDAO = new ProductDAO();
+        RatingDAO ratingDAO = new RatingDAO();
+
         try {
-            List<Product> pcList = dao.getAllPC();
+            List<Product> pcList = productDAO.getAllPC();
+
+            // Lấy map rating trung bình và số lượt
+            Map<Integer, Double> avgStars = ratingDAO.getAverageStars();
+            Map<Integer, Integer> ratingCounts = ratingDAO.getRatingCounts();
+
+            // Gán vào từng sản phẩm
+            for (Product pc : pcList) {
+                int pid = pc.getProductId();
+                pc.setAvgStars(avgStars.getOrDefault(pid, 0.0));
+                pc.setTotalRatings(ratingCounts.getOrDefault(pid, 0));
+            }
+
             req.setAttribute("pcList", pcList);
-            // lỗi truy cập vào trang !!!
             req.getRequestDispatcher("/WEB-INF/include/listPC.jsp").forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();

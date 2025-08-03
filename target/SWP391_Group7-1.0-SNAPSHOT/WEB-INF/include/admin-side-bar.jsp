@@ -104,6 +104,16 @@
     </a>
 
     <a href="${pageContext.request.contextPath}/manage-user">
+        <i class="fa-solid fa-user"></i> Quản lý tài khoản
+    </a>
+
+    <a href="${pageContext.request.contextPath}/StaffList">
+        <i class="fa-solid fa-user"></i> Quản lý Staff
+    </a>
+
+
+    <a href="${pageContext.request.contextPath}/feedbacks">
+        <i class="fa-solid fa-comment-dots"></i> Quản lý phản hồi
         <i class="fa-solid fa-user"></i> Quản lý tài khoản khách hàng
     </a>
 
@@ -114,6 +124,9 @@
     <a href="${pageContext.request.contextPath}/manage-vouchers">
         <i class="fas fa-shopping-cart"></i> Quản lý Voucher
     </a>
+    <a href="${pageContext.request.contextPath}/manage-banner">
+    <i class="fa-regular fa-image"></i>Quản lý Banner
+        </a>
     </c:if>
 
     <c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role != 'Customer'}">
