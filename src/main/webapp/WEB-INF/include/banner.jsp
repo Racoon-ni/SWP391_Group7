@@ -25,7 +25,13 @@
         </style>
     </head>
     <body>
-        <div class="main-content">
+        <div class="main-content container mt-4">
+
+            <!-- ✅ Nút quay về trang chủ admin -->
+            <a href="${pageContext.request.contextPath}/dash-board.jsp" class="btn btn-outline-primary mb-3">
+                ⬅ Quay về trang chủ
+            </a>
+
             <h2>Quản lý Banner</h2>
 
             <c:if test="${param.updated eq 'true'}">
@@ -65,7 +71,7 @@
                 </thead>
                 <tbody>
                     <c:choose>
-                        <c:when test="${not empty banners}">
+<c:when test="${not empty banners}">
                             <c:forEach var="b" items="${banners}">
                                 <tr>
                             <form method="post" class="form-inline">
@@ -119,7 +125,7 @@
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Trạng thái:</label>
-                                    <select name="status" class="form-select">
+<select name="status" class="form-select">
                                         <option value="1">Hiển thị</option>
                                         <option value="0">Ẩn</option>
                                     </select>
@@ -142,5 +148,3 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-
-
