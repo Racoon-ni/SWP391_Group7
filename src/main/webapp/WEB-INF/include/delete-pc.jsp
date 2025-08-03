@@ -10,7 +10,7 @@
 <!-- Modal HTML -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
-        <form method="post" action="manage-pc">
+        <form method="post" action="${pageContext.request.contextPath}/manage-pc">
             <input type="hidden" name="id" id="id">
             <input type="hidden" name="action" value="delete">
             <div class="modal-content">

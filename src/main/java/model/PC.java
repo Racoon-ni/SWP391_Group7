@@ -32,6 +32,7 @@ public class PC {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.category = category;
+
         this.status = status;
     }
 

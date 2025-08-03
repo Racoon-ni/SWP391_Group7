@@ -27,7 +27,6 @@
                 <th scope="col">Email</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Số Điện Thoại</th>
-                <th scope="col">Vai trò</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col" style="text-align: center">Chức năng</th>
             </tr>
@@ -42,7 +41,6 @@
                 <td><%= user.getEmail()%></td>
                 <td><%= user.getAddress()%></td>
                 <td><%= user.getPhone()%></td>
-                <td><%= user.getRole()%></td>
                 <td><%= user.isStatus() ? "Còn hoạt động" : "Dừng hoạt động"%></td>
                 <td class="d-flex justify-content-center gap-2" style="text-align: center">
 
@@ -51,7 +49,7 @@
                     </a>
                         
                     <a href="${pageContext.request.contextPath}/manage-user?view=details&id=<%= user.getId()%>" class="btn btn-info">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <i class="fa-solid fa-eye"></i>
                     </a>
 
                 </td>

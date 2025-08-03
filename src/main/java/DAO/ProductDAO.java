@@ -19,6 +19,8 @@ import java.util.List;
 import model.Product;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProductDAO {
 
@@ -78,7 +80,7 @@ public class ProductDAO {
         return product;
     }
 
-    public List<Product> getProductByCategoryId(int categoryId) throws SQLException, ClassNotFoundException {
+    public List<Product> getProductByCategoryId(int categoryId) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE category_id = ? AND status = 1";
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -102,9 +104,8 @@ public class ProductDAO {
                 list.add(p);
 
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }

@@ -7,6 +7,7 @@ package DAO;
 import config.DBConnect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -106,30 +107,42 @@ public class ComponentDAO {
     }
 
     public int addComponent(Component component) {
-
         String sql = "INSERT INTO Products (name, description, price, stock, image_url, product_type, category_id) "
-                + "VALUES (?, ?, ?, ?, null, 'Component', ?)";
+                + "VALUES (?, ?, ?, ?, ?, 'Component', ?)";
+        try (
+                 PreparedStatement ps = DBConnect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setString(1, component.getName());
             ps.setString(2, component.getDescription());
             ps.setDouble(3, component.getPrice());
             ps.setInt(4, component.getStock());
-            ps.setInt(5, component.getCategory().getCategoryId());
+            ps.setString(5, component.getImageUrl());
+            ps.setInt(6, component.getCategory().getCategoryId());
 
-            return ps.executeUpdate(); // returns 1 if success
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Inserting PC failed, no rows affected.");
+            }
+
+            try ( ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return the auto-generated product_id
+                } else {
+                    throw new SQLException("Inserting PC failed, no ID obtained.");
+                }
+            }
+
         } catch (Exception ex) {
             Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return 0;
-
+        return -1; // Return -1 to indicate failure
     }
 
     public int updateComponent(Component component) {
 
         String sql = "Update Products SET name = ?, description = ?, price = ?,\n"
-                + "stock = ?, category_id = ?, status = ?\n"
+                + "stock = ?, category_id = ?, status = ?, image_url = ?\n"
                 + "WHERE product_id = ? ";
 
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
@@ -139,7 +152,8 @@ public class ComponentDAO {
             ps.setInt(4, component.getStock());
             ps.setInt(5, component.getCategory().getCategoryId());
             ps.setBoolean(6, component.isStatus());
-            ps.setInt(7, component.getId());
+            ps.setString(7, component.getImageUrl());
+            ps.setInt(8, component.getId());
 
             return ps.executeUpdate(); // returns 1 if success
         } catch (Exception ex) {
@@ -150,15 +164,4 @@ public class ComponentDAO {
 
     }
 
-    public int delete(int id) {
-        String query = "DELETE FROM Products WHERE product_id = ?";
-
-        try ( PreparedStatement ps = DBConnect.prepareStatement(query)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate();
-        } catch (Exception ex) {
-            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
-        }
-    }
 }

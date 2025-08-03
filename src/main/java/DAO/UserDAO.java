@@ -109,15 +109,14 @@ public class UserDAO extends DBConnect {
         return null;
     }
 
-    public int updateUser(User user) {
+    public int updateUser(int userId, boolean status) {
 
-        String sql = " Update Users SET role = ?, status = ? \n"
+        String sql = " Update Users SET status = ? \n"
                 + "WHERE user_id = ?";
 
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getRole());
-            ps.setBoolean(2, user.isStatus());
-            ps.setInt(3, user.getId());
+            ps.setBoolean(1, status);
+            ps.setInt(2, userId);
 
             return ps.executeUpdate(); // returns 1 if success
         } catch (Exception ex) {
@@ -149,10 +148,11 @@ public class UserDAO extends DBConnect {
     public ArrayList<User> getAllUser() {
 
         ArrayList<User> userList = new ArrayList<>();
-        String sql = "  SELECT u.user_id, u.username, u.email,\n"
+        String sql = "SELECT u.user_id, u.username, u.email,\n"
                 + "  u.fullname, u.date_of_birth, u.address,\n"
                 + "  u.phone, u.gender, u.role, u.status\n"
-                + "  FROM Users u";
+                + "  FROM Users u\n"
+                + "  WHERE u.role = 'Customer'";
 
         try (
                  PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
@@ -164,7 +164,7 @@ public class UserDAO extends DBConnect {
                 Date dateOfBirth = rs.getDate("date_of_birth");
                 String address = rs.getString("address");
                 String phone = rs.getString("phone");
-                String gender = rs.getString("phone");
+                String gender = rs.getString("gender");
                 String role = rs.getString("role");
                 boolean status = rs.getBoolean("status");
 
@@ -181,7 +181,7 @@ public class UserDAO extends DBConnect {
 
     private String hashMd5(String raw) {
 //       use when need to convert password using sql
-//SELECT LOWER(CONVERT(varchar(32), HASHBYTES('MD5', '123456'), 2)) AS md5_hash
+//SELECT LOWER(CONVERT(varchar(32), HASHBYTES('MD5', '1'), 2)) AS md5_hash
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] mess = md.digest(raw.getBytes());

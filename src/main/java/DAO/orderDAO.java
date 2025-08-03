@@ -41,7 +41,7 @@ public class orderDAO {
                 + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price "
                 + "FROM OrderItems oi "
                 + "JOIN Products p ON oi.product_id = p.product_id "
-                + "WHERE oi.order_id = ?";
+                + "WHERE oi.order_id";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
@@ -73,13 +73,13 @@ public class orderDAO {
                 + "FROM OrderItems oi \n"
                 + "JOIN Products p ON oi.product_id = p.product_id\n"
                 + "Join Orders o ON o.order_id = oi.order_id\n"
-                + "WHERE o.user_id = ?";
+                + "WHERE o.user_id = ? ";
         
         
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
-//            RatingDAO ratingDAO = new RatingDAO(); // Thêm dòng này vào đầu
+            
             while (rs.next()) {
                 OrderDetail detail = new OrderDetail(
                         rs.getInt("order_item_id"),
@@ -90,8 +90,7 @@ public class orderDAO {
                         rs.getInt("quantity"),
                         rs.getDouble("unit_price")
                 );
-                // Đúng logic: check theo userId, orderId, productId
-//                detail.setRated(ratingDAO.hasUserRatedInOrder(userId, orderId, detail.getProductId()));
+               
                 details.add(detail);
             }
         } catch (Exception e) {

@@ -80,7 +80,7 @@ public class LoginServlet extends HttpServlet {
                 
                 request.setAttribute("success", "Đăng nhập thành công");
                 session.setAttribute("logged", true);
-                request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
+                request.getRequestDispatcher("/dash-board").forward(request, response);
                 
             } else {
                 request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");

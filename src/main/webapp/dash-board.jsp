@@ -5,11 +5,7 @@
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%--<%@ page import="model.User" %>
-
-<%
-    User user = (User) session.getAttribute("loggedUser");
-%>--%>
+<%@ page import="model.User" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -28,8 +24,8 @@
 
             <!-- Nội dung chính -->
             <div class="container mt-4">
-                <h2>Chào mừng, Admin <b>
-                        <%--<%= user.getUsername()%>--%>
+                <h2>Chào mừng, ${sessionScope.user.fullname}<b>
+                       
                     </b></h2>
                 <p>Chào mừng bạn đến với trang quản trị. Đây là nơi quản lý tất cả nội dung.</p>
             </div>
@@ -38,3 +34,4 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
+
