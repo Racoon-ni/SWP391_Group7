@@ -3,9 +3,11 @@
 
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <title>Chi tiết sản phẩm - <c:out value="${product.name}" default="Sản phẩm"/></title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <style>
     .btn {
         transition: background-color 0.3s ease, transform 0.2s ease;
@@ -28,6 +30,64 @@
         max-height: 400px;
         object-fit: contain;
     }
+    /* Ảnh review hình vuông, to */
+    .review-thumb {
+        width: 180px;
+        height: 180px;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        box-shadow: 0 1px 8px #0002;
+        cursor: pointer;
+        transition: box-shadow .2s;
+    }
+    .review-thumb:hover {
+        box-shadow: 0 4px 20px #0003;
+        border-color: #3b82f6;
+    }
+    /* Modal phóng to ảnh */
+    #imageModal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.8);
+        align-items: center;
+        justify-content: center;
+    }
+    #imageModal img {
+        max-width: 92vw;
+        max-height: 92vh;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 0 32px #222;
+        display: block;
+        margin: auto;
+        animation: zoomIn .25s;
+    }
+    @keyframes zoomIn {
+        from {
+            transform:scale(0.8);
+        }
+        to {
+            transform:scale(1);
+        }
+    }
+    #imageModal .close-btn {
+        position: absolute;
+        top: 44px;
+        right: 60px;
+        font-size: 48px;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10001;
+        text-shadow: 0 2px 8px #000;
+    }
 </style>
 </head>
 <body class="bg-gray-100">
@@ -48,7 +108,7 @@
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800 mb-4"><c:out value="${product.name}"/></h1>
                             <p class="text-gray-600 text-lg mb-4"><c:out value="${product.description}" default="Không có mô tả"/></p>
-                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/>VNÐ</p>
+                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/> VNÐ</p>
                             <p class="text-gray-500 mb-4">Tồn kho: <c:out value="${product.stock}"/></p>
                             <p class="text-gray-500 mb-4">Loại sản phẩm: <c:out value="${product.productType}" default="Không xác định"/></p>
                             <p class="text-gray-500 mb-4">Danh mục ID: <c:out value="${product.categoryId}"/></p>
@@ -59,7 +119,7 @@
                                             class="btn w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
                                         Thêm vào giỏ 
                                     </button>
-</form>
+                                </form>
 
                                 <form id="buyNowForm" method="post" action="${pageContext.request.contextPath}/checkout" class="flex-1">
                                     <input type="hidden" name="productId" value="${product.productId}" />
@@ -93,6 +153,66 @@
         </c:choose>
     </div>
 
+    <!-- Đánh giá sản phẩm -->
+    <div class="bg-white mt-8 rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá sản phẩm</h2>
+        <c:choose>
+            <c:when test="${not empty ratingList}">
+                <c:forEach var="rating" items="${ratingList}">
+                    <div class="border-b border-gray-200 py-4 flex">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-2xl text-gray-400"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="font-bold text-gray-700 mr-2"><c:out value="${rating.userName}"/></span>
+                                <span class="text-yellow-500 font-bold mr-2 flex">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <c:choose>
+                                            <c:when test="${i <= rating.stars}">
+                                                <i class="fas fa-star mr-1"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="far fa-star mr-1"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </span>
+                                <span class="text-gray-400 text-xs ml-2">
+                                    <fmt:formatDate value="${rating.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+                                </span>
+                            </div>
+                            <div class="text-gray-800 mb-2"><c:out value="${rating.comment}"/></div>
+                            <!-- Hiển thị ảnh review nếu có -->
+                            <c:if test="${not empty rating.imageUrls}">
+                                <div class="flex flex-wrap gap-3 mt-2">
+                                    <c:forEach var="img" items="${rating.imageUrls}">
+                                        <c:if test="${not empty img}">
+                                            <img src="${pageContext.request.contextPath}/${img}"
+                                                 alt="review image"
+                                                 class="review-thumb"
+                                                 onclick="showFullImage(this.src)"
+                                                 />
+                                        </c:if>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="text-gray-500 italic">Chưa có đánh giá nào cho sản phẩm này.</div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <!-- Modal/phóng to ảnh -->
+    <div id="imageModal">
+        <span class="close-btn" onclick="closeImageModal()">&times;</span>
+        <img id="fullImage" src="" />
+    </div>
+
     <script>
         const isLoggedIn = "${not empty sessionScope.user}";
 
@@ -120,21 +240,54 @@
                         }
                     })
                     .catch(error => {
-alert('Lỗi khi thêm vào giỏ hàng: ' + error);
+                        alert('Lỗi khi thêm vào giỏ hàng: ' + error);
                     });
         }
 
         function handleBuyNow() {
             if (isLoggedIn !== "true") {
-                // ✅ Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
                 window.location.href = '${pageContext.request.contextPath}/login';
             } else {
-                // ✅ Nếu đã đăng nhập thì gửi form mua hàng
                 document.getElementById("buyNowForm").submit();
             }
         }
-    </script>
 
+        function addToWishlist(productId) {
+            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Đã thêm sản phẩm vào danh sách yêu thích!');
+                        } else {
+                            alert('Lỗi: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
+                    });
+        }
+
+        // Image modal logic
+        function showFullImage(src) {
+            document.getElementById("fullImage").src = src;
+            document.getElementById("imageModal").style.display = "flex";
+        }
+        function closeImageModal() {
+            document.getElementById("imageModal").style.display = "none";
+            document.getElementById("fullImage").src = "";
+        }
+        document.getElementById("imageModal").onclick = function (e) {
+            if (e.target === this)
+                closeImageModal();
+        }
+        document.addEventListener('keydown', function (evt) {
+            if (evt.key === "Escape")
+                closeImageModal();
+        });
+    </script>
 
     <%@ include file="/WEB-INF/include/footer.jsp" %>
 </body>
