@@ -251,7 +251,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                             ArrayList<ProductAttribute> pAttList = paDAO.getAttributes(cateId);
 
                             for (ProductAttribute attr : pAttList) {
-                                int attrId = attr.getAttribute().getId();
+                                int attrId = attr.getAttribute().getAttributeId();
                                 String value = request.getParameter("attr_" + attrId);
 
                                 if (value != null && !value.trim().isEmpty()) {
@@ -355,7 +355,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                     // Update attributes
                     ArrayList<ProductAttribute> pAttList = paDAO.getAttributeByProductId(id);
                     for (ProductAttribute pAtt : pAttList) {
-                        int attrId = pAtt.getAttribute().getId();
+                        int attrId = pAtt.getAttribute().getAttributeId();
                         String newValue = request.getParameter("attr_" + attrId);
                         if (newValue != null && !newValue.trim().isEmpty()) {
                             paDAO.updateProductAttributeValue(id, attrId, newValue);
