@@ -48,7 +48,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <c:forEach var="product" items="${componentList}">
                         <div class="component-card bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-contain p-4"/>
+                            <img src=".${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-contain p-4"/>
                             <div class="p-4">
                                 <h3 class="text-lg font-semibold text-gray-800 truncate">${product.name}</h3>
                                 <p class="text-xs text-gray-500 mt-1">${product.category.name}</p>

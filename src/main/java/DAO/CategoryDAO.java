@@ -70,4 +70,30 @@ public class CategoryDAO extends DBConnect {
 
         return null;
     }
+    
+    public ArrayList<String> getProductNameByCateId (int cateId) {
+
+        ArrayList<String> productNameList = new ArrayList<>();
+        String sql = "SELECT  p.name as p_name\n"
+                + "From Categories c \n"
+                + "JOIN Products p on p.category_id = c.category_id\n"
+                + "WHERE c.category_id = ?";
+
+        try (
+                 PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, cateId);
+            try ( ResultSet rs = ps.executeQuery();) {
+                while (rs.next()) {
+                    String name = rs.getString("p_name");
+                    productNameList.add(name);
+                }
+
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return productNameList;
+    }
 }
