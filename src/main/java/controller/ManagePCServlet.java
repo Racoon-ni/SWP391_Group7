@@ -143,7 +143,6 @@ public class ManagePCServlet extends HttpServlet {
         if (act != null) {
             switch (act) {
                 case "create":
-                case "create":
                     String name = request.getParameter("name");
                     String description = request.getParameter("description");
                     String priceStr = request.getParameter("price");
@@ -219,7 +218,7 @@ public class ManagePCServlet extends HttpServlet {
                             ArrayList<ProductAttribute> pAttList = paDAO.getAttributes(cateId);
 
                             for (ProductAttribute attr : pAttList) {
-                                int attrId = attr.getAttribute().getId();
+                                int attrId = attr.getAttribute().getAttributeId();
                                 String value = request.getParameter("attr_" + attrId);
 
                                 if (value != null && !value.trim().isEmpty()) {
@@ -316,7 +315,7 @@ public class ManagePCServlet extends HttpServlet {
                     // Update attributes
                     ArrayList<ProductAttribute> pAttList = paDAO.getAttributeByProductId(id);
                     for (ProductAttribute pAtt : pAttList) {
-                        int attrId = pAtt.getAttribute().getId();
+                        int attrId = pAtt.getAttribute().getAttributeId();
                         String newValue = request.getParameter("attr_" + attrId);
                         if (newValue != null && !newValue.trim().isEmpty()) {
                             paDAO.updateProductAttributeValue(id, attrId, newValue);

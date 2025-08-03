@@ -42,7 +42,7 @@ public class ProductAttributeDAO {
                     String value = rs.getString("value");
                     String unit = rs.getString("unit");
 
-                    Attribute a = new Attribute(id, name, id, unit);
+                    Attribute a = new Attribute(id, name, id, unit, "");
                     ProductAttribute pAtt = new ProductAttribute(p_id, a, value);
 
                     pAttList.add(pAtt);
@@ -72,7 +72,7 @@ public class ProductAttributeDAO {
                     String name = rs.getString("name");
                     String unit = rs.getString("unit");
 
-                    Attribute a = new Attribute(id, name, c_id, unit);
+                    Attribute a = new Attribute(id, name, c_id, unit, "");
                     ProductAttribute pAtt = new ProductAttribute(0, a, "");
 
                     pAttList.add(pAtt);
