@@ -72,7 +72,7 @@ public class RegisterServlet extends HttpServlet {
                 request.setAttribute("success", "Đăng ký thành công");
                 request.getRequestDispatcher("/WEB-INF/include/login.jsp").forward(request, response);
             } else {
-                request.setAttribute("error", "Đăng ký thất bại");
+                request.setAttribute("error", "Đăng ký thất bại (Username đã tồn tại)");
                 request.getRequestDispatcher("/WEB-INF/include/register.jsp").forward(request, response);
             }
 

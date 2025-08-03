@@ -117,7 +117,7 @@
         <i class="fa-solid fa-user"></i> Quản lý tài khoản khách hàng
     </a>
 
-    <a href="#">
+    <a href="http://localhost:8080/SWP391_Group7/categories">
         <i class="fa-solid fa-tags"></i> Quản lý thể loại
     </a>
 
