@@ -11,11 +11,12 @@ import DAO.orderDAO;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="OrderDetailsServlet", urlPatterns={"/order-details"})
+@WebServlet(name = "OrderDetailsServlet", urlPatterns = {"/order-details"})
 public class OrderDetailsServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String orderIdStr = request.getParameter("order_id");
         if (orderIdStr == null) {
             response.sendRedirect("my-orders"); // sửa lại đường dẫn
@@ -38,6 +39,13 @@ public class OrderDetailsServlet extends HttpServlet {
         Order order = dao.getOrderById(orderId);
         ShippingInfo shippingInfo = dao.getShippingInfoByOrderId(orderId);
 
+        System.out.println("Order Details: " + details);
+        for (OrderDetail d : details) {
+            System.out.println(" - " + d);
+        }
+        System.out.println("Order: " + order);
+        System.out.println("Shipping Info: " + shippingInfo);
+// ====================
         // Đưa lên request cho JSP
         request.setAttribute("orderDetails", details);
         request.setAttribute("order", order);

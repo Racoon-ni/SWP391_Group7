@@ -10,7 +10,7 @@
 <%@include file="../include/admin-side-bar.jsp" %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<title>Components List</title>
+<title>Danh sách linh kiện</title>
 
 <%
     ArrayList<Component> componentList = (ArrayList<Component>) request.getAttribute("componentList");
@@ -32,9 +32,9 @@
                 <th scope="col" style="text-align: center">ID</th>
                 <th scope="col">Tên</th>
                 <th scope="col">Mô tả</th>
-                <th scope="col">Giá</th>
-                <th scope="col">Tồn kho</th>
+                <th scope="col">Giá (VND)</th>
                 <th scope="col">Ảnh</th>
+                <th scope="col">Tồn kho</th>
                 <th scope="col">Trạng thái</th>
                 <th>
                     Thể loại
@@ -69,12 +69,23 @@
                 <th scope="row" style="text-align: center"><%= comp.getId()%></th>
                 <td scope="row"><%= comp.getName()%></td>
                 <td><%= comp.getDescription()%></td>
-                <td><%= comp.getPrice()%></td>
+                <%
+                    java.text.NumberFormat vndFormat = java.text.NumberFormat.getInstance(new java.util.Locale("vi", "VN"));
+                    String formattedPrice = vndFormat.format(comp.getPrice());
+                %>
+                <td><%= formattedPrice%></td>
+
+                <td>
+                    <img src="<%= comp.getImageUrl()%>" width="50" alt="comp Image"/>
+                </td>
                 <td><%= comp.getStock()%></td>
-                <td><%= comp.getImageUrl()%></td>
                 <td><%= comp.isStatus() ? "Còn bán" : "Hết hàng"%></td>
                 <td><%= comp.getCategory().getName()%></td>
                 <td class="d-flex justify-content-center gap-2" style="text-align: center">
+
+                    <a href="${pageContext.request.contextPath}/manage-component?view=details&id=<%= comp.getId()%>" class="btn btn-info">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
 
                     <a href="${pageContext.request.contextPath}/manage-component?view=edit&id=<%= comp.getId()%>" class="btn btn-warning">
                         <i class="fa-solid fa-pen-to-square"></i>
