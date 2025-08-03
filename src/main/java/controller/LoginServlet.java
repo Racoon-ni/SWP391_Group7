@@ -38,16 +38,15 @@ public class LoginServlet extends HttpServlet {
 
             if (uDAO.login(user) && user.getRole().equalsIgnoreCase("Customer")) {
                 session.setAttribute("logged", true);
-                request.setAttribute("success", "Đăng nhập thành công");
-                request.getRequestDispatcher("/home.jsp").forward(request, response);
+                // ✅ Gọi lại HomeServlet để lấy banner
+                response.sendRedirect("home");
 
             } else if (uDAO.login(user)
                     && (user.getRole().equalsIgnoreCase("Admin") || user.getRole().equalsIgnoreCase("Staff"))) {
 
                 session.setAttribute("logged", true);
-                session.setAttribute("adminId", user.getId()); // ✅ Thêm dòng này để fix lỗi
-                request.setAttribute("success", "Đăng nhập thành công");
-                request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
+                session.setAttribute("adminId", user.getId());
+                response.sendRedirect("dash-board.jsp");
 
             } else {
                 request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
