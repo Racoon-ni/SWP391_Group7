@@ -127,6 +127,9 @@
     <a href="${pageContext.request.contextPath}/manage-vouchers">
         <i class="fas fa-shopping-cart"></i> Quản lý Voucher
     </a>
+    <a href="${pageContext.request.contextPath}/manage-banner">
+    <i class="fa-regular fa-image"></i>Quản lý Banner
+        </a>
     <%--</c:if>--%>
 
     <%--<c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role != 'Customer'}">--%>
