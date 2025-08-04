@@ -66,7 +66,7 @@
 
         <div class="form-group">
             <label>Chọn hình ảnh:</label>
-            <input type="file" name="image" class="form-control" accept="image/*"  onchange="previewImage(event)">
+            <input type="file" name="image" class="form-control" accept="image/*"  onchange="previewImage(event)" required>
             <br/>
             <img id="imagePreview" src="#" alt="Ảnh xem trước" 
                  style="display:none; max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />

@@ -111,13 +111,13 @@
                 <c:forEach var="item" items="${cartItems}">
                     <div class="d-flex justify-content-between mb-2">
                         <div>${item.productName} x ${item.quantity}</div>
-                        <div>${item.price * item.quantity} đ</div>
+                        <div>${item.price * item.quantity} VND</div>
                     </div>
                 </c:forEach>
                 <hr>
                 <div class="d-flex justify-content-between">
                     <strong>Tổng thành tiền:</strong>
-                    <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount) %> đ</strong>
+                    <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount) %> VND</strong>
                 </div>
                 <div class="mt-3">
                     <input type="text" class="form-control" placeholder="Mã khuyến mãi">

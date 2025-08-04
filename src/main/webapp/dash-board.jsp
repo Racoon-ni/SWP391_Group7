@@ -52,10 +52,10 @@
                     <div>
                         <div style="font-size:13px; color:#888; margin-bottom:4px;">Doanh thu tháng mới nhất</div>
                         <div style="font-size:26px; font-weight:bold;">
-                            <fmt:formatNumber value="${not empty monthlyStats ? monthlyStats[0].revenue : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                            <fmt:formatNumber value="${not empty monthlyStats ? monthlyStats[0].revenue : 0}" type="number" groupingUsed="true" maxFractionDigits="0"/> VND
                         </div>
                         <div style="font-size:13px; color:#888; margin:10px 0 4px 0;">Chỉ tiêu doanh thu</div>
-                        <div style="font-size:20px;">50.000.000 ₫</div>
+                        <div style="font-size:20px;">50.000.000 VND</div>
                         <div style="font-size:13px; color:#888; margin:10px 0 4px 0;">Đạt được</div>
                         <div style="font-size:20px; color:#5e2df7; font-weight:bold;">
                             <%
@@ -73,7 +73,7 @@
                         </div>
                         <div style="font-size:13px; color:#888; margin:10px 0 4px 0;">Tổng doanh thu</div>
                         <div style="font-size:20px; color:#5e2df7; font-weight:bold;">
-                            <fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true" maxFractionDigits="0"/> ₫
+                            <fmt:formatNumber value="${totalRevenue}" type="number" groupingUsed="true" maxFractionDigits="0"/> VND
                         </div>
                     </div>
                     <div style="flex:1; min-width:260px;">

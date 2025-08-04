@@ -13,10 +13,10 @@
 <!DOCTYPE html>
 
 <html>
-    
+
 
     <head>
-        
+
         <meta charset="UTF-8">
 
         <title>Đơn hàng của tôi</title>
@@ -38,7 +38,7 @@
                 font-weight: 700;
                 font-size: 1.5rem;
             }
-            
+
 
             .order-header i {
                 margin-right: 12px;
@@ -110,9 +110,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (orders == null || orders.isEmpty()) { %>
+                    <%
+                        if (orders == null || orders.isEmpty()) {
+                    %>
                     <tr><td colspan="6">Không có đơn hàng nào!</td></tr>
-                    <% } else {
+                    <%
+                    } else {
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                         NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
                         for (Order order : orders) {
@@ -121,7 +124,9 @@
                     <tr>
                         <td><%= fullOrderId%></td>
                         <td><%= df.format(order.getCreatedAt())%></td>
-                        <td><%= nf.format(order.getTotalPrice())%></td>
+                        <td>
+                            <%= nf.format(order.getTotalPrice()).replace("₫", " VND").replace("đ", " VND")%>
+                        </td>
                         <td>
                             <% if ("Completed".equals(order.getStatus())) { %>
                             <span class="badge bg-success">Hoàn tất</span>
@@ -171,9 +176,12 @@
                             </div>
                         </td>
                     </tr>
-                    <% }
-        }%>
+                    <%
+                            } // end for
+                        } // end else
+%>
                 </tbody>
+
 
             </table>
 

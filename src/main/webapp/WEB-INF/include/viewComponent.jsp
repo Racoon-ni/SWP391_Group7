@@ -36,7 +36,11 @@
 <body class="bg-gray-100">
 
     <div class="container mx-auto px-4 py-8">
+
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">${category}</h1>
+        <c:if test="${showFilterBar}">
+            <%@ include file="/WEB-INF/include/filter-bar.jsp" %>
+        </c:if>
 
         <c:if test="${not empty errorMessage}">
             <div class="error-message bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg text-center">
@@ -120,7 +124,7 @@
                                         <button type="submit" 
                                                 class="btn w-full bg-red-100 text-red-600 py-2 flex items-center justify-center rounded-md hover:bg-red-200">
                                             <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
                                             </svg>
                                             Yêu thích
                                         </button>

@@ -24,15 +24,22 @@ public class SearchProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String keyword = request.getParameter("keyword");
-        System.out.println("Search keyword: " + keyword); // Test log
 
         ProductDAO productDAO = new ProductDAO();
         List<Product> resultList = productDAO.searchProducts(keyword);
 
-        System.out.println("Search result size: " + resultList.size()); // Test log
+        // Đây là tên attribute mà viewComponent.jsp đang sử dụng!
+        request.setAttribute("componentList", resultList);
 
-        request.setAttribute("products", resultList);
-        request.setAttribute("keyword", keyword);
-        request.getRequestDispatcher("search-result.jsp").forward(request, response);
+        // Hiển thị tiêu đề kết quả tìm kiếm trên trang
+        request.setAttribute("category", "Kết quả tìm kiếm cho: " + keyword);
+
+        // Nếu không có sản phẩm, có thể gửi thông báo cho view hiển thị
+        if (resultList == null || resultList.isEmpty()) {
+            request.setAttribute("errorMessage", "Không tìm thấy sản phẩm phù hợp.");
+        }
+
+        // Forward về viewComponent.jsp để dùng giao diện đồng bộ!
+        request.getRequestDispatcher("/WEB-INF/include/viewComponent.jsp").forward(request, response);
     }
 }

@@ -21,6 +21,7 @@ import model.Product;
  *
  * @author ThinhLVCE181726 <your.name at your.org>
  */
+
 @WebServlet("/filter")
 public class FilterProductServlet extends HttpServlet {
     @Override
@@ -38,8 +39,18 @@ public class FilterProductServlet extends HttpServlet {
         // Lấy sản phẩm đã lọc
         ProductDAO productDAO = new ProductDAO();
         List<Product> filteredList = productDAO.filterProducts(categoryId, priceRange);
-        request.setAttribute("products", filteredList);
+        request.setAttribute("componentList", filteredList);
+        request.setAttribute("category", "Kết quả lọc sản phẩm");
 
-        request.getRequestDispatcher("filter-result.jsp").forward(request, response);
+        if (filteredList == null || filteredList.isEmpty()) {
+            request.setAttribute("errorMessage", "Không tìm thấy sản phẩm phù hợp với bộ lọc.");
+        }
+
+    
+        request.setAttribute("showFilterBar", true);
+
+
+        request.getRequestDispatcher("/WEB-INF/include/viewComponent.jsp").forward(request, response);
     }
 }
+

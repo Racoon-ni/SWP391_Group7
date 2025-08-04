@@ -110,9 +110,9 @@
             <i class="fa-solid fa-user"></i> Quản lý Staff
         </a>
 
-        <a href="#">
+        <a href="http://localhost:8080/SWP391_Group7/categories">
             <i class="fa-solid fa-tags"></i> Quản lý thể loại
-</a>
+        </a>     
 
         <a href="${pageContext.request.contextPath}/manage-vouchers">
             <i class="fas fa-shopping-cart"></i> Quản lý Voucher
@@ -123,7 +123,7 @@
     </c:if>
 
     <c:if test="${sessionScope.logged and sessionScope.user != null and sessionScope.user.role != 'Customer'}">
-        <a href="${pageContext.request.contextPath}/adminstaff-sales-stats">
+        <a href="${pageContext.request.contextPath}/adminstaff-">
             <i class="fa-solid fa-square-poll-vertical"></i> Thống kê bán hàng
         </a>
 

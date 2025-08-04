@@ -1,7 +1,6 @@
 package DAO;
 
 import java.sql.Date;
-
 import config.DBConnect;
 import model.AdminStaffSalesStats;
 
@@ -25,7 +24,7 @@ public class AdminStaffSalesDAO {
 
     public ArrayList<AdminStaffSalesStats> getDailyRevenue() {
         ArrayList<AdminStaffSalesStats> list = new ArrayList<>();
-        String sql = "SELECT CAST(created_at AS DATE) AS date, SUM(total_price) AS revenue\n"
+        String sql = "SELECT CAST(created_at AS DATE) AS date, SUM(total_price) AS revenue "
                 + "FROM Orders GROUP BY CAST(created_at AS DATE) ORDER BY date DESC";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -58,9 +57,11 @@ public class AdminStaffSalesDAO {
         }
         return list;
     }
+
+    // ✅ Lấy doanh thu hôm nay
     public double getTodayRevenue() {
-        String sql = "SELECT SUM(total_price) AS revenue FROM Orders WHERE DATE(created_at) = CURDATE()";
-        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+        String sql = "SELECT SUM(total_price) AS revenue FROM Orders WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("revenue");
@@ -71,10 +72,10 @@ public class AdminStaffSalesDAO {
         return 0;
     }
 
-    // ✅ 2. Lấy doanh thu tháng hiện tại
+    // ✅ Lấy doanh thu tháng hiện tại
     public double getThisMonthRevenue() {
-        String sql = "SELECT SUM(total_price) AS revenue FROM Orders WHERE MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())";
-        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+        String sql = "SELECT SUM(total_price) AS revenue FROM Orders WHERE MONTH(created_at) = MONTH(GETDATE()) AND YEAR(created_at) = YEAR(GETDATE())";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("revenue");
@@ -85,13 +86,13 @@ public class AdminStaffSalesDAO {
         return 0;
     }
 
-    // ✅ 3. Lấy doanh thu 7 ngày gần nhất (cho biểu đồ & export)
+    // ✅ Lấy doanh thu 7 ngày gần nhất (cho biểu đồ & export)
     public List<AdminStaffSalesStats> getLast7DaysRevenue() {
         List<AdminStaffSalesStats> list = new ArrayList<>();
-        String sql = "SELECT DATE(created_at) AS date, SUM(total_price) AS revenue " +
-                     "FROM Orders WHERE created_at >= CURDATE() - INTERVAL 6 DAY " +
-                     "GROUP BY DATE(created_at) ORDER BY date DESC";
-        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+        String sql = "SELECT CAST(created_at AS DATE) AS date, SUM(total_price) AS revenue "
+                + "FROM Orders WHERE CAST(created_at AS DATE) >= DATEADD(DAY, -6, CAST(GETDATE() AS DATE)) "
+                + "GROUP BY CAST(created_at AS DATE) ORDER BY date DESC";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Date date = rs.getDate("date");
@@ -104,15 +105,15 @@ public class AdminStaffSalesDAO {
         return list;
     }
 
-    // ✅ 4. Lấy doanh thu 6 tháng gần nhất (cho biểu đồ & export)
+    // ✅ Lấy doanh thu 6 tháng gần nhất (cho biểu đồ & export)
     public List<AdminStaffSalesStats> getLast6MonthsRevenue() {
         List<AdminStaffSalesStats> list = new ArrayList<>();
-        String sql = "SELECT YEAR(created_at) AS year, MONTH(created_at) AS month, SUM(total_price) AS revenue " +
-                     "FROM Orders " +
-                     "WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) " +
-                     "GROUP BY YEAR(created_at), MONTH(created_at) " +
-                     "ORDER BY year DESC, month DESC LIMIT 6";
-        try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+        String sql = "SELECT TOP 6 YEAR(created_at) AS year, MONTH(created_at) AS month, SUM(total_price) AS revenue "
+                + "FROM Orders "
+                + "WHERE created_at >= DATEADD(MONTH, -6, CAST(GETDATE() AS DATE)) "
+                + "GROUP BY YEAR(created_at), MONTH(created_at) "
+                + "ORDER BY year DESC, month DESC";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int year = rs.getInt("year");
@@ -126,4 +127,3 @@ public class AdminStaffSalesDAO {
         return list;
     }
 }
-

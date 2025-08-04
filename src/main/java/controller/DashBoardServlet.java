@@ -36,7 +36,7 @@ public class DashBoardServlet extends HttpServlet {
      */
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-    /**
+     * /**
      * Handles the HTTP <code>GET</code> method.
      *
      *
@@ -57,6 +57,26 @@ public class DashBoardServlet extends HttpServlet {
 
             if (Boolean.TRUE.equals(isLogged)) {
                 if (user != null && (user.getRole().equalsIgnoreCase("Admin") || user.getRole().equalsIgnoreCase("Staff"))) {
+
+                    AdminStaffSalesDAO salesDAO = new AdminStaffSalesDAO();
+
+                    // Lấy danh sách doanh thu theo tháng và theo ngày
+                    List<AdminStaffSalesStats> monthlyStats = salesDAO.getMonthlyRevenue();
+                    List<AdminStaffSalesStats> dailyStats = salesDAO.getDailyRevenue();
+
+                    // ✅ Lấy tổng doanh thu (phần bị thiếu gây lỗi hiển thị)
+                    double totalRevenue = salesDAO.getTotalRevenue();
+
+                    // DEBUG (tùy chọn, bạn có thể xóa)
+                    System.out.println("Total Revenue: " + totalRevenue);
+                    System.out.println("Monthly Stats size: " + monthlyStats.size());
+                    System.out.println("Daily Stats size: " + dailyStats.size());
+
+                    // ✅ Set attribute để truyền sang JSP
+request.setAttribute("monthlyStats", monthlyStats);
+                    request.setAttribute("dailyStats", dailyStats);
+                    request.setAttribute("totalRevenue", totalRevenue); // ✅ Bổ sung dòng này
+
                     request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
                 } else {
                     response.sendRedirect(request.getContextPath() + "/home");
@@ -88,6 +108,26 @@ public class DashBoardServlet extends HttpServlet {
 
         if (isLogged && (user.getRole().equalsIgnoreCase("Admin")
                 || user.getRole().equalsIgnoreCase("Staff"))) {
+
+            AdminStaffSalesDAO salesDAO = new AdminStaffSalesDAO();
+
+            // Lấy danh sách doanh thu theo tháng và theo ngày
+            List<AdminStaffSalesStats> monthlyStats = salesDAO.getMonthlyRevenue();
+            List<AdminStaffSalesStats> dailyStats = salesDAO.getDailyRevenue();
+
+            // ✅ Lấy tổng doanh thu (phần bị thiếu gây lỗi hiển thị)
+            double totalRevenue = salesDAO.getTotalRevenue();
+
+            // DEBUG (tùy chọn, bạn có thể xóa)
+            System.out.println("Total Revenue: " + totalRevenue);
+            System.out.println("Monthly Stats size: " + monthlyStats.size());
+            System.out.println("Daily Stats size: " + dailyStats.size());
+
+            // ✅ Set attribute để truyền sang JSP
+            request.setAttribute("monthlyStats", monthlyStats);
+            request.setAttribute("dailyStats", dailyStats);
+            request.setAttribute("totalRevenue", totalRevenue); // ✅ Bổ sung dòng này
+
             request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
         } else {
             response.sendRedirect(request.getContextPath() + "/home");

@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
 
                 session.setAttribute("logged", true);
                 session.setAttribute("adminId", user.getId());
-                response.sendRedirect("dash-board.jsp");
+                request.getRequestDispatcher("dash-board").forward(request, response);
 
             } else {
                 request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
