@@ -5,13 +5,9 @@
 package controller;
 
 import DAO.ProductDAO;
-import DAO.CategoryDAO;
 import model.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.*;
@@ -22,104 +18,116 @@ import java.util.*;
  */
 @WebServlet(name = "BuildPCServlet", urlPatterns = {"/BuildPC"})
 public class BuildPCServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        // Danh sách các loại linh kiện cần build
-
-    }
     private static final String[] COMPONENTS = {
         "Mainboard", "CPU", "RAM", "VGA", "SSD", "HDD", "PSU", "Case", "Tản nhiệt"
     };
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        // Lấy build hiện tại từ session (Map<String, Product>)
+        // 1) Lấy build map
+        @SuppressWarnings("unchecked")
         Map<String, Product> build = (Map<String, Product>) session.getAttribute("currentBuild");
         if (build == null) {
             build = new LinkedHashMap<>();
             session.setAttribute("currentBuild", build);
         }
 
-        // Tổng tiền
-        double total = 0;
-        for (Product p : build.values()) {
-            if (p != null) {
-                total += p.getPrice();
-            }
+        // 2) Lấy skip set
+        @SuppressWarnings("unchecked")
+        Set<String> skipSet = (Set<String>) session.getAttribute("skippedComponents");
+        if (skipSet == null) {
+            skipSet = new HashSet<>();
+            session.setAttribute("skippedComponents", skipSet);
         }
+
+        // 3) Tính total
+        double total = build.values().stream()
+                            .filter(Objects::nonNull)
+                            .mapToDouble(Product::getPrice)
+                            .sum();
+
+        // 4) Mainboard đã chọn?
+        boolean mainboardSelected =
+            build.containsKey("Mainboard") && build.get("Mainboard") != null;
+
+       
+        Map<String,Boolean> skipMap = new HashMap<>();
+        for (String t : COMPONENTS) {
+            if (skipSet.contains(t)) skipMap.put(t, true);
+        }
+
+        //  Đếm completed = selected + skipped
+        int completedCount = build.size() + skipSet.size();
+
+        //  Đưa vào request
         request.setAttribute("total", total);
-
-        // Mainboard đã chọn chưa?
-        boolean mainboardSelected = build.containsKey("Mainboard") && build.get("Mainboard") != null;
-
         request.setAttribute("mainboardSelected", mainboardSelected);
-        request.setAttribute("components", COMPONENTS);
+        request.setAttribute("components", Arrays.asList(COMPONENTS));
         request.setAttribute("build", build);
+        request.setAttribute("skipMap", skipMap);
+        request.setAttribute("completedCount", completedCount);
 
-        request.getRequestDispatcher("/WEB-INF/include/build-pc.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/include/build-pc.jsp")
+               .forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    // Khi chọn linh kiện -> lưu vào build (session), redirect về build-pc
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String type = request.getParameter("type");      // Loại linh kiện
+        String type         = request.getParameter("type");
         String productIdStr = request.getParameter("productId");
+        String skip         = request.getParameter("skip");
 
-        if (type != null && productIdStr != null) {
-            int productId = Integer.parseInt(productIdStr);
-            ProductDAO productDAO = new ProductDAO();
-            Product product = productDAO.getProductById(productId);
+        HttpSession session = request.getSession();
 
-            // Lưu vào session
-            HttpSession session = request.getSession();
-            Map<String, Product> build = (Map<String, Product>) session.getAttribute("currentBuild");
-            if (build == null) build = new LinkedHashMap<>();
-            build.put(type, product);
-            session.setAttribute("currentBuild", build);
+        @SuppressWarnings("unchecked")
+        Map<String, Product> build = (Map<String, Product>) session.getAttribute("currentBuild");
+        if (build == null) {
+            build = new LinkedHashMap<>();
         }
+
+        @SuppressWarnings("unchecked")
+        Set<String> skipSet = (Set<String>) session.getAttribute("skippedComponents");
+        if (skipSet == null) {
+            skipSet = new HashSet<>();
+        }
+
+        if (skip != null) {
+            // 1) Người dùng đánh dấu "Tôi đã có linh kiện này"
+            build.remove(type);
+            skipSet.add(type);
+
+        } else if (productIdStr != null) {
+            // 2) Người dùng chọn lại sản phẩm
+            skipSet.remove(type);
+            int pid = Integer.parseInt(productIdStr);
+            Product p = new ProductDAO().getProductById(pid);
+
+            // 3) Nếu đổi Mainboard khác hãng → clear CPU cũ
+            if ("Mainboard".equals(type) && build.get("Mainboard") != null) {
+                String oldMain = build.get("Mainboard").getName().toLowerCase();
+                boolean oldAmd   = oldMain.contains("amd");
+                boolean oldIntel = oldMain.contains("intel");
+                String newMain = p.getName().toLowerCase();
+                boolean newAmd   = newMain.contains("amd");
+                boolean newIntel = newMain.contains("intel");
+                if ((oldAmd && newIntel) || (oldIntel && newAmd)) {
+                    // xóa tất cả ngoại trừ Mainboard
+                    build.keySet().removeIf(k -> !"Mainboard".equals(k));
+                }
+            }
+            build.put(type, p);
+        }
+
+        session.setAttribute("currentBuild", build);
+        session.setAttribute("skippedComponents", skipSet);
         response.sendRedirect(request.getContextPath() + "/BuildPC");
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet để build PC";
+    }
 }

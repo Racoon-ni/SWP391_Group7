@@ -23,7 +23,7 @@
             <p class="text-sm text-gray-700 mb-1">
                 Giảm <%= v.getDiscountPercent()%>% cho đơn từ <span
                     class="font-medium">
-                    <%= String.format("%,.0f", v.getMinOrderValue())%> đ
+                    <%= String.format("%,.0f", v.getMinOrderValue())%> VND
                 </span>
             </p>
             <p class="text-xs text-gray-500">Hạn: <%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(v.getExpiredAt())%>

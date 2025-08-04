@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0 mt-6">
-                    <a href="home.jsp"
+                    <a href="home"
                        class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md text-center transition duration-200">
                         ← Quay về Trang chủ
                     </a>

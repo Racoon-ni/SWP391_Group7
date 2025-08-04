@@ -4,19 +4,17 @@
  */
 package controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import DAO.ProductDAO;
+import model.Product;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import DAO.ProductDAO;
-import DAO.CategoryDAO;
-import model.Product;
-import jakarta.servlet.*;
 import jakarta.servlet.http.*;
+
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,6 +37,7 @@ public class SelectComponentServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
     }
+    private final ProductDAO dao = new ProductDAO();
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -50,42 +49,67 @@ public class SelectComponentServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String type = request.getParameter("type"); // Loại linh kiện
+        String type = req.getParameter("type");
         if (type == null) {
-            type = "Mainboard";
+            resp.sendRedirect(req.getContextPath() + "/BuildPC");
+            return;
         }
 
-        // Lấy mainboard hiện tại
-        HttpSession session = request.getSession();
+        // Lấy Mainboard đã chọn để lọc CPU/RAM
+        HttpSession session = req.getSession();
+        @SuppressWarnings("unchecked")
         Map<String, Product> build = (Map<String, Product>) session.getAttribute("currentBuild");
-        Product selectedMain = (build != null) ? build.get("Mainboard") : null;
+        Product main = (build != null) ? build.get("Mainboard") : null;
 
-        List<Product> list = new ArrayList<>();
-        try {
-            ProductDAO dao = new ProductDAO();
-            // Nếu chọn CPU thì lọc theo loại mainboard
-            if (type.equals("CPU") && selectedMain != null) {
-                List<Product> allCPU = dao.getProductsByCategory("CPU");
-                // Lấy cả name và description để chắc chắn bắt được AMD/Intel
-                String mainInfo = (selectedMain.getName() + " " + selectedMain.getDescription()).toLowerCase();
-                for (Product cpu : allCPU) {
-                    String cpuName = cpu.getName().toLowerCase();
-                    if ((mainInfo.contains("amd") && cpuName.contains("amd"))
-                            || (mainInfo.contains("intel") && cpuName.contains("intel"))) {
-                        list.add(cpu);
-                    }
-                }
-            } else {
-                list = dao.getProductsByCategory(type);
+        List<Product> list = null;
+        if ("CPU".equals(type) && main != null) {
+            list = new ArrayList<>();
+            List<Product> all = null;
+            try {
+                all = dao.getProductsByCategory("CPU");
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(SelectComponentServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            String info = (main.getName() + " " + main.getDescription()).toLowerCase();
+            for (Product cpu : all) {
+                String nm = cpu.getName().toLowerCase();
+                if ((info.contains("amd") && nm.contains("amd"))
+                        || (info.contains("intel") && nm.contains("intel"))) {
+                    list.add(cpu);
+                }
+            }
+        } else if ("ram".equals(type) && main != null) {
+            list = new ArrayList<>();
+            List<Product> all = null;
+            try {
+                all = dao.getProductsByCategory("ram");
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(SelectComponentServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String info = (main.getName() + " " + main.getDescription()).toLowerCase();
+            for (Product ram : all) {
+                String nm = ram.getName().toLowerCase();
+                // Lọc theo DDR4/DDR5 dựa trên description mainboard
+                if ((info.contains("ddr4") && nm.contains("ddr4"))
+                        || (info.contains("ddr5") && nm.contains("ddr5"))) {
+                    list.add(ram);
+                }
+            }
+        } else {
+            try {
+                // load toàn bộ loại
+                list = dao.getProductsByCategory(type);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(SelectComponentServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        request.setAttribute("list", list);
-        request.setAttribute("type", type);
-        request.getRequestDispatcher("/WEB-INF/include/select-component.jsp").forward(request, response);
+
+        req.setAttribute("list", list);
+        req.setAttribute("type", type);
+        req.getRequestDispatcher("/WEB-INF/include/select-component.jsp")
+                .forward(req, resp);
     }
 
     /**
@@ -97,9 +121,25 @@ public class SelectComponentServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Tương tự BuildPCServlet.doPost, nhưng chỉ add rồi redirect
+        String type = req.getParameter("type");
+        String pid = req.getParameter("productId");
+
+        if (type != null && pid != null) {
+            int id = Integer.parseInt(pid);
+            Product p = dao.getProductById(id);
+            HttpSession session = req.getSession();
+            @SuppressWarnings("unchecked")
+            Map<String, Product> build = (Map<String, Product>) session.getAttribute("currentBuild");
+            if (build == null) {
+                build = new LinkedHashMap<>();
+            }
+            build.put(type, p);
+            session.setAttribute("currentBuild", build);
+        }
+        resp.sendRedirect(req.getContextPath() + "/BuildPC");
     }
 
     /**

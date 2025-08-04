@@ -149,7 +149,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           <div class="value" id="totalRevenueCard">
             <c:choose>
               <c:when test="${not empty totalRevenue}">
-                <fmt:formatNumber value="${totalRevenue}" pattern="#,##0.00" />VND
+                <fmt:formatNumber value="${totalRevenue}" pattern="#,##0" /> VND
               </c:when>
               <c:otherwise> ₫0.00 </c:otherwise>
             </c:choose>
@@ -160,9 +160,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           <div class="value" id="todayRevenueCard">
             <c:choose>
               <c:when test="${not empty todayRevenue}">
-                <fmt:formatNumber value="${todayRevenue}" pattern="#,##0.00" />VND
+                <fmt:formatNumber value="${todayRevenue}" pattern="#,##0" /> VND
               </c:when>
-              <c:otherwise> VND0.00 </c:otherwise>
+              <c:otherwise> VND </c:otherwise>
             </c:choose>
           </div>
         </div>
@@ -173,8 +173,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
               <c:when test="${not empty thisMonthRevenue}">
                 <fmt:formatNumber
                   value="${thisMonthRevenue}"
-                  pattern="#,##0.00"
-                />VND
+                  pattern="#,##0"
+                /> VND
               </c:when>
               <c:otherwise> VND0.00 </c:otherwise>
             </c:choose>
@@ -200,8 +200,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                 <td>
                   <fmt:formatNumber
                     value="${stat.revenue}"
-                    pattern="#,##0.00"
-                  />₫
+                    pattern="#,##0"
+                  /> VND
                 </td>
               </tr>
             </c:forEach>
@@ -232,8 +232,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                 <td>
                   <fmt:formatNumber
                     value="${stat.revenue}"
-                    pattern="#,##0.00"
-                  />₫
+                    pattern="#,##0"
+                  /> VND
                 </td>
               </tr>
             </c:forEach>
@@ -287,10 +287,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
             total += parseCurrency(raw);
           }
         });
-        aoa.push([
-          "Tổng",
-          total.toLocaleString("vi-VN", { minimumFractionDigits: 2 }) + "₫",
-        ]);
+        
         const ws = XLSX.utils.aoa_to_sheet(aoa);
         const colWidths = headers.map((h, i) => {
           let max = h.length;

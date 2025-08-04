@@ -72,13 +72,12 @@
                  style="display:none; max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;" />
             <div class="invalid-feedback">Vui lòng chọn ảnh.</div>
         </div>
-
-        <c:forEach var="att" items="${pAttList}">
+<c:forEach var="att" items="${pAttList}">
             <div class="form-group">
                 <br/>
                 <label>${att.attribute.name}</label>
-                <select name="attr_${att.attribute.id}" class="form-control">
-                    <c:set var="combinedKey" value="attr_${att.attribute.id}" />
+                <select name="attr_${att.attribute.attributeId}" class="form-control">
+                    <c:set var="combinedKey" value="attr_${att.attribute.attributeId}" />
                     <c:set var="currentVal" value="${requestScope[combinedKey]}" />
                     <c:forEach var="val" items="${attrValueOptions[att.attribute.name]}">
                         <option value="${val}" 

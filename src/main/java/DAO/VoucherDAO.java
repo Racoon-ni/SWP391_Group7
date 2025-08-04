@@ -8,7 +8,7 @@ import java.util.Date;
 import config.DBConnect;
 import java.util.ArrayList;
 import java.util.List;
-import DAO.NotificationDAO; // ✅ Đảm bảo import NotificationDAO
+import DAO.NotificationDAO; 
 
 /**
  *
@@ -108,4 +108,28 @@ public class VoucherDAO {
         }
     }
 
+    public Voucher getVoucherByCode(String code) {
+        System.out.println("DEBUG getVoucherByCode – tìm code = " + code);
+        String sql = "SELECT * FROM Vouchers WHERE code = ?";
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Voucher v = new Voucher();
+                    v.setVoucherId(rs.getInt("voucher_id"));
+                    v.setCode(rs.getString("code"));
+                    v.setDiscountPercent(rs.getInt("discount_percent"));
+                    v.setMinOrderValue(rs.getDouble("min_order_value"));
+                    v.setExpiredAt(rs.getDate("expired_at"));
+                    // (nếu có thêm trường khác thì lấy vào)
+                    System.out.println("DEBUG getVoucherByCode – tìm thấy voucher_id = " + v.getVoucherId());
+                    return v;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("DEBUG getVoucherByCode – không tìm thấy");
+        return null;
+    }
 }

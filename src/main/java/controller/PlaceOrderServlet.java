@@ -21,6 +21,7 @@ import model.OrderDetail;
 
 @WebServlet("/place-order")
 public class PlaceOrderServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -52,10 +53,10 @@ public class PlaceOrderServlet extends HttpServlet {
 
         System.out.println(">>> Danh sách địa chỉ của userId = " + user.getId());
         for (UserAddress addr : addresses) {
-            System.out.println(" - ID: " + addr.getId() +
-                               ", Họ tên: " + addr.getFullName() +
-                               ", SĐT: " + addr.getPhone() +
-                               ", Địa chỉ: " + addr.getSpecificAddress());
+            System.out.println(" - ID: " + addr.getId()
+                    + ", Họ tên: " + addr.getFullName()
+                    + ", SĐT: " + addr.getPhone()
+                    + ", Địa chỉ: " + addr.getSpecificAddress());
         }
 
         // === Tìm địa chỉ được chọn ===
@@ -109,11 +110,18 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        // === Tính tổng tiền ===
+        String disAmount = request.getParameter("discountAmount");
         double total = 0;
-        for (Cart item : cartItems) {
-            total += item.getPrice() * item.getQuantity();
+        if (disAmount != null && !disAmount.isEmpty()) {
+            total = Double.parseDouble(disAmount);
+        } else {
+            for (Cart item : cartItems) {
+                total += item.getPrice() * item.getQuantity();
+            }
+
         }
+        // === Tính tổng tiền ===
+
         System.out.println(">>> Tổng tiền đơn hàng: " + total);
 
         // === Tạo đơn hàng ===

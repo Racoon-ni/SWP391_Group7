@@ -90,8 +90,8 @@
             <div class="form-group">
                 <br/>
                 <label>${att.attribute.name}</label>
-                <select name="attr_${att.attribute.id}" class="form-control">
-                    <c:set var="combinedKey" value="attr_${att.attribute.id}" />
+                <select name="attr_${att.attribute.attributeId}" class="form-control">
+                    <c:set var="combinedKey" value="attr_${att.attribute.attributeId}" />
                     <c:set var="currentVal" value="${requestScope[combinedKey]}" />
                     <c:forEach var="val" items="${attrValueOptions[att.attribute.name]}">
                         <option value="${val}" 

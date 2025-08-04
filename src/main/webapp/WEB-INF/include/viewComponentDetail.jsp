@@ -113,7 +113,7 @@
                         <div>
                             <h1 class="text-3xl font-bold text-gray-800 mb-4"><c:out value="${product.name}"/></h1>
                             <p class="text-gray-600 text-lg mb-4"><c:out value="${product.description}" default="Không có mô tả"/></p>
-                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/> VNÐ</p>
+                            <p class="text-pink-600 font-bold text-2xl mb-4"><c:out value="${product.price}"/> VND</p>
                             <p class="text-gray-500 mb-4">Tồn kho: <c:out value="${product.stock}"/></p>
                             <p class="text-gray-500 mb-4">Loại sản phẩm: <c:out value="${product.productType}" default="Không xác định"/></p>
                             <p class="text-gray-500 mb-4">Danh mục ID: <c:out value="${product.categoryId}"/></p>
@@ -165,7 +165,7 @@
             <div>
                 <h4 class="text-lg font-bold text-red-600 mb-1"><%= v.getCode()%></h4>
                 <p class="text-sm text-gray-700 mb-1">
-                    Giảm <%= v.getDiscountPercent()%>% cho đơn từ <span class="font-medium"><%= String.format("%,.0f", v.getMinOrderValue())%> đ</span>
+                    Giảm <%= v.getDiscountPercent()%>% cho đơn từ <span class="font-medium"><%= String.format("%,.0f", v.getMinOrderValue())%> VND</span>
                 </p>
                 <p class="text-xs text-gray-500">Hạn: <%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(v.getExpiredAt())%></p>
             </div>

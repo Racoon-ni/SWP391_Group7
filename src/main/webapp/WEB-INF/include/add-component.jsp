@@ -69,7 +69,7 @@
 
                 <!-- Hidden input to hold raw numeric value -->
                 <input type="hidden" name="price" id="price"
-                       value="${price != null ? price : ''}" />
+value="${price != null ? price : ''}" />
 
                 <div class="invalid-feedback">Giá phải lớn hơn 0.</div>
             </div>
@@ -95,7 +95,7 @@
                 <div class="form-group">
                     <br/>
                     <label>${att.attribute.name}</label>
-                    <select name="attr_${att.attribute.id}" class="form-control">
+                    <select name="attr_${att.attribute.attributeId}" class="form-control">
                         <c:forEach var="val" items="${attrValueOptions[att.attribute.name]}">
                             <option value="${val}">${val} ${att.attribute.unit}</option>
                         </c:forEach>

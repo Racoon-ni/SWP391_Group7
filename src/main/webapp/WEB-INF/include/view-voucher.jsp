@@ -108,9 +108,8 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <a href="view-profile">Thông tin tài khoản</a>
-            <a href="my-orders">Quản lý đơn hàng</a>
             <a href="ViewAddress">Sổ địa chỉ</a>
-            <a href="notifications">Thông báo</a>
+
             <a href="change-password">Đổi mật khẩu</a>
             <a href="ViewMyVoucher">Kho voucher</a>
             <a href="ViewWishlist">Danh sách yêu thích</a>
