@@ -21,9 +21,9 @@ public class CustomerDAO {
                         rs.getString("fullname"),
                         rs.getString("email"),
                         rs.getString("gender"),
-                        rs.getString("address"),
-                        rs.getString("phone"),
                         rs.getString("date_of_birth"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
                         rs.getString("password_hash")
                 );
             }

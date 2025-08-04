@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import model.OrderDetail;
-
 import model.User;
 
 /**

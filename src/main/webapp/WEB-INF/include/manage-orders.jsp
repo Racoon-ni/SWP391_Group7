@@ -1,4 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/WEB-INF/include/admin-side-bar.jsp" %>
+<%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -183,7 +184,7 @@
     <body>
 
         <div class="container">
-            <a href="dash-board.jsp" class="btn-back">← Quay lại </a>
+
             <h2>Quản lý Đơn hàng</h2>
             <form method="get" action="manage-orders"  class="filter-form"> 
                 <!-- Lọc theo trạng thái -->

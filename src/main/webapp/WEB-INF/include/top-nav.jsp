@@ -7,7 +7,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <style>
     /* The Modal (background) */
-    .modal {
+    .modals {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
@@ -22,7 +22,7 @@
     }
 
     /* Modal Content */
-    .modal-content {
+    .modal-contents {
         background-color: #fefefe;
         margin-left: 210px;
         padding: 20px 20px 20px 32px;
@@ -54,8 +54,6 @@
         border-style: none;
     }
 </style>
-</head>
-<body>
 
     <!-- Trigger/Open The Modal -->
     <button class="button" id="myBtn">
@@ -63,8 +61,8 @@
     </button>
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
+    <div id="myModal" class="modals">
+        <div class="modal-contents">
             <span class="close">&times;</span>
             <ul class="no-bullets">
                 <li><a href="${pageContext.request.contextPath}/ViewComponent?category=PC">PC - Máy tính bàn</a></li>
