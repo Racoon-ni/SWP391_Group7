@@ -34,7 +34,6 @@
                 <th scope="col">Ngày Sinh</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Số Điện Thoại</th>
-                <th scope="col">Vai trò</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col" style="text-align: center">Chức năng</th>
             </tr>
@@ -51,12 +50,15 @@
                 <td><%= user.getDateOfBirth()%></td>
                 <td><%= user.getAddress()%></td>
                 <td><%= user.getPhone()%></td>
-                <td><%= user.getRole()%></td>
                 <td><%= user.isStatus() ? "Còn hoạt động" : "Dừng hoạt động"%></td>
                 <td class="d-flex justify-content-center gap-2" style="text-align: center">
 
                     <a href="${pageContext.request.contextPath}/manage-user?view=edit&id=<%= user.getId()%>" class="btn btn-warning">
                         <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                        
+                    <a href="${pageContext.request.contextPath}/manage-user?view=details&id=<%= user.getId()%>" class="btn btn-info">
+                        <i class="fa-solid fa-eye"></i>
                     </a>
 
                 </td>

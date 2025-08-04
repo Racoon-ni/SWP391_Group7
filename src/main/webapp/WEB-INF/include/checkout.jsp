@@ -92,9 +92,10 @@
                         <label class="form-check-label">Tiền mặt</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentMethod" value="BANK">
+                        <input class="form-check-input" type="radio" name="paymentMethod" value="CARD">
                         <label class="form-check-label">Chuyển khoản</label>
                     </div>
+                    
                 </div>
 
                 <button type="button" class="btn btn-primary w-100 mt-3" style="font-size: 1.2rem;" onclick="confirmOrder()">
@@ -116,7 +117,7 @@
                 <hr>
                 <div class="d-flex justify-content-between">
                     <strong>Tổng thành tiền:</strong>
-                    <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount * 1000) %> đ</strong>
+                    <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount) %> đ</strong>
                 </div>
                 <div class="mt-3">
                     <input type="text" class="form-control" placeholder="Mã khuyến mãi">

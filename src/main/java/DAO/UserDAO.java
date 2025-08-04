@@ -109,15 +109,14 @@ public class UserDAO extends DBConnect {
         return null;
     }
 
-    public int updateUser(User user) {
+    public int updateUser(int userId, boolean status) {
 
-        String sql = " Update Users SET role = ?, status = ? \n"
+        String sql = " Update Users SET status = ? \n"
                 + "WHERE user_id = ?";
 
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getRole());
-            ps.setBoolean(2, user.isStatus());
-            ps.setInt(3, user.getId());
+            ps.setBoolean(1, status);
+            ps.setInt(2, userId);
 
             return ps.executeUpdate(); // returns 1 if success
         } catch (Exception ex) {
@@ -149,22 +148,27 @@ public class UserDAO extends DBConnect {
     // Lấy toàn bộ user (bao gồm ngày sinh)
     public ArrayList<User> getAllUser() {
         ArrayList<User> userList = new ArrayList<>();
-        String sql = "SELECT u.user_id, u.username, u.email, u.fullname, u.date_of_birth, u.address, u.phone, u.gender, u.role, u.status FROM Users u";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT u.user_id, u.username, u.email,\n"
+                + "  u.fullname, u.date_of_birth, u.address,\n"
+                + "  u.phone, u.gender, u.role, u.status\n"
+                + "  FROM Users u\n"
+                + "  WHERE u.role = 'Customer'";
+
+        try (
+                 PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
             while (rs.next()) {
-                User user = new User(
-                        rs.getInt("user_id"),
-                        rs.getString("username"),
-                        "", // không lấy password
-                        rs.getString("email"),
-                        rs.getString("fullname"),
-                        rs.getDate("date_of_birth"),
-                        rs.getString("address"),
-                        rs.getString("phone"),
-                        rs.getString("gender"),
-                        rs.getString("role"),
-                        rs.getBoolean("status")
-                );
+                int id = rs.getInt("user_id");
+                String name = rs.getString("username");
+                String email = rs.getString("email");
+                String fullname = rs.getString("fullname");
+                Date dateOfBirth = rs.getDate("date_of_birth");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                String gender = rs.getString("gender");
+                String role = rs.getString("role");
+                boolean status = rs.getBoolean("status");
+
+                User user = new User(id, name, "", email, fullname, dateOfBirth, address, phone, gender, role, status);
                 userList.add(user);
             }
         } catch (Exception ex) {
@@ -175,6 +179,8 @@ public class UserDAO extends DBConnect {
 
     // Hash password MD5
     private String hashMd5(String raw) {
+//       use when need to convert password using sql
+//SELECT LOWER(CONVERT(varchar(32), HASHBYTES('MD5', '1'), 2)) AS md5_hash
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] mess = md.digest(raw.getBytes());

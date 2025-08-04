@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import DAO.AdminStaffSalesDAO;
 import model.AdminStaffSalesStats;
 import java.util.List;
+import jakarta.servlet.http.HttpSession;
+import model.User;
 
 /**
  *
@@ -34,7 +36,9 @@ public class DashBoardServlet extends HttpServlet {
      */
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      *
      * @param request servlet request
      * @param response servlet response
@@ -45,27 +49,24 @@ public class DashBoardServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AdminStaffSalesDAO salesDAO = new AdminStaffSalesDAO();
+        HttpSession session = request.getSession(false);
 
-        // Lấy danh sách doanh thu theo tháng và theo ngày
-        List<AdminStaffSalesStats> monthlyStats = salesDAO.getMonthlyRevenue();
-        List<AdminStaffSalesStats> dailyStats = salesDAO.getDailyRevenue();
+        if (session != null) {
+            User user = (User) session.getAttribute("user");
+            Boolean isLogged = (Boolean) session.getAttribute("logged");
 
-        // ✅ Lấy tổng doanh thu (phần bị thiếu gây lỗi hiển thị)
-        double totalRevenue = salesDAO.getTotalRevenue();
+            if (Boolean.TRUE.equals(isLogged)) {
+                if (user != null && (user.getRole().equalsIgnoreCase("Admin") || user.getRole().equalsIgnoreCase("Staff"))) {
+                    request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/home");
+                }
+                return;
+            }
+        }
 
-        // DEBUG (tùy chọn, bạn có thể xóa)
-        System.out.println("Total Revenue: " + totalRevenue);
-        System.out.println("Monthly Stats size: " + monthlyStats.size());
-        System.out.println("Daily Stats size: " + dailyStats.size());
+        response.sendRedirect(request.getContextPath() + "/home");
 
-        // ✅ Set attribute để truyền sang JSP
-        request.setAttribute("monthlyStats", monthlyStats);
-        request.setAttribute("dailyStats", dailyStats);
-        request.setAttribute("totalRevenue", totalRevenue); // ✅ Bổ sung dòng này
-
-        // Chuyển tiếp tới trang dashboard
-        request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
     }
 
     /**
@@ -79,6 +80,18 @@ public class DashBoardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        User user = (User) session.getAttribute("user");
+        boolean isLogged = (boolean) session.getAttribute("logged");
+
+        if (isLogged && (user.getRole().equalsIgnoreCase("Admin")
+                || user.getRole().equalsIgnoreCase("Staff"))) {
+            request.getRequestDispatcher("/dash-board.jsp").forward(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/home");
+        }
     }
 
     /**

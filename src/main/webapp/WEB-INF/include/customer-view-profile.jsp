@@ -20,28 +20,6 @@
         margin: 0;
         padding: 0;
     }
-    .sidebar {
-        position: fixed;
-        top: 80px;
-        left: 0;
-        width: 250px;
-        height: calc(100% - 80px);
-        background-color: #f8f9fa;
-        padding-top: 20px;
-        border-right: 1px solid #ddd;
-        z-index: 500;
-    }
-    .sidebar a {
-        display: block;
-        padding: 15px;
-        color: #333;
-        text-decoration: none;
-        font-size: 18px;
-    }
-    .sidebar a:hover {
-        background-color: #007bff;
-        color: white;
-    }
     .main-content {
         margin-left: 250px;
         margin-top: 80px;

@@ -63,7 +63,7 @@ public class RegisterServlet extends HttpServlet {
         Date d = new Date();
 
         UserDAO uDAO = new UserDAO();
-       User user = new User(0, username,  password, username + "@example.com", "", d, "", "", "", "Customer", true);
+        User user = new User(0, username,  password, username + "@example.com", "", d, "", "", "", "Customer", true);
 
         request.setAttribute("username", username);
         if (password.equals(validPass)) {
@@ -72,7 +72,7 @@ public class RegisterServlet extends HttpServlet {
                 request.setAttribute("success", "Đăng ký thành công");
                 request.getRequestDispatcher("/WEB-INF/include/login.jsp").forward(request, response);
             } else {
-                request.setAttribute("error", "Đăng ký thất bại");
+                request.setAttribute("error", "Đăng ký thất bại (Username đã tồn tại)");
                 request.getRequestDispatcher("/WEB-INF/include/register.jsp").forward(request, response);
             }
 

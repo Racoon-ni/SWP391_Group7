@@ -175,7 +175,8 @@
                 </c:if>
 
                 <!-- BUILD PC -->
-                <a class="nav-link d-flex align-items-center" href="#">
+                <a class="nav-link d-flex align-items-center" href="${pageContext.request.contextPath}/BuildPC
+                   ">
                     <i class="fas fa-desktop me-1"></i> Build PC
                 </a>
 
@@ -220,13 +221,8 @@
                                     </div>
                                 </a>
                             </li>
-                            <% }
-                                }%>
-                            <li>
-                                <a class="notification-view-all" href="${pageContext.request.contextPath}/notifications">
-                                    🔎 Xem tất cả
-                                </a>
-                            </li>
+                            <% } // <-- đóng for %>
+                            <% } // <-- đóng else %>
                         </ul>
                     </div>
                 </c:if>
@@ -234,19 +230,18 @@
         </div>
     </nav>
 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
-
-<script>
-    document.getElementById('notificationDropdown')?.addEventListener('click', function () {
-        fetch('<%= contextPath%>/notification/mark-all-read', {method: 'POST'})
-                .then(() => {
-                    const badge = document.getElementById('notificationBadge');
-                    if (badge) {
-                        badge.style.display = 'none';
-                    }
-                });
-    });
-</script>
+    <script>
+        document.getElementById('notificationDropdown')?.addEventListener('click', function () {
+            fetch('<%= contextPath%>/notification/mark-all-read', {method: 'POST'})
+                    .then(() => {
+                        const badge = document.getElementById('notificationBadge');
+                        if (badge) {
+                            badge.style.display = 'none';
+                        }
+                    });
+        });
+    </script>
 </body>

@@ -13,8 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import model.OrderDetail;
 import model.User;
@@ -39,40 +39,66 @@ public class ManageUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String view = request.getParameter("view");
+        HttpSession session = request.getSession(false);
 
-        if (view == null || view.isEmpty() || view.equalsIgnoreCase("list")) {
+        if (session != null) {
 
-            UserDAO uDAO = new UserDAO();
+            User user = (User) session.getAttribute("user");
+            Boolean isLogged = (Boolean) session.getAttribute("logged");
 
-            ArrayList<User> userList = uDAO.getAllUser();
+            if (isLogged != null && isLogged) {
 
-            request.setAttribute("userList", userList);
+                if (user != null && (user.getRole().equalsIgnoreCase("Admin") || user.getRole().equalsIgnoreCase("Staff"))) {
 
-            request.getRequestDispatcher("/WEB-INF/include/user-list.jsp").forward(request, response);
+                    if (view == null || view.isEmpty() || view.equalsIgnoreCase("list")) {
 
-        } else if (view.equalsIgnoreCase("edit")) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            UserDAO uDAO = new UserDAO();
+                        UserDAO uDAO = new UserDAO();
 
-            User user = uDAO.getUserById(id);
+                        ArrayList<User> userList = uDAO.getAllUser();
 
-            request.setAttribute("user", user);
+                        request.setAttribute("userList", userList);
 
-            request.getRequestDispatcher("/WEB-INF/include/edit-user.jsp").forward(request, response);
-        } else if (view.equalsIgnoreCase("details")) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            UserDAO uDAO = new UserDAO();
-            orderDAO dao = new orderDAO();
-            
-            User user = uDAO.getUserById(id);
-            List<OrderDetail> orderDetails = dao.getOrderDetailsByUserId(id);
-            
-            request.setAttribute("user", user);
-            request.setAttribute("orderDetails", orderDetails);
-            request.getRequestDispatcher("/WEB-INF/include/user-details.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/WEB-INF/include/user-list.jsp").forward(request, response);
+                        request.getRequestDispatcher("/WEB-INF/include/user-list.jsp").forward(request, response);
+                        return;
+                        
+                    } else if (view.equalsIgnoreCase("edit")) {
+                        int id = Integer.parseInt(request.getParameter("id"));
+                        UserDAO uDAO = new UserDAO();
+
+                        user = uDAO.getUserById(id);
+
+                        request.setAttribute("user", user);
+
+                        request.getRequestDispatcher("/WEB-INF/include/edit-user.jsp").forward(request, response);
+                        return;
+                        
+                    } else if (view.equalsIgnoreCase("details")) {
+                        int id = Integer.parseInt(request.getParameter("id"));
+                        UserDAO uDAO = new UserDAO();
+                        orderDAO dao = new orderDAO();
+
+                        user = uDAO.getUserById(id);
+                        List<OrderDetail> orderDetails = dao.getOrderDetailsByUserId(id);
+
+                        request.setAttribute("user", user);
+                        request.setAttribute("orderDetails", orderDetails);
+                        request.getRequestDispatcher("/WEB-INF/include/user-details.jsp").forward(request, response);
+                        return;
+                        
+                    } else {
+                        request.getRequestDispatcher("/WEB-INF/include/user-list.jsp").forward(request, response);
+                        return;
+                    }
+
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/home");
+                    return;
+                }
+
+            }
         }
+
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 
     /**
@@ -92,11 +118,9 @@ public class ManageUserServlet extends HttpServlet {
             switch (act) {
                 case "edit": // not validate yetư
                     int id = Integer.parseInt(request.getParameter("id"));
-                    String role = request.getParameter("role");
                     boolean status = Boolean.parseBoolean(request.getParameter("status"));
-                    Date d = new Date();
 
-                    if (uDAO.updateUser(new User(id, "", "", "", "", d, "", "", "", role, status)) == 1) {
+                    if (uDAO.updateUser(id, status) == 1) {
                         response.sendRedirect(request.getContextPath() + "/manage-user");
                     }
 
