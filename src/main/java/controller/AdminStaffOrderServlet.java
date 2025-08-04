@@ -64,9 +64,9 @@ public class AdminStaffOrderServlet extends HttpServlet {
 
                 HttpSession session = request.getSession();
                 if (updated) {
-                    session.setAttribute("flashMessage", "✅ Cập nhật trạng thái thành công!");
+                    session.setAttribute("message", "✅ Cập nhật trạng thái thành công!");
                 } else {
-                    session.setAttribute("flashMessage", "❌ Không thể cập nhật trạng thái đơn hàng.");
+                    session.setAttribute("error", "❌ Không thể cập nhật trạng thái đơn hàng.");
                 }
 
                 response.sendRedirect("order-detail-admin?id=" + orderId);

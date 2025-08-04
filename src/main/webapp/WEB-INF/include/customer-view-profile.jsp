@@ -1,10 +1,13 @@
+<%@page import="DAO.CustomerDAO"%>
 <%@ include file="/WEB-INF/include/header.jsp" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ page import="model.Customer" %>
-<%@ page import="java.util.List" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%
-    Customer customer = (Customer) request.getAttribute("customer");
-    List<String> errors = (List<String>) request.getAttribute("errors");
+    CustomerDAO c = new CustomerDAO();
+    User loggedInUser = (User) session.getAttribute("user");
+    Customer customer = c.getCustomerById(loggedInUser.getId());
     String success = request.getParameter("success");
     String error = request.getParameter("error");
 %>
@@ -21,7 +24,7 @@
         margin-left: 250px;
         margin-top: 80px;
         display: flex;
-        justify-content: center; /* căn giữa ngang */
+        justify-content: center;
         padding: 40px;
     }
     .container {
@@ -30,7 +33,7 @@
         padding: 30px;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         width: 100%;
-        max-width: 600px; /* cố định độ rộng */
+        max-width: 600px;
     }
 
     h2 {
@@ -86,21 +89,23 @@
         color: #721c24;
         border: 1px solid #f5c6cb;
     }
+    .error-message {
+        color: #d8000c;
+        font-size: 13px;
+        margin-top: 5px;
+    }
 </style>
 
-<!-- Sidebar -->
 <div class="sidebar">
     <a href="view-profile">Thông tin tài khoản</a>
     <a href="#">Quản lý đơn hàng</a>
-    <a href="ViewAddress">Sở địa chỉ</a>
+    <a href="ViewAddress">Sổ địa chỉ</a>
     <a href="#">Thông báo</a>
-    <a href="#">Điểm thành viên</a>
     <a href="change-password">Đổi mật khẩu</a>
-    <a href="ViewVouchers">Kho voucher</a>
+    <a href="ViewMyVoucher">Kho voucher</a>
     <a href="ViewWishlist">Danh sách yêu thích</a>
 </div>
 
-<!-- Main content -->
 <div class="main-content">
     <div class="container">
         <h2>Thông tin khách hàng</h2>
@@ -111,49 +116,57 @@
         <div class="alert alert-error">Có lỗi xảy ra khi cập nhật thông tin.</div>
         <% } %>
 
-        <% if (errors != null && !errors.isEmpty()) { %>
-        <div class="alert alert-error">
-            <ul>
-                <% for (String err : errors) {%>
-                <li><%= err%></li>
-                    <% } %>
-            </ul>
-        </div>
-        <% }%>
-
         <form method="post" action="${pageContext.request.contextPath}/update-profile">
             <div class="form-field">
                 <label>Họ tên</label>
-                <input type="text" name="fullName" value="<%= customer.getFullName()%>" required />
+                <input type="text" name="fullName" value="<%= customer.getFullName() %>" required />
+                <c:if test="${not empty errorFullName}">
+                    <div class="error-message">${errorFullName}</div>
+                </c:if>
             </div>
 
             <div class="form-field">
                 <label>Email</label>
-                <input type="email" name="email" value="<%= customer.getEmail()%>" required />
+                <input type="email" name="email" value="<%= customer.getEmail() %>" required />
+                <c:if test="${not empty errorEmail}">
+                    <div class="error-message">${errorEmail}</div>
+                </c:if>
             </div>
 
             <div class="form-field">
                 <label>Giới tính</label>
                 <select name="gender">
-                    <option value="Nam" <%= "Nam".equals(customer.getGender()) ? "selected" : ""%>>Nam</option>
-                    <option value="Nữ" <%= "Nữ".equals(customer.getGender()) ? "selected" : ""%>>Nữ</option>
-                    <option value="Khác" <%= "Khác".equals(customer.getGender()) ? "selected" : ""%>>Khác</option>
+                    <option value="Nam" <%= "Nam".equals(customer.getGender()) ? "selected" : "" %>>Nam</option>
+                    <option value="Nữ" <%= "Nữ".equals(customer.getGender()) ? "selected" : "" %>>Nữ</option>
+                    <option value="Khác" <%= "Khác".equals(customer.getGender()) ? "selected" : "" %>>Khác</option>
                 </select>
+                <c:if test="${not empty errorGender}">
+                    <div class="error-message">${errorGender}</div>
+                </c:if>
             </div>
 
             <div class="form-field">
                 <label>Ngày sinh</label>
-                <input type="date" name="dob" value="<%= customer.getDateOfBirth()%>" required />
+                <input type="date" name="dob" value="<%= customer.getDateOfBirth() %>" required />
+                <c:if test="${not empty errorDob}">
+                    <div class="error-message">${errorDob}</div>
+                </c:if>
             </div>
 
             <div class="form-field">
                 <label>Số điện thoại</label>
-                <input type="text" name="phone" value="<%= customer.getPhone()%>" required />
+                <input type="text" name="phone" value="<%= customer.getPhone() %>" required />
+                <c:if test="${not empty errorPhone}">
+                    <div class="error-message">${errorPhone}</div>
+                </c:if>
             </div>
 
             <div class="form-field">
                 <label>Địa chỉ</label>
-                <input type="text" name="address" value="<%= customer.getAddress()%>" required />
+                <input type="text" name="address" value="<%= customer.getAddress() %>" required />
+                <c:if test="${not empty errorAddress}">
+                    <div class="error-message">${errorAddress}</div>
+                </c:if>
             </div>
 
             <button type="submit" class="btn-update">Cập nhật thông tin</button>

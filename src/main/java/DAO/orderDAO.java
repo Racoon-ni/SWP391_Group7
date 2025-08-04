@@ -8,10 +8,13 @@ import model.Order;
 import model.ShippingInfo;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Cart;
 
 public class orderDAO {
 //orderDAO
+
     public List<Order> getOrdersByUserId(int userId) {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM Orders WHERE user_id = ?";
@@ -303,108 +306,66 @@ public class orderDAO {
     }
 
     public boolean updateOrderStatus(int orderId, String newStatus) {
-        String updateSQL = "UPDATE Orders SET status = ? WHERE order_id = ?";
-        String getUserSQL = "SELECT user_id FROM Orders WHERE order_id = ?";
-        Connection conn = null;
-        PreparedStatement psUpdate = null;
-        PreparedStatement psGetUser = null;
-        ResultSet rs = null;
+        String getOrderInfoSQL = "  SELECT user_id, status, payment_method \n"
+                + "  FROM Orders o\n"
+                + "  JOIN OrderShippingPayment os on os.order_id = o.order_id\n"
+                + "  WHERE o.order_id = ?";
+        String updateStatusSQL = "UPDATE Orders SET status = ? WHERE order_id = ?";
 
-        try {
-            conn = DBConnect.connect();
+        try (
+                 Connection conn = DBConnect.connect();  PreparedStatement psGetOrderInfo = conn.prepareStatement(getOrderInfoSQL)) {
+            psGetOrderInfo.setInt(1, orderId);
+            try ( ResultSet rs = psGetOrderInfo.executeQuery()) {
+                if (!rs.next()) {
+                    return false; // Order not found
+                }
 
-            // Lấy user_id của đơn hàng
-            psGetUser = conn.prepareStatement(getUserSQL);
-            psGetUser.setInt(1, orderId);
-            rs = psGetUser.executeQuery();
+                int userId = rs.getInt("user_id");
+                String currentStatus = rs.getString("status");
+                String paymentMethod = rs.getString("payment_method");
 
-            int userId = -1;
-            if (rs.next()) {
-                userId = rs.getInt("user_id");
-            } else {
-                return false; // không tìm thấy đơn hàng
-            }
+                if ("Cancelled".equalsIgnoreCase(currentStatus)) {
+                    return false; // Cannot update canceled order
+                }
 
-            // Cập nhật trạng thái đơn hàng
-            psUpdate = conn.prepareStatement(updateSQL);
-            psUpdate.setString(1, newStatus);
-            psUpdate.setInt(2, orderId);
-            int rows = psUpdate.executeUpdate();
+                try ( PreparedStatement psUpdateStatus = conn.prepareStatement(updateStatusSQL)) {
+                    psUpdateStatus.setString(1, newStatus);
+                    psUpdateStatus.setInt(2, orderId);
 
-            if (rows > 0) {
-                // Gửi thông báo
-                String title = "Cập nhật đơn hàng";
-                String message = "Đơn hàng #" + orderId + " đã được cập nhật trạng thái: " + newStatus;
-                String link = "/order-details?order_id=" + orderId;
+                    int rows = psUpdateStatus.executeUpdate();
+                    if (rows == 0) {
+                        return false; // No update
+                    }
+                    // Update payment status if needed
+                    if (("Shipped".equalsIgnoreCase(newStatus) || "Completed".equalsIgnoreCase(newStatus))
+                            && "COD".equalsIgnoreCase(paymentMethod)) {
 
-                NotificationDAO dao = new NotificationDAO();
-                dao.sendNotification(userId, title, message, link);
+                        String sqlUpdatePayment = "UPDATE OrderShippingPayment SET payment_status = 'Paid'"
+                                + ("Shipped".equalsIgnoreCase(newStatus) ? ", shippedDate = GETDATE()" : "")
+                                + " WHERE order_id = ?";
 
-                return true;
+                        try ( PreparedStatement psUpdatePayment = conn.prepareStatement(sqlUpdatePayment)) {
+                            psUpdatePayment.setInt(1, orderId);
+                            psUpdatePayment.executeUpdate();
+                        }
+                    }
+
+                    // Send notification
+                    String title = "Cập nhật đơn hàng";
+                    String message = "Đơn hàng #" + orderId + " đã được cập nhật trạng thái: " + newStatus;
+                    String link = "/order-details?order_id=" + orderId;
+
+                    NotificationDAO dao = new NotificationDAO();
+                    dao.sendNotification(userId, title, message, link);
+
+                    return true;
+                }
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (psUpdate != null) {
-                    psUpdate.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (psGetUser != null) {
-                    psGetUser.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            }
+            Logger.getLogger(orderDAO.class.getName()).log(Level.SEVERE, null, e);
+            return false;
         }
-
-        return false;
-    }
-
-    public List<OrderDetail> getOrderDetailsByUserId(int userId) {
-        List<OrderDetail> details = new ArrayList<>();
-        String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id,\n"
-                + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price \n"
-                + "FROM OrderItems oi \n"
-                + "JOIN Products p ON oi.product_id = p.product_id\n"
-                + "Join Orders o ON o.order_id = oi.order_id\n"
-                + "WHERE o.user_id = ?";
-
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                OrderDetail detail = new OrderDetail(
-                        rs.getInt("order_item_id"),
-                        rs.getInt("order_id"),
-                        rs.getInt("product_id"),
-                        rs.getString("product_name"),
-                        rs.getString("image_url"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("unit_price")
-                );
-
-                details.add(detail);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return details;
     }
 
     public void placeOrder(Order order) {
@@ -644,4 +605,35 @@ public class orderDAO {
 }
 
 
+    public List<OrderDetail> getOrderDetailsByUserId(int userId) {
+        List<OrderDetail> details = new ArrayList<>();
+        String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id,\n"
+                + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price \n"
+                + "FROM OrderItems oi \n"
+                + "JOIN Products p ON oi.product_id = p.product_id\n"
+                + "Join Orders o ON o.order_id = oi.order_id\n"
+                + "WHERE o.user_id = ?";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDetail detail = new OrderDetail(
+                        rs.getInt("order_item_id"),
+                        rs.getInt("order_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("product_name"),
+                        rs.getString("image_url"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("unit_price")
+                );
+
+                details.add(detail);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return details;
+    }
 }

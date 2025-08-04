@@ -141,7 +141,7 @@
                 <span style="color: orange">PC</span><span style="color: black"> Store</span>
             </a>
 
-            <%@include file="../include/top-nav.jsp" %>
+            <%@include file="top-nav.jsp" %>
 
             <!-- SEARCH BAR -->
             <form action="${pageContext.request.contextPath}/search" method="GET" class="flex-grow-1 mx-3" style="max-width: 500px;">
