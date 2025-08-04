@@ -64,7 +64,7 @@ public class NotificationDAO {
         String sqlGetUsers = "SELECT user_id FROM Users WHERE role = 'Customer'";
         String title = "Khuyến mãi hot";
         String message = "Voucher mới '" + voucherCode + "' đã được cập nhật!";
-        String link = "/voucher";
+        String link = "/ViewAllVouhers";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sqlGetUsers);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {

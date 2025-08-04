@@ -28,7 +28,7 @@
         <div class="main-content container mt-4">
 
             <!-- ✅ Nút quay về trang chủ admin -->
-            <a href="${pageContext.request.contextPath}/dash-board.jsp" class="btn btn-outline-primary mb-3">
+            <a href="${pageContext.request.contextPath}/dash-board" class="btn btn-outline-primary mb-3">
                 ⬅ Quay về trang chủ
             </a>
 

@@ -189,7 +189,10 @@
                 <a class="nav-link d-flex align-items-center" href="${pageContext.request.contextPath}/my-orders">
                     <i class="fas fa-receipt me-1"></i> Đơn hàng của tôi
                 </a>
-
+                <!-- voucher -->
+                <a class="nav-link d-flex align-items-center" href="${pageContext.request.contextPath}/ViewAllVouhers">
+                    <i class="fas fa-receipt me-1"></i> Danh sách Voucher
+                </a>
                 <!-- NOTIFICATION -->
                 <c:if test="${not empty user}">
                     <div class="dropdown">

@@ -1,7 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ taglib
+ 
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib
 uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ taglib
 uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+        <%@include file="admin-side-bar.jsp" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -147,7 +149,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           <div class="value" id="totalRevenueCard">
             <c:choose>
               <c:when test="${not empty totalRevenue}">
-                <fmt:formatNumber value="${totalRevenue}" pattern="#,##0.00" />₫
+                <fmt:formatNumber value="${totalRevenue}" pattern="#,##0.00" />VND
               </c:when>
               <c:otherwise> ₫0.00 </c:otherwise>
             </c:choose>
@@ -158,9 +160,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           <div class="value" id="todayRevenueCard">
             <c:choose>
               <c:when test="${not empty todayRevenue}">
-                <fmt:formatNumber value="${todayRevenue}" pattern="#,##0.00" />₫
+                <fmt:formatNumber value="${todayRevenue}" pattern="#,##0.00" />VND
               </c:when>
-              <c:otherwise> ₫0.00 </c:otherwise>
+              <c:otherwise> VND0.00 </c:otherwise>
             </c:choose>
           </div>
         </div>
@@ -172,9 +174,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                 <fmt:formatNumber
                   value="${thisMonthRevenue}"
                   pattern="#,##0.00"
-                />₫
+                />VND
               </c:when>
-              <c:otherwise> ₫0.00 </c:otherwise>
+              <c:otherwise> VND0.00 </c:otherwise>
             </c:choose>
           </div>
         </div>
@@ -186,7 +188,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           <thead>
             <tr>
               <th>Ngày</th>
-              <th>Doanh thu (VNĐ)</th>
+              <th>Doanh thu (VND)</th>
             </tr>
           </thead>
           <tbody>
@@ -220,7 +222,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           <thead>
             <tr>
               <th>Tháng/Năm</th>
-              <th>Doanh thu (VNĐ)</th>
+              <th>Doanh thu (VND)</th>
             </tr>
           </thead>
           <tbody>

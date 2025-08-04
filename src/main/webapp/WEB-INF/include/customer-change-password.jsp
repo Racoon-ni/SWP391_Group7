@@ -1,57 +1,15 @@
 <%@ include file="/WEB-INF/include/header.jsp" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <%@ page import="java.util.List" %>
-<%@ page import="model.Customer" %>
-
 
 <%
     List<String> errors = (List<String>) request.getAttribute("errors");
     String success = request.getParameter("success");
     String error = request.getParameter("error");
 %>
-
-
-
 <style>
-    .container-form {
-        display: flex;
-        justify-content: center;
-        padding: 100px 1rem;
-    }
-
-    .form-box {
-        width: 100%;
-        max-width: 500px;
-        border-radius: var(--radius);
-        border: 1px solid var(--gray);
-        background: white;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-header {
-        background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-        color: white;
-        padding: 1.25rem;
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
-
-    .form-body {
-        padding: 2rem;
-    }
-
-    .form-footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #eee;
-    }
-
-
-    .sidebar {
+ .sidebar {
         position: fixed;
         top: 80px;
         left: 0;
@@ -73,19 +31,18 @@
         background-color: #007bff;
         color: white;
     }
-</style>
-
-
+    </style>
 <div class="sidebar">
     <a href="view-profile">Thông tin tài khoản</a>
-    <a href="my-orders">Quản lý đơn hàng</a>
+    <a href="#">Quản lý đơn hàng</a>
     <a href="ViewAddress">Sổ địa chỉ</a>
-    <a href="notifications">Thông báo</a>
+    <a href="#">Thông báo</a>
     <a href="change-password">Đổi mật khẩu</a>
-    <a href="ViewVouchers">Kho voucher</a>
+    <a href="ViewMyVoucher">Kho voucher</a>
     <a href="ViewWishlist">Danh sách yêu thích</a>
 </div>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <div style="display: flex; justify-content: center; align-items: flex-start; padding: 100px 1rem;">
     <div style="width: 100%; max-width: 500px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
@@ -97,14 +54,34 @@
 
         <!-- Body -->
         <div style="padding: 2rem; background-color: #fff;">
-            <form action="${pageContext.request.contextPath}/change-password" method="post">
+            <!-- Hiển thị thông báo -->
+            <c:if test="${not empty errors}">
+                <div class="alert alert-danger" style="color: #dc2626; background: #fee2e2; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <ul style="margin: 0; padding-left: 1rem;">
+                        <c:forEach var="err" items="${errors}">
+                            <li>${err}</li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+            <c:if test="${param.success eq 'true'}">
+                <div class="alert alert-success" style="color: #059669; background: #d1fae5; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    Đổi mật khẩu thành công!
+                </div>
+            </c:if>
+            <c:if test="${param.error eq 'true'}">
+                <div class="alert alert-danger" style="color: #dc2626; background: #fee2e2; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    Có lỗi xảy ra khi đổi mật khẩu. Vui lòng thử lại!
+                </div>
+            </c:if>
 
+            <!-- Form -->
+            <form action="${pageContext.request.contextPath}/change-password" method="post">
                 <!-- Mật khẩu cũ -->
                 <div class="mb-4 position-relative">
-                    <label style="font-weight: 600; margin-bottom: 6px; display: block;">Mật khẩu cũ</label>
-                    <input type="password" name="oldPassword" id="oldPassword"
-                           class="form-control pe-5"
-                           style="border-radius: 8px; border: 1px solid #ddd; padding: 10px 40px 10px 12px;" required />
+                    <label>Mật khẩu cũ</label>
+                    <input type="password" name="oldPassword" id="oldPassword" class="form-control" required
+                           style="width: 100%; padding: 10px 40px 10px 12px; border: 1px solid #ddd; border-radius: 8px;" />
                     <i class="toggle-password fas fa-eye"
                        toggle="#oldPassword"
                        style="position: absolute; top: 50%; right: 14px; transform: translateY(-50%); cursor: pointer; color: #999;"></i>
@@ -112,22 +89,20 @@
 
                 <!-- Mật khẩu mới -->
                 <div class="mb-4 position-relative">
-                    <label style="font-weight: 600; margin-bottom: 6px; display: block;">Mật khẩu mới</label>
-                    <input type="password" name="newPassword" id="newPassword"
-                           class="form-control pe-5"
-                           style="border-radius: 8px; border: 1px solid #ddd; padding: 10px 40px 10px 12px;" required />
+                    <label>Mật khẩu mới</label>
+                    <input type="password" name="newPassword" id="newPassword" class="form-control" required
+                           style="width: 100%; padding: 10px 40px 10px 12px; border: 1px solid #ddd; border-radius: 8px;" />
                     <i class="toggle-password fas fa-eye"
                        toggle="#newPassword"
                        style="position: absolute; top: 50%; right: 14px; transform: translateY(-50%); cursor: pointer; color: #999;"></i>
-                    <small style="font-size: 0.75rem; color: #888;">Ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 6-8 ký tự</small>
+                    <small style="font-size: 0.75rem; color: #888;">Ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 6–8 ký tự</small>
                 </div>
 
-                <!-- Xác nhận mật khẩu -->
+                <!-- Nhập lại mật khẩu -->
                 <div class="mb-4 position-relative">
-                    <label style="font-weight: 600; margin-bottom: 6px; display: block;">Xác nhận mật khẩu mới</label>
-                    <input type="password" name="confirmPassword" id="confirmPassword"
-                           class="form-control pe-5"
-                           style="border-radius: 8px; border: 1px solid #ddd; padding: 10px 40px 10px 12px;" required />
+                    <label>Xác nhận mật khẩu mới</label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required
+                           style="width: 100%; padding: 10px 40px 10px 12px; border: 1px solid #ddd; border-radius: 8px;" />
                     <i class="toggle-password fas fa-eye"
                        toggle="#confirmPassword"
                        style="position: absolute; top: 50%; right: 14px; transform: translateY(-50%); cursor: pointer; color: #999;"></i>
@@ -135,7 +110,7 @@
 
                 <!-- Footer nút -->
                 <hr />
-                <div class="d-flex justify-content-end gap-3 mt-3">
+                <div style="display: flex; justify-content: flex-end; gap: 1rem;">
                     <a href="${pageContext.request.contextPath}/view-profile"
                        class="btn"
                        style="border-radius: 8px; background-color: #f3f3f3; border: 1px solid #ccc; padding: 8px 20px;">
@@ -152,9 +127,6 @@
     </div>
 </div>
 
-
-
-
 <script>
     document.querySelectorAll(".toggle-password").forEach(icon => {
         icon.addEventListener("click", function () {
@@ -164,5 +136,36 @@
             this.classList.toggle("fa-eye");
             this.classList.toggle("fa-eye-slash");
         });
+    });
+
+    // Client-side validation
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const oldPass = document.getElementById("oldPassword").value.trim();
+        const newPass = document.getElementById("newPassword").value.trim();
+        const confirmPass = document.getElementById("confirmPassword").value.trim();
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,8}$/;
+        let errors = [];
+
+        if (!oldPass || !newPass || !confirmPass) {
+            errors.push("Vui lòng điền đầy đủ các trường.");
+        }
+
+        if (oldPass === newPass) {
+            errors.push("Mật khẩu mới không được trùng với mật khẩu cũ.");
+        }
+
+
+        if (!regex.test(newPass)) {
+            errors.push("Mật khẩu mới phải từ 6–8 ký tự, gồm chữ hoa, chữ thường và số.");
+        }
+
+        if (newPass !== confirmPass) {
+            errors.push("Xác nhận mật khẩu không khớp.");
+        }
+
+        if (errors.length > 0) {
+            e.preventDefault();
+            alert(errors.join("\n"));
+        }
     });
 </script>

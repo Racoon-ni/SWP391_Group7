@@ -113,7 +113,9 @@
         <a href="http://localhost:8080/SWP391_Group7/categories">
             <i class="fa-solid fa-tags"></i> Quản lý thể loại
         </a>     
-
+        <a href="${pageContext.request.contextPath}/attributes">
+            <i class="fa-solid fa-tags"></i> Quản lý thuộc tính
+        </a>
         <a href="${pageContext.request.contextPath}/manage-vouchers">
             <i class="fas fa-shopping-cart"></i> Quản lý Voucher
         </a>
