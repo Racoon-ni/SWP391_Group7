@@ -141,7 +141,7 @@
                 <span style="color: orange">PC</span><span style="color: black"> Store</span>
             </a>
 
-            <%@include file="../include/top-nav.jsp" %>
+            <%@include file="top-nav.jsp" %>
 
             <!-- SEARCH BAR -->
             <form action="${pageContext.request.contextPath}/search" method="GET" class="flex-grow-1 mx-3" style="max-width: 500px;">
@@ -234,10 +234,6 @@
         </div>
     </nav>
 
-
-</div>
-</div>
-</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>

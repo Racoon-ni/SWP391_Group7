@@ -1,3 +1,4 @@
+<%@ include file="/WEB-INF/include/admin-side-bar.jsp" %>
 <%@page import="model.AdminStaffVoucher"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page pageEncoding="UTF-8" %>
@@ -278,8 +279,7 @@
         </div>
     </div>
 
-    <!-- Quay lại Dashboard Button -->
-    <a href="dash-board.jsp" class="back-btn">Quay lại trang chủ</a>
+   
 </div>
 
 <script>

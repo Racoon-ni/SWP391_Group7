@@ -23,21 +23,20 @@
                 position: fixed;
                 top: 80px;
                 left: 0;
-                width: 220px;
+                width: 250px;
                 height: calc(100% - 80px);
-                background-color: #ffffff;
-                border-right: 1px solid #ddd;
+                background-color: #f8f9fa;
                 padding-top: 20px;
+                border-right: 1px solid #ddd;
+                z-index: 500;
             }
-
             .sidebar a {
                 display: block;
-                padding: 14px 20px;
+                padding: 15px;
                 color: #333;
-                font-size: 16px;
                 text-decoration: none;
+                font-size: 18px;
             }
-
             .sidebar a:hover {
                 background-color: #007bff;
                 color: white;
@@ -109,13 +108,14 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <a href="view-profile">Thông tin tài khoản</a>
-            <a href="#">Quản lý đơn hàng</a>
-            <a href="#">Sở địa chỉ</a>
-            <a href="#">Thông báo</a>
-            <a href="#">Điểm thành viên</a>
-            <a href="ViewVouchers">Kho voucher</a>
+            <a href="my-orders">Quản lý đơn hàng</a>
+            <a href="ViewAddress">Sổ địa chỉ</a>
+            <a href="notifications">Thông báo</a>
+            <a href="change-password">Đổi mật khẩu</a>
+            <a href="ViewMyVoucher">Kho voucher</a>
             <a href="ViewWishlist">Danh sách yêu thích</a>
         </div>
+
 
         <!-- Main content -->
         <div class="main-content">
