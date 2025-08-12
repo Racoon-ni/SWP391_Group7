@@ -104,7 +104,7 @@ public class StaffUpdateServlet extends HttpServlet {
         dao.updateStaff(staff);
 
         // Sau khi cập nhật thành công, chuyển về danh sách với message
-        response.sendRedirect("StaffList?message=Cập nhật nhân viên thành công!");
+        response.sendRedirect("StaffList?message=Employee update successful!");
     }
 
     /**

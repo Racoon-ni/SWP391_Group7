@@ -111,7 +111,7 @@ public class StaffCreateServlet extends HttpServlet {
 
         if (dao.addStaff(user) == 1) {
             // Gửi thông báo thành công qua query string (1 lần duy nhất)
-            response.sendRedirect("StaffList?message=Thêm nhân viên thành công!");
+            response.sendRedirect("StaffList?message=add success!");
         } else {
             request.setAttribute("error", "Lỗi thêm nhân viên.");
             request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);

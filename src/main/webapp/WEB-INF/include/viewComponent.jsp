@@ -119,16 +119,13 @@
                                     </c:choose>
 
                                     <!-- Nút 3: Yêu thích -->
-                                    <form method="post" action="${pageContext.request.contextPath}/AddToWishlist">
-                                        <input type="hidden" name="productId" value="${product.productId}" />
-                                        <button type="submit" 
-                                                class="btn w-full bg-red-100 text-red-600 py-2 flex items-center justify-center rounded-md hover:bg-red-200">
-                                            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
-                                            </svg>
-                                            Yêu thích
-                                        </button>
-                                    </form>
+                                    <button onclick="addToWishlist(${product.productId})" 
+                                            class="btn w-full bg-red-100 text-red-600 py-2 rounded-md hover:bg-red-200">
+                                        <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Yêu thích
+                                    </button>
                                 </div>
 
                             </div>
@@ -143,6 +140,26 @@
             </c:otherwise>
         </c:choose>
     </div>
+
+    <script>
+        function addToWishlist(productId) {
+            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Đã thêm sản phẩm vào danh sách yêu thích!');
+                        } else {
+                            alert('Lỗi: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
+                    });
+        }
+    </script>
 
     <%@ include file="/WEB-INF/include/footer.jsp" %>
 </body>

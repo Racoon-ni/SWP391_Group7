@@ -32,15 +32,8 @@
         color: white;
     }
     </style>
-<div class="sidebar">
-    <a href="view-profile">Thông tin tài khoản</a>
-    <a href="#">Quản lý đơn hàng</a>
-    <a href="ViewAddress">Sổ địa chỉ</a>
-    <a href="#">Thông báo</a>
-    <a href="change-password">Đổi mật khẩu</a>
-    <a href="ViewMyVoucher">Kho voucher</a>
-    <a href="ViewWishlist">Danh sách yêu thích</a>
-</div>
+
+        <%@include file="../include/user-side-bar.jsp" %>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 

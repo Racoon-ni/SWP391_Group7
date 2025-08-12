@@ -120,15 +120,7 @@
     </head>
     <body>
         <!-- Sidebar -->
-        <div class="sidebar">
-            <a href="view-profile">Thông tin tài khoản</a>
-           
-            <a href="ViewAddress">Sở địa chỉ</a>
-            
-            <a href="#">Điểm thành viên</a>
-            <a href="ViewMyVoucher">Kho voucher</a>
-            <a href="ViewWishlist">Danh sách yêu thích</a>
-        </div>
+        <%@include file="../include/user-side-bar.jsp" %>
 
         <!-- Main Content -->
         <div class="container mt-5">

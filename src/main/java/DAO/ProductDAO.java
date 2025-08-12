@@ -418,4 +418,46 @@ public class ProductDAO {
         }
         return list;
     }
+
+    public List<Product> getProductsByCategoryWithPaging(String categoryName, int page, int pageSize) throws Exception {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT p.* FROM Products p JOIN Categories c ON p.category_id = c.category_id "
+                + "WHERE c.name = ? AND p.status = 1 AND p.stock > 0 "
+                + "ORDER BY p.product_id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, categoryName);
+            ps.setInt(2, (page - 1) * pageSize);
+            ps.setInt(3, pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setProductId(rs.getInt("product_id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setProductType(rs.getString("product_type"));
+                p.setCategoryId(rs.getInt("category_id"));
+                p.setStatus(rs.getInt("status"));
+                // Gọi thêm getAvgStars, getTotalRatings nếu muốn
+                list.add(p);
+            }
+        }
+        return list;
+    }
+
+    public int countProductsByCategory(String categoryName) throws Exception {
+        String sql = "SELECT COUNT(*) FROM Products p JOIN Categories c ON p.category_id = c.category_id "
+                + "WHERE c.name = ? AND p.status = 1 AND p.stock > 0";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, categoryName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
 }

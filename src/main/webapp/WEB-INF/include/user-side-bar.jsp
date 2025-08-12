@@ -25,14 +25,11 @@
     }
 </style>
 
- <!-- Sidebar Section -->
-        <div class="sidebar">
-            <a href="view-profile">Thông tin tài khoản</a>
-            <a href="#">Quản lý đơn hàng</a>
-            <a href="#">Sở địa chỉ</a>
-            <a href="#">Thông báo</a>
-            <a href="#">Điểm thành viên</a>
-            <!-- Thêm mục Kho voucher -->
-            <a href="ViewMyVoucher">Kho voucher</a>
-            <a href="ViewWishlist">Danh sách yêu thích</a>
-        </div>
+<!-- Sidebar Section -->
+<div class="sidebar">
+    <a href="view-profile">Thông tin tài khoản</a>
+    <a href="ViewAddress">Sổ địa chỉ</a>
+    <a href="change-password">Đổi mật khẩu</a>
+    <a href="ViewMyVoucher">Kho voucher</a>
+    <a href="ViewWishlist">Danh sách yêu thích</a>
+</div>

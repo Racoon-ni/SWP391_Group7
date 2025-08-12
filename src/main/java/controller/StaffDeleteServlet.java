@@ -69,7 +69,7 @@ public class StaffDeleteServlet extends HttpServlet {
             dao.deleteUser(id);
 
             // Xóa thành công, chuyển hướng về danh sách kèm thông báo thành công
-            response.sendRedirect("StaffList?message=Đã xoá nhân viên thành công!");
+            response.sendRedirect("StaffList?message=Employee deleted successfully!");
         } catch (Exception e) {
             // Có lỗi bất ngờ
             response.sendRedirect("StaffList?error=Xoá nhân viên thất bại.");

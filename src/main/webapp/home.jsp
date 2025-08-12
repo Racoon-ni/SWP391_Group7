@@ -15,8 +15,14 @@
         <div class="">
             <!-- Carousel -->
             <%@include file="/WEB-INF/include/carousel.jsp" %>
-            <!-- PC Best Seller -->
-            <%@include file="/WEB-INF/include/pc-best-seller.jsp" %>
+            <!-- Block PC -->
+            <jsp:include page="/WEB-INF/include/pc-best-seller.jsp">
+                <jsp:param name="categoryName" value="PC"/>
+                <jsp:param name="productList" value="${pcList}"/>
+                <jsp:param name="currentPage" value="${pcCurrentPage}"/>
+                <jsp:param name="totalPages" value="${pcTotalPages}"/>
+            </jsp:include>
+
         </div>
     </div>
 </div>

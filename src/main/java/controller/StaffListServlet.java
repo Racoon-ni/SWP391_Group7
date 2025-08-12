@@ -51,15 +51,9 @@ public class StaffListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserDAO dao = new UserDAO();
-        ArrayList<User> allUsers = dao.getAllUser();
-        ArrayList<User> staffList = new ArrayList<>();
+        ArrayList<User> staffList = dao.getAllStaff();
 
-        for (User u : allUsers) {
-            // Lấy đúng nhân viên Staff (role là "Staff" trong DB)
-            if (u.getRole() != null && u.getRole().equalsIgnoreCase("Staff")) {
-                staffList.add(u);
-            }
-        }
+        
 
         request.setAttribute("staffList", staffList);
         request.getRequestDispatcher("/WEB-INF/include/staff-list.jsp").forward(request, response);

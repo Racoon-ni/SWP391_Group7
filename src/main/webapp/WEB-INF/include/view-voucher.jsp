@@ -140,7 +140,7 @@
                         <tr>
                             <td><%= v.getCode()%></td>
                             <td><%= v.getDiscountPercent()%>%</td>
-                            <td><%= String.format("%,.0f", v.getMinOrderValue())%> ?</td>
+                            <td><%= String.format("%,.0f", v.getMinOrderValue())%> VND</td>
                             <td><%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(v.getExpiredAt())%></td>
                         </tr>
                         <% } %>

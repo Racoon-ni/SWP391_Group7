@@ -89,17 +89,6 @@
     </tbody>
   </table>
 
-  <!-- Bảng đánh giá -->
-  <div class="row my-4">
-    <div class="col-md-6">
-      <h4>Hiệu năng (Performance)</h4>
-      <p>${performanceMessage}</p>
-    </div>
-    <div class="col-md-6">
-      <h4>Tương thích (Compatibility)</h4>
-      <p>${compatibilityMessage}</p>
-    </div>
-  </div>
 
   <!-- Tổng và Thanh toán -->
   <div class="row mt-4">

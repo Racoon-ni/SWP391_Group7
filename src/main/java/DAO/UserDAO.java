@@ -176,6 +176,38 @@ public class UserDAO extends DBConnect {
         }
         return userList;
     }
+    
+    // Lấy toàn bộ user (bao gồm ngày sinh)
+    public ArrayList<User> getAllStaff() {
+        ArrayList<User> userList = new ArrayList<>();
+        String sql = "SELECT u.user_id, u.username, u.email,\n"
+                + "  u.fullname, u.date_of_birth, u.address,\n"
+                + "  u.phone, u.gender, u.role, u.status\n"
+                + "  FROM Users u\n"
+                + "  WHERE u.role = 'Staff'";
+
+        try (
+                 PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
+            while (rs.next()) {
+                int id = rs.getInt("user_id");
+                String name = rs.getString("username");
+                String email = rs.getString("email");
+                String fullname = rs.getString("fullname");
+                Date dateOfBirth = rs.getDate("date_of_birth");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                String gender = rs.getString("gender");
+                String role = rs.getString("role");
+                boolean status = rs.getBoolean("status");
+
+                User user = new User(id, name, "", email, fullname, dateOfBirth, address, phone, gender, role, status);
+                userList.add(user);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return userList;
+    }
 
     // Hash password MD5
     private String hashMd5(String raw) {
