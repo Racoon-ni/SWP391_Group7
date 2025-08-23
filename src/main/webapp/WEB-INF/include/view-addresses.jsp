@@ -16,60 +16,19 @@
                 padding: 0;
             }
 
-            .sidebar {
-                position: fixed;
-                top: 80px;
-                left: 0;
-                width: 250px;
-                height: calc(100% - 80px);
-                background-color: #f8f9fa;
-                padding-top: 20px;
-                border-right: 1px solid #ddd;
-                z-index: 500;
-            }
-
-            .sidebar a {
-                display: block;
-                padding: 15px;
-                color: #333;
-                text-decoration: none;
-                font-size: 18px;
-            }
-
-            .sidebar a:hover {
-                background-color: #007bff;
-                color: white;
-            }
-
-            .container {
-                background-color: white;
-                border-radius: 10px;
-                padding: 30px;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-                margin-left: 250px;
-                margin-top: 80px;
-                max-width: 800px;
-                margin: auto;
-            }
-
-            .container h1 {
-                color: #333;
-                text-align: center;
-                margin-bottom: 20px;
-            }
 
             .modal {
                 display: none;
                 position: fixed;
                 top: 0;
-                left: 50%;
+                left: 0;
                 transform: translateX(-50%);
                 width: 100%;
                 height: 100%;
                 background-color: rgba(0, 0, 0, 0.5);
                 justify-content: center;
                 align-items: center;
-                z-index: 1000;
+                z-index: 2000;
                 padding: 20px 0;
             }
 
@@ -221,4 +180,5 @@
         </script>
 
     </body>
+    <%@ include file="/WEB-INF/include/footer.jsp" %>
 </html>

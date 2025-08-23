@@ -115,7 +115,7 @@
             </div>
 
             <div class="links">
-                <a href="#">Quên mật khẩu?</a>
+                <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a>
                 <a href="${pageContext.request.contextPath}/register"><span class="highlight">Tạo tài khoản?</span></a>
             </div>
 

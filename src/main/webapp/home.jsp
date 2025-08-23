@@ -4,7 +4,7 @@
     Author     : Huynh Trong Nguyen - CE190356
 --%>
 
-<%@include file="WEB-INF/include/header.jsp" %>
+<%@include file="/WEB-INF/include/header.jsp" %>
 <%@ include file="/WEB-INF/include/filter.jsp" %>
 
 <!-- Main Content -->
