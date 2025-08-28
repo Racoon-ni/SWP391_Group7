@@ -15,8 +15,8 @@
 
     .sidebar {
         width: 250px;
-        height: 100vh; /* Chiều cao toàn màn hình */
-        background-color: #343a40; /* Màu nền xám đậm */
+        height: 100vh; /* Full viewport height */
+        background-color: #343a40;
         color: white;
         position: fixed;
         top: 0;
@@ -24,6 +24,18 @@
         padding-top: 50px;
         display: flex;
         flex-direction: column;
+        overflow-y: auto;   /* ✅ Enable vertical scrolling */
+        overflow-x: hidden; /* ✅ Hide horizontal scroll */
+    }
+
+    /* Hide scrollbar but keep scrolling */
+    .sidebar::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+    }
+
+    .sidebar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;     /* Firefox */
     }
 
     .content-wrapper {

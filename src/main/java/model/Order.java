@@ -13,7 +13,7 @@ public class Order {
     // === Thêm thuộc tính này ===
     private ShippingInfo shippingInfo;
     private String productsJson; // Thêm dòng này vào class
-
+    
     public Order(int orderId, int userId, String status, double totalPrice, Date createdAt) {
         this.orderId = orderId;
         this.userId = userId;

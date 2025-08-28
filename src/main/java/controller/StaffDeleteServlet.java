@@ -51,7 +51,7 @@ public class StaffDeleteServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             UserDAO dao = new UserDAO();
-            ArrayList<User> userList = dao.getAllUser();
+            ArrayList<User> userList = dao.getAllCustomers();
             User staff = null;
             for (User u : userList) {
                 if (u.getId() == id && "staff".equalsIgnoreCase(u.getRole())) {
