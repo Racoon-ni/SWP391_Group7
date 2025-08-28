@@ -9,12 +9,12 @@
             <option value="${cat.categoryId}">${cat.name}</option>
         </c:forEach>
     </select>
-    <select name="priceRange" class="form-select">
-        <option value="">Tất cả giá</option>
-        <option value="0-2000000">Dưới 2 triệu</option>
-        <option value="2000000-5000000">2-5 triệu</option>
-        <option value="5000000-10000000">5-10 triệu</option>
-        <option value="10000000-">Trên 10 triệu</option>
-    </select>
+        <select name="priceRange" id="priceRange" class="form-select" style="border-radius:12px;">
+            <option value="">Tất cả</option>
+            <option value="1" ${param.priceRange == '1' ? 'selected' : ''}>Dưới 2 triệu</option>
+            <option value="2" ${param.priceRange == '2' ? 'selected' : ''}>2 - 5 triệu</option>
+            <option value="3" ${param.priceRange == '3' ? 'selected' : ''}>5 - 10 triệu</option>
+            <option value="4" ${param.priceRange == '4' ? 'selected' : ''}>Trên 10 triệu</option>
+        </select>
     <button type="submit" class="btn btn-primary">Lọc</button>
 </form>
