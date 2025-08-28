@@ -27,10 +27,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&display=swap" rel="stylesheet" />
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
         .shadowed-navbar {
             border-bottom: 2px solid black;
             box-shadow: 0px 8px 8px -4px rgba(0, 0, 0, 0.4);
@@ -131,7 +127,6 @@
 
 <c:if test="${not empty success}"> <%@include file="toast.jsp" %> </c:if>
 
-    <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadowed-navbar">
             <div class="container-fluid">
                 <!-- LOGO -->
@@ -247,4 +242,3 @@
                     });
         });
     </script>
-</body>

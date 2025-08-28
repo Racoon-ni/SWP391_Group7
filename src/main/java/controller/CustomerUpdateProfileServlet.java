@@ -4,8 +4,8 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Customer;
-import DAO.CustomerDAO;
 import model.User;
+import DAO.CustomerDAO;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,6 +14,7 @@ import java.util.Map;
 
 @WebServlet("/update-profile")
 public class CustomerUpdateProfileServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -26,7 +27,8 @@ public class CustomerUpdateProfileServlet extends HttpServlet {
             return;
         }
 
-        Customer customer = new CustomerDAO().getCustomerById(loggedInUser.getId());
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = customerDAO.getCustomerById(loggedInUser.getId());
         if (customer == null) {
             resp.sendRedirect("login.jsp");
             return;
@@ -39,7 +41,6 @@ public class CustomerUpdateProfileServlet extends HttpServlet {
         String gender = req.getParameter("gender");
         String dateOfBirth = req.getParameter("dob");
         String phone = req.getParameter("phone");
-        String address = req.getParameter("address");
 
         // Validate họ tên
         if (fullName == null || fullName.trim().isEmpty()) {
@@ -68,7 +69,11 @@ public class CustomerUpdateProfileServlet extends HttpServlet {
         } else {
             try {
                 LocalDate birthDate = LocalDate.parse(dateOfBirth);
-                if (birthDate.isAfter(LocalDate.of(2025, 12, 31))) {
+
+                // ✅ thêm check năm sinh >= 1945
+                if (birthDate.getYear() < 1945) {
+                    errors.put("errorDob", "Năm sinh phải từ 1945 trở đi!");
+                } else if (birthDate.isAfter(LocalDate.of(2025, 12, 31))) {
                     errors.put("errorDob", "Ngày sinh không được sau năm 2025!");
                 } else if (birthDate.isAfter(LocalDate.now().minusYears(13))) {
                     errors.put("errorDob", "Bạn phải ít nhất 15 tuổi!");
@@ -85,19 +90,34 @@ public class CustomerUpdateProfileServlet extends HttpServlet {
             errors.put("errorPhone", "Số điện thoại chỉ được chứa số và phải bắt đầu bằng 0 (10-11 chữ số)!");
         }
 
-        // Validate địa chỉ
-        if (address == null || address.trim().isEmpty()) {
-            errors.put("errorAddress", "Địa chỉ không được để trống!");
-        } else if (!address.matches("^[A-Za-zÀ-Ỹà-ỹ0-9\\s,./-]+$")) {
-            errors.put("errorAddress", "Địa chỉ chỉ được chứa chữ cái, số và dấu cách, không được chứa ký tự đặc biệt!");
+        // ✅ Check DB: email trùng
+        if (!errors.containsKey("errorEmail")) {
+            if (customerDAO.isEmailExist(email, customer.getUserId())) {
+                errors.put("errorEmail", "Email này đã được sử dụng!");
+            }
         }
 
-        // Nếu có lỗi thì trả lại giao diện + từng lỗi
+        // ✅ Check DB: phone trùng
+        if (!errors.containsKey("errorPhone")) {
+            if (customerDAO.isPhoneExist(phone, customer.getUserId())) {
+                errors.put("errorPhone", "Số điện thoại này đã được sử dụng!");
+            }
+        }
+
+        // Nếu có lỗi thì trả lại giao diện + giữ lại dữ liệu đã nhập
         if (!errors.isEmpty()) {
+            Customer tempCustomer = new Customer();
+            tempCustomer.setFullName(fullName);
+            tempCustomer.setEmail(email);
+            tempCustomer.setGender(gender);
+            tempCustomer.setDateOfBirth(dateOfBirth);
+            tempCustomer.setPhone(phone);
+
             for (Map.Entry<String, String> entry : errors.entrySet()) {
                 req.setAttribute(entry.getKey(), entry.getValue());
             }
-            req.setAttribute("customer", customer); // giữ lại thông tin đã nhập
+
+            req.setAttribute("customer", tempCustomer);
             req.getRequestDispatcher("/WEB-INF/include/customer-view-profile.jsp").forward(req, resp);
             return;
         }
@@ -108,9 +128,8 @@ public class CustomerUpdateProfileServlet extends HttpServlet {
         customer.setGender(gender);
         customer.setDateOfBirth(dateOfBirth);
         customer.setPhone(phone.trim());
-        customer.setAddress(address.trim());
 
-        boolean success = new CustomerDAO().updateCustomerInfo(customer);
+        boolean success = customerDAO.updateCustomerInfo(customer);
 
         if (success) {
             session.setAttribute("loggedInUser", customer);
