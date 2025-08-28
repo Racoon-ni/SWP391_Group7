@@ -24,7 +24,6 @@ public class AdminOrderDetailServlet extends HttpServlet {
             Order order = dao.getOrderById(orderId);
             List<OrderDetail> orderDetails = dao.getOrderDetailsNoUser(orderId);
             ShippingInfo shipping = dao.getShippingInfoByOrderId(orderId);
-
             if (order != null && orderDetails != null && shipping != null) {
                 request.setAttribute("order", order);
                 request.setAttribute("orderDetails", orderDetails);
