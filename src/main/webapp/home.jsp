@@ -1,8 +1,6 @@
-<%-- 
-    Document   : header
-    Created on : Jun 17, 2025, 7:59:35 AM
-    Author     : Huynh Trong Nguyen - CE190356
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@include file="WEB-INF/include/header.jsp" %>
 <%@ include file="/WEB-INF/include/filter.jsp" %>

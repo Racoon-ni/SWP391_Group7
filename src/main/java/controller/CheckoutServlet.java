@@ -18,23 +18,70 @@ import model.Voucher;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
+
+    private void loadAndForward(HttpServletRequest request, HttpServletResponse response, int userId)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        @SuppressWarnings("unchecked")
+        List<Cart> selectedItems = (List<Cart>) (session != null ? session.getAttribute("cartItems") : null);
+        CartDAO cartDAO = new CartDAO();
+        if (selectedItems == null || selectedItems.isEmpty()) {
+            selectedItems = cartDAO.getCartItemsByUserId(userId);
+            if (session != null) {
+                session.setAttribute("cartItems", selectedItems);
+            }
+        }
+
+        double totalAmount = cartDAO.calculateTotal(selectedItems);
+
+        UserDAO userDAO = new UserDAO();
+        User fullUser = userDAO.getUserByIdForCheckout(userId);
+
+        UserAddressDAO addressDAO = new UserAddressDAO();
+        List<UserAddress> addressList = addressDAO.getAddressesByUserId(userId);
+
+        request.setAttribute("userInfo", fullUser);
+        request.setAttribute("addressList", addressList);
+        request.setAttribute("cartItems", selectedItems);
+        request.setAttribute("totalAmount", totalAmount);
+        request.setAttribute("finalAmount", totalAmount);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/include/checkout.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private User checkLoginOrRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login.jsp");
+            return null;
+        }
+        return (User) session.getAttribute("user");
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        User sessionUser = checkLoginOrRedirect(request, response);
+        if (sessionUser == null) return;
+
+        loadAndForward(request, response, sessionUser.getId());
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+        User sessionUser = checkLoginOrRedirect(request, response);
+        if (sessionUser == null) return;
 
-        User sessionUser = (User) session.getAttribute("user");
         int userId = sessionUser.getId();
 
         String productIdParam = request.getParameter("productId");
@@ -44,19 +91,28 @@ public class CheckoutServlet extends HttpServlet {
         CartDAO cartDAO = new CartDAO();
 
         if (productIdParam != null) {
-            // ✅ Mua ngay: chỉ lấy 1 sản phẩm
+            // ✅ Flow "Mua ngay"
             try {
                 int productId = Integer.parseInt(productIdParam);
-                Cart singleItem = cartDAO.getCartItemForBuyNow(productId);
-                if (singleItem != null) {
-                    selectedItems.add(singleItem);
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
 
+                try {
+                    int currentQty = cartDAO.getCartQuantity(userId, productId);
+                    int stock = cartDAO.getProductStock(productId);
+
+                    if (currentQty >= stock) {
+                        response.sendRedirect(request.getContextPath() + "/ViewComponentDetail?productId=" + productId + "&msg=maxed");
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/ViewComponentDetail?productId=" + productId + "&msg=error");
+                    return;
+                }
+
+                Cart singleItem = cartDAO.getCartItemForBuyNow(productId);
+                if (singleItem != null) selectedItems.add(singleItem);
+            } catch (NumberFormatException ignored) {}
         } else if (selectedItemIds != null && selectedItemIds.length > 0) {
-            // ✅ Mua từ giỏ hàng: lấy sản phẩm được chọn
             List<Cart> allItems = cartDAO.getCartItemsByUserId(userId);
             for (String idStr : selectedItemIds) {
                 try {
@@ -67,18 +123,15 @@ public class CheckoutServlet extends HttpServlet {
                             break;
                         }
                     }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
+                } catch (NumberFormatException ignored) {}
             }
-
         } else {
-            // ✅ fallback: mua toàn bộ giỏ hàng
             selectedItems = cartDAO.getCartItemsByUserId(userId);
         }
 
         double totalAmount = cartDAO.calculateTotal(selectedItems);
-        //Long
+
+        // Áp voucher nếu có
         String voucherCode = request.getParameter("voucherCode");
         String voucherMessage = null;
         double discountAmount = 0;
@@ -95,22 +148,15 @@ public class CheckoutServlet extends HttpServlet {
             } else if (appliedVoucher.getExpiredAt().before(new Date())) {
                 voucherMessage = "Mã voucher đã hết hạn.";
             } else if (totalAmount < appliedVoucher.getMinOrderValue()) {
-                voucherMessage = String.format(
-                        "Đơn hàng tối thiểu %,.0f₫ để sử dụng mã này.",
-                        appliedVoucher.getMinOrderValue()
-                );
+                voucherMessage = String.format("Đơn hàng tối thiểu %,.0f₫ để sử dụng mã này.", appliedVoucher.getMinOrderValue());
             } else {
-                // Áp dụng chiết khấu
                 discountAmount = totalAmount * appliedVoucher.getDiscountPercent() / 100.0;
                 totalAmount -= discountAmount;
-                voucherMessage = String.format(
-                        "Áp dụng thành công: -%d%% (%,.0f₫)",
-                        appliedVoucher.getDiscountPercent(),
-                        discountAmount
-                );
+                voucherMessage = String.format("Áp dụng thành công: -%d%% (%,.0f₫)",
+                        appliedVoucher.getDiscountPercent(), discountAmount);
             }
         }
-        //end
+
         UserDAO userDAO = new UserDAO();
         User fullUser = userDAO.getUserByIdForCheckout(userId);
 
@@ -119,16 +165,15 @@ public class CheckoutServlet extends HttpServlet {
 
         request.setAttribute("userInfo", fullUser);
         request.setAttribute("addressList", addressList);
+        request.setAttribute("cartItems", selectedItems);
         request.setAttribute("totalAmount", totalAmount);
-        //long
+
         request.setAttribute("voucherMessage", voucherMessage);
         request.setAttribute("discountAmount", discountAmount);
         request.setAttribute("appliedVoucher", appliedVoucher);
-// totalAmount giờ đã là finalAmount
-
         request.setAttribute("finalAmount", totalAmount);
-        // end
-        request.setAttribute("totalAmount", totalAmount);
+
+        HttpSession session = request.getSession();
         session.setAttribute("cartItems", selectedItems);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/include/checkout.jsp");
