@@ -8,16 +8,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.Cart;
 import model.Order;
+import model.OrderDetail;
 import model.ShippingInfo;
 import model.User;
 import model.UserAddress;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import model.OrderDetail;
+import java.util.*;
 
 @WebServlet("/place-order")
 public class PlaceOrderServlet extends HttpServlet {
@@ -27,39 +24,41 @@ public class PlaceOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         System.out.println("PlaceOrderServlet is called!");
 
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
+
+        // 1) Kiểm tra đăng nhập
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(ctx + "/login.jsp");
+            return;
+        }
         User user = (User) session.getAttribute("user");
 
-        if (user == null) {
-            response.sendRedirect("login.jsp");
+        // 2) Lấy & kiểm tra addressId
+        String addressIdStr = request.getParameter("addressId");
+        if (addressIdStr == null || addressIdStr.trim().isEmpty()) {
+            response.sendRedirect(ctx + "/ViewAddress?message=Vui%20l%C3%B2ng%20th%C3%AAm%20%C4%91%E1%BB%8Ba%20ch%E1%BB%89%20tr%C6%B0%E1%BB%9Bc%20khi%20%C4%91%E1%BA%B7t%20h%C3%A0ng");
             return;
         }
 
-        // === Lấy addressId từ form ===
-        String addressIdStr = request.getParameter("addressId");
-        int addressId = 0;
+        int addressId;
         try {
             addressId = Integer.parseInt(addressIdStr);
             System.out.println(">>> addressId (POST): " + addressId);
         } catch (NumberFormatException e) {
-            System.out.println(">>> addressId không hợp lệ: " + addressIdStr);
-            response.sendRedirect("checkout.jsp?error=invalid_address");
+            response.sendRedirect(ctx + "/ViewAddress?message=%C4%90%E1%BB%8Ba%20ch%E1%BB%89%20kh%C3%B4ng%20h%E1%BB%A3p%20l%E1%BB%87");
             return;
         }
 
-        // === Lấy danh sách địa chỉ từ DB ===
+        // 3) Lấy danh sách địa chỉ của user
         UserAddressDAO addressDAO = new UserAddressDAO();
         List<UserAddress> addresses = addressDAO.getAddressesByUserId(user.getId());
-
-        System.out.println(">>> Danh sách địa chỉ của userId = " + user.getId());
-        for (UserAddress addr : addresses) {
-            System.out.println(" - ID: " + addr.getId()
-                    + ", Họ tên: " + addr.getFullName()
-                    + ", SĐT: " + addr.getPhone()
-                    + ", Địa chỉ: " + addr.getSpecificAddress());
+        if (addresses == null || addresses.isEmpty()) {
+            response.sendRedirect(ctx + "/ViewAddress?message=Kh%C3%B4ng%20c%C3%B3%20%C4%91%E1%BB%8Ba%20ch%E1%BB%89.%20Vui%20l%C3%B2ng%20th%C3%AAm%20%C4%91%E1%BB%8Ba%20ch%E1%BB%89%20tr%C6%B0%E1%BB%9Bc%20khi%20%C4%91%E1%BA%B7t%20h%C3%A0ng");
+            return;
         }
 
-        // === Tìm địa chỉ được chọn ===
+        // 4) Tìm địa chỉ được chọn
         UserAddress selectedAddress = null;
         for (UserAddress addr : addresses) {
             if (addr.getId() == addressId) {
@@ -67,89 +66,93 @@ public class PlaceOrderServlet extends HttpServlet {
                 break;
             }
         }
-
         if (selectedAddress == null) {
-            System.out.println(">>> Không tìm thấy địa chỉ có ID: " + addressId);
-            response.sendRedirect("checkout.jsp?error=address_not_found");
+            response.sendRedirect(ctx + "/ViewAddress?message=Kh%C3%B4ng%20t%C3%ACm%20th%E1%BA%A5y%20%C4%91%E1%BB%8Ba%20ch%E1%BB%89%20%C4%91%C3%A3%20ch%E1%BB%8Dn");
             return;
-        } else {
-            System.out.println(">>> Địa chỉ được chọn:");
-            System.out.println(" - Họ tên: " + selectedAddress.getFullName());
-            System.out.println(" - SĐT: " + selectedAddress.getPhone());
-            System.out.println(" - Địa chỉ: " + selectedAddress.getSpecificAddress());
         }
 
-        // === Lấy phương thức thanh toán ===
+        // 5) Kiểm tra phương thức thanh toán
         String paymentMethod = request.getParameter("paymentMethod");
-        System.out.println(">>> Phương thức thanh toán: " + paymentMethod);
-
         if (paymentMethod == null || paymentMethod.isEmpty()) {
-            response.sendRedirect("checkout.jsp?error=payment_method_missing");
+            response.sendRedirect(ctx + "/checkout.jsp?error=payment_method_missing");
+            return;
+        }
+        if (!"COD".equalsIgnoreCase(paymentMethod) && !"CARD".equalsIgnoreCase(paymentMethod)) {
+            response.sendRedirect(ctx + "/checkout.jsp?error=payment_method_invalid");
             return;
         }
 
-        // === Tạo ShippingInfo ===
+        // 6) Tạo ShippingInfo
         ShippingInfo shipping = new ShippingInfo();
         shipping.setReceiverName(selectedAddress.getFullName());
         shipping.setShippingAddress(selectedAddress.getSpecificAddress());
         shipping.setPhone(selectedAddress.getPhone());
-        shipping.setPaymentMethod(paymentMethod);
+        shipping.setPaymentMethod(paymentMethod.toUpperCase());
         shipping.setPaymentStatus("Pending");
 
-        // === Lấy giỏ hàng từ session hoặc DB ===
+        // 7) Lấy giỏ hàng
         @SuppressWarnings("unchecked")
         List<Cart> cartItems = (List<Cart>) session.getAttribute("cartItems");
         if (cartItems == null || cartItems.isEmpty()) {
             CartDAO cartDAO = new CartDAO();
             cartItems = cartDAO.getCartItemsByUserId(user.getId());
         }
-
         if (cartItems == null || cartItems.isEmpty()) {
-            System.out.println(">>> Giỏ hàng rỗng!");
-            response.sendRedirect("checkout.jsp?error=empty_cart");
+            response.sendRedirect(ctx + "/checkout.jsp?error=empty_cart");
             return;
         }
 
-        String disAmount = request.getParameter("discountAmount");
-        double total = 0;
-        if (disAmount != null && !disAmount.isEmpty()) {
-            total = Double.parseDouble(disAmount);
-        } else {
-            for (Cart item : cartItems) {
-                total += item.getPrice() * item.getQuantity();
-            }
+        // 8) Tính tổng tiền
+        double total = 0.0;
+        String finalAmountStr = request.getParameter("finalAmount");
+        String discountAmountStr = request.getParameter("discountAmount");
 
+        if (finalAmountStr != null && !finalAmountStr.trim().isEmpty()) {
+            try { total = Double.parseDouble(finalAmountStr.trim()); } catch (NumberFormatException ignore) {}
         }
-        // === Tính tổng tiền ===
+        if (total <= 0 && discountAmountStr != null && !discountAmountStr.trim().isEmpty()) {
+            try { total = Double.parseDouble(discountAmountStr.trim()); } catch (NumberFormatException ignore) {}
+        }
+        if (total <= 0) {
+            for (Cart item : cartItems) total += item.getPrice() * item.getQuantity();
+        }
+        if (Double.isNaN(total) || total < 0) {
+            response.sendRedirect(ctx + "/checkout.jsp?error=total_invalid");
+            return;
+        }
 
-        System.out.println(">>> Tổng tiền đơn hàng: " + total);
-
-        // === Tạo đơn hàng ===
+        // 9) Tạo đơn hàng & lưu DB (đồng thời trừ tồn kho trong DAO)
         Order order = new Order(0, user.getId(), "Pending", total, new Date());
         order.setShippingInfo(shipping);
 
-        // === Gọi DAO để lưu đơn hàng ===
         orderDAO orderDAO = new orderDAO();
         boolean isOrderPlaced = orderDAO.placeOrder(order, cartItems);
-
         if (!isOrderPlaced) {
-            System.out.println(">>> Đặt hàng thất bại!");
-            response.sendRedirect("checkout.jsp?error=order_failed");
+            // có thể do out_of_stock
+            response.sendRedirect(ctx + "/checkout.jsp?error=out_of_stock");
             return;
         }
 
-        // === Xóa session cart ===
+        // 10) XÓA các mục đã mua khỏi giỏ hàng (DB) + dọn session
+        try {
+            CartDAO cartDAO = new CartDAO();
+            cartDAO.removePurchasedItems(user.getId(), cartItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         session.removeAttribute("cartItems");
 
-        // === Lấy danh sách đơn hàng và chi tiết đơn hàng ===
+        // 11) Lấy danh sách đơn hàng & chi tiết
         List<Order> orders = orderDAO.getOrdersByUserId(user.getId());
         Map<Integer, List<OrderDetail>> orderDetailsMap = new HashMap<>();
-        for (Order ord : orders) {
-            List<OrderDetail> details = orderDAO.getOrderDetails(ord.getOrderId(), user.getId());
-            orderDetailsMap.put(ord.getOrderId(), details);
+        if (orders != null) {
+            for (Order ord : orders) {
+                List<OrderDetail> details = orderDAO.getOrderDetails(ord.getOrderId(), user.getId());
+                orderDetailsMap.put(ord.getOrderId(), details);
+            }
         }
 
-        // === Gửi sang JSP ===
+        // 12) Forward sang trang "Đơn hàng của tôi"
         request.setAttribute("orders", orders);
         request.setAttribute("orderDetailsMap", orderDetailsMap);
         request.setAttribute("orderSuccess", true);

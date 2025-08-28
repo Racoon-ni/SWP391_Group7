@@ -2,6 +2,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, model.Product" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<fmt:setLocale value="vi_VN" />
 
 <title>Danh sách linh kiện - ${category}</title>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -12,23 +15,23 @@
     }
     .component-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 16px rgba(0,0,0,.2);
     }
     .btn {
-        transition: background-color 0.3s ease, transform 0.2s ease;
+        transition: background-color .3s ease, transform .2s ease;
     }
     .btn:hover {
         transform: scale(1.05);
     }
     .error-message {
-        animation: fadeIn 0.5s ease-in-out;
+        animation: fadeIn .5s ease-in-out;
     }
     @keyframes fadeIn {
-        0% {
-            opacity: 0;
+        0%{
+            opacity:0
         }
-        100% {
-            opacity: 1;
+        100%{
+            opacity:1
         }
     }
 </style>
@@ -52,13 +55,18 @@
             <c:when test="${not empty componentList}">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <c:forEach var="product" items="${componentList}">
-                        <div class="component-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div id="p${product.productId}" class="component-card bg-white rounded-lg shadow-md overflow-hidden">
                             <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-contain p-4"/>
                             <div class="p-4">
                                 <h3 class="text-lg font-semibold text-gray-800 truncate">${product.name}</h3>
                                 <p class="text-xs text-gray-500 mt-1">${product.category.name}</p>
                                 <p class="text-gray-600 text-sm mt-2 h-12 overflow-hidden">${product.description}</p>
-                                <p class="text-pink-600 font-bold text-lg mt-2">${product.price} VNÐ</p>
+
+                                <!-- ✅ Giá format kiểu Việt Nam -->
+                                <p class="text-pink-600 font-bold text-lg mt-2">
+                                    <fmt:formatNumber value="${product.price}" pattern="#,###"/> VNĐ
+                                </p>
+
                                 <p class="text-gray-500 text-sm mt-1">Tồn kho: ${product.stock}</p>
 
                                 <!-- Rating -->
@@ -102,8 +110,12 @@
                                     <!-- Nút 2: Thêm vào giỏ -->
                                     <c:choose>
                                         <c:when test="${not empty sessionScope.user}">
+                                            <c:url var="backUrl" value="/ViewComponent">
+                                                <c:param name="category" value="${category}" />
+                                            </c:url>
                                             <form method="post" action="${pageContext.request.contextPath}/AddToCart">
                                                 <input type="hidden" name="productId" value="${product.productId}" />
+                                                <input type="hidden" name="redirect" value="${backUrl}" />
                                                 <button type="submit"
                                                         class="btn w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
                                                     Thêm vào giỏ
@@ -122,12 +134,14 @@
                                     <button onclick="addToWishlist(${product.productId})" 
                                             class="btn w-full bg-red-100 text-red-600 py-2 rounded-md hover:bg-red-200">
                                         <svg class="w-6 h-6 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                        <path fill-rule="evenodd" 
+                                              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 
+                                              5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" 
+                                              clip-rule="evenodd"/>
                                         </svg>
                                         Yêu thích
                                     </button>
                                 </div>
-
                             </div>
                         </div>
                     </c:forEach>
@@ -141,24 +155,58 @@
         </c:choose>
     </div>
 
+
+
+
+
+
+
+    <!-- SweetAlert2 phải được include thì popup mới hiện -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        function addToWishlist(productId) {
-            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'}
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Đã thêm sản phẩm vào danh sách yêu thích!');
-                        } else {
-                            alert('Lỗi: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        alert('Lỗi khi thêm vào danh sách yêu thích: ' + error);
-                    });
-        }
+                                        
+                                        function addToWishlist(productId) {
+                                            fetch('${pageContext.request.contextPath}/AddToWishlist?productId=' + productId, {
+                                                method: 'POST',
+                                                headers: {'Content-Type': 'application/json'}
+                                            })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            Swal.fire({icon: 'success', title: 'Đã thêm yêu thích!', timer: 1200, showConfirmButton: false});
+                                                        } else {
+                                                            Swal.fire({icon: 'error', title: 'Lỗi', text: data.message || 'Không thể thêm yêu thích'});
+                                                        }
+                                                    })
+                                                    .catch(error => Swal.fire({icon: 'error', title: 'Lỗi', text: String(error)}));
+                                        }
+
+                                        (function () {
+                                            // Đọc query param trả về từ AddToCartServlet
+                                            var params = new URLSearchParams(window.location.search);
+                                            var msg = params.get('msg');
+                                            if (!msg)
+                                                return;
+
+                                            if (msg === 'added') {
+                                                Swal.fire({icon: 'success', title: 'Đã thêm vào giỏ!', timer: 1200, showConfirmButton: false});
+                                            } else if (msg === 'maxed') {
+                                                Swal.fire({
+                                                    icon: 'info',
+                                                    title: 'Đã đạt số lượng tối đa!',
+                                                    text: 'Bạn đã chọn tối đa theo tồn kho.',
+                                                    timer: 1600, showConfirmButton: false
+                                                });
+                                            } else {
+                                                Swal.fire({icon: 'error', title: 'Có lỗi xảy ra!', timer: 1400, showConfirmButton: false});
+                                            }
+
+                                            // Xoá msg khỏi URL để không lặp lại khi refresh/back
+                                            var url = new URL(window.location.href);
+                                            url.searchParams.delete('msg');
+                                            window.history.replaceState({}, '', url.toString());
+                                        })();
     </script>
 
     <%@ include file="/WEB-INF/include/footer.jsp" %>

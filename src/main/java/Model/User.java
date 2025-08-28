@@ -23,7 +23,12 @@ public class User {
     private String gender;
     private String role;
     private boolean status;
+
     private double totalSpent;
+
+
+    private String resetToken;
+    private java.sql.Timestamp tokenExpiry;
 
     public User() {
     }

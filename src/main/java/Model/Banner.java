@@ -1,19 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.util.Date;
 
 public class Banner {
     private int bannerId;
-    private int productId;
+    private int productId;   // 0 nếu không set
     private String imageUrl;
     private int status;
     private Date createdAt;
 
-    // Getters and setters
+    // ✅ Link đích (tùy chọn)
+    private String targetUrl;
+
     public int getBannerId() { return bannerId; }
     public void setBannerId(int bannerId) { this.bannerId = bannerId; }
 
@@ -28,5 +26,7 @@ public class Banner {
 
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-}
 
+    public String getTargetUrl() { return targetUrl; }
+    public void setTargetUrl(String targetUrl) { this.targetUrl = targetUrl; }
+}

@@ -54,6 +54,38 @@ public class CustomerDAO {
             return false;
         }
     }
+    public boolean isEmailExist(String email, int excludeUserId) {
+    String sql = "SELECT COUNT(*) FROM Users WHERE email = ? AND user_id <> ?";
+    try (Connection con = DBConnect.connect();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, email);
+        ps.setInt(2, excludeUserId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // true = đã tồn tại
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+public boolean isPhoneExist(String phone, int excludeUserId) {
+    String sql = "SELECT COUNT(*) FROM Users WHERE phone = ? AND user_id <> ?";
+    try (Connection con = DBConnect.connect();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, phone);
+        ps.setInt(2, excludeUserId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // true = đã tồn tại
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
      public static boolean checkOldPassword(int userId, String inputPassword) {
         String sql = "SELECT password_hash FROM Users WHERE user_id = ?";
         try (Connection conn = DBConnect.connect();

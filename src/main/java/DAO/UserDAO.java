@@ -7,6 +7,7 @@ package DAO;
 import config.DBConnect;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -337,4 +338,29 @@ public class UserDAO extends DBConnect {
         return null;
     }
 
+    /** Lấy User theo email
+     * @param email
+     * @return  */
+    public User getUserIdByEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE email = ?";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("user_id"));
+                user.setFullname(rs.getString("fullname"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password_hash"));
+                return user;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
