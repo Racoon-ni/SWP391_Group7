@@ -19,28 +19,6 @@
                 padding: 0;
             }
 
-            .sidebar {
-                position: fixed;
-                top: 80px;
-                left: 0;
-                width: 250px;
-                height: calc(100% - 80px);
-                background-color: #f8f9fa;
-                padding-top: 20px;
-                border-right: 1px solid #ddd;
-                z-index: 500;
-            }
-            .sidebar a {
-                display: block;
-                padding: 15px;
-                color: #333;
-                text-decoration: none;
-                font-size: 18px;
-            }
-            .sidebar a:hover {
-                background-color: #007bff;
-                color: white;
-            }
 
             .main-content {
                 margin-left: 240px;
@@ -105,15 +83,7 @@
     </head>
     <body>
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <a href="view-profile">Thông tin tài khoản</a>
-            <a href="ViewAddress">Sổ địa chỉ</a>
-
-            <a href="change-password">Đổi mật khẩu</a>
-            <a href="ViewMyVoucher">Kho voucher</a>
-            <a href="ViewWishlist">Danh sách yêu thích</a>
-        </div>
+        <%@include file="../include/user-side-bar.jsp" %>
 
 
         <!-- Main content -->

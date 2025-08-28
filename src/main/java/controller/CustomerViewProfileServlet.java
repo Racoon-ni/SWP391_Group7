@@ -81,9 +81,6 @@ public class CustomerViewProfileServlet extends HttpServlet {
             }
         }
 
-        if (address == null || address.length() < 5 || address.matches(".*[<>;].*")) {
-            errors.add("Địa chỉ không hợp lệ!");
-        }
 
         if (!errors.isEmpty()) {
             req.setAttribute("errors", errors);
