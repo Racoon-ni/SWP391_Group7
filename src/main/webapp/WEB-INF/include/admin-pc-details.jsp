@@ -92,7 +92,7 @@
     </head>
     <body class="bg-light">
         <!-- Admin Header -->
-<div class="admin-header">
+        <div class="admin-header">
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -158,9 +158,9 @@
                                     java.text.NumberFormat vndFormat = java.text.NumberFormat.getInstance(new java.util.Locale("vi", "VN"));
                                     String formattedPrice = vndFormat.format(pc.getPrice()) + " VND";
                                 %>
-                               
+
                                 <span class="price-badge"> <%= formattedPrice%></span>
-</div>
+                            </div>
                         </div>
 
                     </div>

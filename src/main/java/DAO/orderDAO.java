@@ -607,12 +607,12 @@ public class orderDAO {
 
     public List<OrderDetail> getOrderDetailsByUserId(int userId) {
         List<OrderDetail> details = new ArrayList<>();
-        String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id,\n"
-                + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price \n"
-                + "FROM OrderItems oi \n"
-                + "JOIN Products p ON oi.product_id = p.product_id\n"
-                + "Join Orders o ON o.order_id = oi.order_id\n"
-                + "WHERE o.user_id = ?";
+            String sql = "SELECT oi.order_item_id, oi.order_id, oi.product_id,\n"
+                    + "p.name AS product_name, p.image_url, oi.quantity, oi.unit_price \n"
+                    + "FROM OrderItems oi \n"
+                    + "JOIN Products p ON oi.product_id = p.product_id\n"
+                    + "Join Orders o ON o.order_id = oi.order_id\n"
+                    + "WHERE o.user_id = ?";
 
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setInt(1, userId);
