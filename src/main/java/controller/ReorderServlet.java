@@ -33,7 +33,7 @@ public class ReorderServlet extends HttpServlet {
             orderDAO dao = new orderDAO();
             Order order = dao.getOrderById(orderId);
             ShippingInfo shippingInfo = dao.getShippingInfoByOrderId(orderId);
-            List<OrderDetail> orderDetails = dao.getOrderDetails(orderId, userId);   // <-- Sửa lại ở đây
+            List<OrderDetail> orderDetails = dao.getOrderDetailsWithUpdatedPrice(orderId);
 
             request.setAttribute("order", order);
             request.setAttribute("shippingInfo", shippingInfo);

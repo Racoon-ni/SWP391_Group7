@@ -49,6 +49,21 @@ public class FeedbackDAO {
         }
         return list;
     }
+        // ✅ Xóa feedback nếu chưa được admin phản hồi (status = 'Pending')
+    public boolean deleteFeedbackIfPending(int feedbackId, int userId) {
+        String sql = "DELETE FROM Feedbacks WHERE feedback_id = ? AND user_id = ? AND status = N'Pending'";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, feedbackId);
+            ps.setInt(2, userId);
+            int rows = ps.executeUpdate();
+            return rows > 0; // true nếu xóa thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     // ✅ Lấy toàn bộ phản hồi (cho admin)
     public List<Feedback> getAllFeedback() {
