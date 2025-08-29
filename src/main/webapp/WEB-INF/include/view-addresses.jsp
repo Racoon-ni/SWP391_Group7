@@ -99,27 +99,32 @@
 
         /* ===== Modal ===== */
         .modal{
-            display:none; position:fixed; inset:0;
+            display:none; 
+            position:fixed; 
+            inset:0;
             background:rgba(17,24,39,.45);
             z-index:1000;
             padding: 32px 16px;
-            align-items:center; justify-content:center;
+            align-items:center; 
+            justify-content:center;
+            overflow-y:auto; /* scroll khi nội dung cao */
         }
+
         .modal-content{
             background:var(--card);
-            width:min(560px, 92vw);
+            width:100%;
+            max-width:500px; /* giới hạn tối đa */
             border-radius:16px;
-            padding:20px 20px 16px 20px;
+            padding:20px;
             box-shadow: 0 24px 64px rgba(0,0,0,.18);
             transform:translateY(12px);
             opacity:0;
             transition: all .18s ease;
         }
+
         .modal.show .modal-content{
-            transform:none; opacity:1;
-        }
-        .modal-title{
-            font-weight:800; margin:0 0 10px 0; color:#111827;
+            transform:none; 
+            opacity:1;
         }
 
         /* ===== Buttons ===== */
@@ -341,11 +346,9 @@
         var m = document.getElementById(id);
         if(!m) return;
         m.classList.remove('show');
-        // chờ animation nhẹ rồi ẩn
         setTimeout(function(){ m.style.display='none'; }, 120);
     }
 
-    // click ra ngoài để đóng
     window.addEventListener('click', function(e){
         var addM = document.getElementById('addAddressModal');
         var editM = document.getElementById('editAddressModal');
@@ -353,7 +356,6 @@
         if(e.target === editM) closeModal('editAddressModal');
     });
 
-    // Gán dữ liệu & mở modal Sửa
     document.addEventListener('DOMContentLoaded', function(){
         var triggers = document.querySelectorAll('.edit-btn-trigger');
         for (var i=0;i<triggers.length;i++){
