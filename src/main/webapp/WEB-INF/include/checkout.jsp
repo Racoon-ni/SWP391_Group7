@@ -1,3 +1,4 @@
+<%@page import="java.text.DecimalFormatSymbols"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.User" %>
@@ -8,7 +9,11 @@
 <%@ include file="/WEB-INF/include/header.jsp" %>
 
 <%
-    DecimalFormat df = new DecimalFormat("#,###");
+      // Định dạng tiền: 40.000.000 thay vì 40,000,000
+    DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+    symbols.setGroupingSeparator('.');  // dấu . cho hàng nghìn
+    symbols.setDecimalSeparator(',');   // dấu , cho số thập phân (nếu có)
+    DecimalFormat df = new DecimalFormat("#,###", symbols);
     List<Cart> cartItems = (List<Cart>) request.getAttribute("cartItems");
     double totalAmount = (double) request.getAttribute("totalAmount");
     User user = (User) request.getAttribute("userInfo");
@@ -115,7 +120,7 @@
 
                             <div class="info-row">
                                 <label>Số tiền</label>
-                                <div id="amountText"><%= df.format(payable) %> VNĐ</div>
+                                <div id="amountText"><%= df.format(payable) %> VND</div>
                                 <button class="btn btn-sm btn-outline-secondary copy-btn" type="button"
                                         onclick="copyText('<%= df.format(payable) %> VNĐ')">Copy</button>
                             </div>
@@ -141,48 +146,54 @@
             </form>
         </div>
 
-        <!-- Thông tin giỏ hàng -->
-        <div class="col-lg-6">
-            <h4 class="section-title mb-4">Giỏ hàng</h4>
-            <div class="total-box">
-                <c:forEach var="item" items="${cartItems}">
-                    <div class="d-flex justify-content-between mb-2">
-                        <div>${item.productName} x ${item.quantity}</div>
-                        <div>${item.price * item.quantity} VNÐ</div>
-                    </div>
-                </c:forEach>
-                <hr>
-                <div class="d-flex justify-content-between">
-                    <strong>Tổng thành tiền:</strong>
-                    <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount) %> VNĐ</strong>
-                </div>
-                <div class="mt-3">
-                    <form method="post" action="${pageContext.request.contextPath}/checkout">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="voucherCode" value="${param.voucherCode}" placeholder="Nhập mã khuyến mãi">
-                            <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
-                        </div>
-                    </form>
-
-                    <c:if test="${not empty voucherMessage}">
-                        <div class="mt-2">
-                            <small style="color: ${discountAmount > 0 ? 'green' : 'red'};">${voucherMessage}</small>
-                        </div>
-                    </c:if>
-
-                    <c:choose>
-                        <c:when test="${discountAmount > 0}">
-                            <strong style="color: #dc3545; font-size: 1.2rem;">
-                                <%= df.format((Double) request.getAttribute("finalAmount")) %> VNĐ
-                            </strong>
-                        </c:when>
-                        <c:otherwise>
-                            <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount) %> đ</strong>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+       <!-- Thông tin giỏ hàng -->
+<div class="col-lg-6">
+    <h4 class="section-title mb-4">Giỏ hàng</h4>
+    <div class="total-box">
+        <c:forEach var="item" items="${cartItems}">
+            <div class="d-flex justify-content-between mb-2">
+                <div>${item.productName} x ${item.quantity}</div>
+                <div><%= df.format(((model.Cart)pageContext.getAttribute("item")).getPrice() 
+                        * ((model.Cart)pageContext.getAttribute("item")).getQuantity()) %> VND</div>
             </div>
+        </c:forEach>
+        <hr>
+        <div class="d-flex justify-content-between">
+            <strong>Tổng thành tiền:</strong>
+            <strong style="color: #dc3545; font-size: 1.2rem;">
+                <%= df.format(totalAmount) %> VND
+            </strong>
         </div>
+        <div class="mt-3">
+            <form method="post" action="${pageContext.request.contextPath}/checkout">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="voucherCode" value="${param.voucherCode}" placeholder="Nhập mã khuyến mãi">
+                    <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
+                </div>
+            </form>
+
+            <c:if test="${not empty voucherMessage}">
+                <div class="mt-2">
+                    <small style="color: ${discountAmount > 0 ? 'green' : 'red'};">${voucherMessage}</small>
+                </div>
+            </c:if>
+
+            <c:choose>
+                <c:when test="${discountAmount > 0}">
+                    <strong style="color: #dc3545; font-size: 1.2rem;">
+                        <%= df.format((Double) request.getAttribute("finalAmount")) %> VNĐ
+                    </strong>
+                </c:when>
+                <c:otherwise>
+                    <strong style="color: #dc3545; font-size: 1.2rem;">
+                        <%= df.format(totalAmount) %> VND
+                    </strong>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+</div>
+
     </div>
 </div>
 

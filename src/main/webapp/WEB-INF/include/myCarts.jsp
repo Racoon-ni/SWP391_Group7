@@ -187,6 +187,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
+        <a href="img/qrtest.jsp">Test</a>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -265,7 +266,7 @@
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
                     useGrouping: true
-                }).replace(/,/g, '.') + ' đ';
+                }).replace(/,/g, '.') + ' VND';
             }
 
             // Format price elements on page load
