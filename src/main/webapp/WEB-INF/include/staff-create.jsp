@@ -91,21 +91,15 @@
                                 <input type="text" class="form-control" id="address" name="address" value="${formData.address}">
                             </div>
 
-                            <div class="d-flex gap-2 mb-3">
-                                <button type="button" id="btnSendMail" class="btn btn-outline-success">
-                                    <i class="fa-regular fa-paper-plane"></i> Gửi mail thông tin đăng nhập
-                                </button>
-                                <small class="text-muted align-self-center" id="sendMailStatus"></small>
-                            </div>
-
                             <div class="d-flex justify-content-between">
                                 <button type="submit" class="btn btn-success px-4">
-                                    <i class="fa-solid fa-plus"></i> Thêm mới
+                                    <i class="fa-solid fa-plus"></i> Thêm mới & Gửi mail
                                 </button>
                                 <a href="StaffList" class="btn btn-secondary px-4">
                                     <i class="fa-solid fa-ban"></i> Huỷ
                                 </a>
                             </div>
+
                         </form>
 
                         <script>

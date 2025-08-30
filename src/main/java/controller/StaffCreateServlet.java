@@ -1,75 +1,47 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
-import java.io.IOException;
-import java.sql.Date;
-import java.util.HashMap;
-import java.util.Map;
+import DAO.UserDAO;
+import model.User;
+import util.EmailUtil;
+import util.ValidationUtils;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import DAO.UserDAO;
-import model.User;
-import utils.ValidationUtils;
+
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Admin
  */
+
 @WebServlet(name = "StaffCreateServlet", urlPatterns = {"/StaffCreate"})
 public class StaffCreateServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+    private static final String PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*?";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         request.setCharacterEncoding("UTF-8");
 
+        // Lấy params
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String password = request.getParameter("password"); // có thể admin tự nhập, nếu rỗng sẽ tạo random
         String email = request.getParameter("email");
         String fullname = request.getParameter("fullname");
         String dobStr = request.getParameter("dateOfBirth");
@@ -82,10 +54,10 @@ public class StaffCreateServlet extends HttpServlet {
         Date dobSql = null;
         try {
             if (dobStr != null && !dobStr.isEmpty()) {
-                dobSql = Date.valueOf(dobStr);
+                dobSql = Date.valueOf(dobStr); // yyyy-MM-dd
             }
         } catch (Exception e) {
-            // sẽ gắn lỗi ở errors
+            // để errors xử lý sau
         }
 
         Map<String, String> errors = new HashMap<>();
@@ -96,7 +68,7 @@ public class StaffCreateServlet extends HttpServlet {
             errors.put("username", "Bắt buộc.");
         }
         if (password == null || password.trim().isEmpty()) {
-            errors.put("password", "Bắt buộc.");
+            // không bắt lỗi ở đây, sẽ tạo password random nếu admin không nhập
         }
 
         // Email
@@ -126,14 +98,15 @@ public class StaffCreateServlet extends HttpServlet {
         }
 
         // Username unique
-        if (dao.usernameExists(username)) {
+        if (username != null && !username.trim().isEmpty() && dao.usernameExists(username)) {
             errors.put("username", "Tên đăng nhập đã tồn tại.");
         }
 
+        // Nếu có lỗi -> trả lại form với dữ liệu
         if (!errors.isEmpty()) {
             User form = new User();
             form.setUsername(username);
-            form.setPassword(password);
+            form.setPassword(password); // giữ nếu admin đã nhập
             form.setEmail(email);
             form.setFullname(fullname);
             form.setDateOfBirth(dobSql);
@@ -149,24 +122,82 @@ public class StaffCreateServlet extends HttpServlet {
             return;
         }
 
-        // Create Staff account
-        User user = new User(0, username, password, email, fullname, dobSql, address, phone, gender, "Staff", true);
-        if (dao.addStaff(user) == 1) {
-            response.sendRedirect("StaffList?message=Thêm nhân viên & tạo account Staff thành công!");
+        // Nếu admin không nhập password, tạo random
+        String rawPassword = (password == null || password.trim().isEmpty()) ? generateRandomPassword(12) : password.trim();
+
+        // Tạo User (lưu ý: addStaff() của bạn sẽ hash MD5 trước khi insert)
+        User user = new User(0, username, rawPassword, email, fullname, dobSql, address, phone, gender, "Staff", true);
+
+        int added = dao.addStaff(user);
+        if (added == 1) {
+            // Gửi email thật
+            String subject = "Tạo tài khoản nhân viên - PC Store";
+            StringBuilder sb = new StringBuilder();
+            sb.append("<p>Xin chào <b>").append(fullname == null ? username : fullname).append("</b>,</p>");
+            sb.append("<p>Bạn vừa được tạo tài khoản nhân viên tại <b>PC Store</b>.</p>");
+            sb.append("<p><b>Tên đăng nhập:</b> ").append(username).append("</p>");
+            sb.append("<p><b>Mật khẩu tạm:</b> ").append(rawPassword).append("</p>");
+            sb.append("<p>Vui lòng đăng nhập và đổi mật khẩu ngay sau lần đăng nhập đầu tiên.</p>");
+            sb.append("<p><a href='http://localhost:8080/SWP391_Group7/login'>Đăng nhập ngay</a></p>");
+            String body = sb.toString();
+
+            try {
+                EmailUtil.sendEmail(email, subject, body);
+                // thành công -> chuyển về danh sách
+                response.sendRedirect("StaffList?message=Thêm nhân viên & tạo account Staff thành công!");
+                return;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                // nếu gửi email thất bại, rollback (xóa user vừa tạo)
+                try {
+                    User created = dao.getUserIdByEmail(email);
+                    if (created != null) {
+                        dao.deleteUser(created.getId());
+                    }
+                } catch (Exception ignore) {
+                    // bỏ qua lỗi xoá (đã log ở trên)
+                }
+                request.setAttribute("error", "Đã tạo nhân viên nhưng gửi email thất bại. Tài khoản đã được xóa để tránh trạng thái không nhất quán.");
+                // để admin dễ kiểm tra lại form, trả các trường đã nhập (không trả password)
+                User form = new User();
+                form.setUsername(username);
+                form.setEmail(email);
+                form.setFullname(fullname);
+                form.setDateOfBirth(dobSql);
+                form.setPhone(phone);
+                form.setGender(gender);
+                form.setAddress(address);
+                request.setAttribute("formData", form);
+                request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);
+                return;
+            }
         } else {
             request.setAttribute("error", "Lỗi thêm nhân viên.");
+            User form = new User();
+            form.setUsername(username);
+            form.setPassword(""); // không lộ mật khẩu
+            form.setEmail(email);
+            form.setFullname(fullname);
+            form.setDateOfBirth(dobSql);
+            form.setPhone(phone);
+            form.setGender(gender);
+            form.setAddress(address);
+            request.setAttribute("formData", form);
             request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);
+            return;
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    private String generateRandomPassword(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(PASSWORD_CHARS.charAt(RANDOM.nextInt(PASSWORD_CHARS.length())));
+        }
+        return sb.toString();
+    }
+
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "StaffCreateServlet - tạo nhân viên và gửi mail thật";
+    }
 }

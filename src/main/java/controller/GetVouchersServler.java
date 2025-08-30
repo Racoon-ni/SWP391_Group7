@@ -16,6 +16,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.User;
 import DAO.VoucherDAO;
+import model.Voucher;
 
 /**
  *
@@ -65,25 +66,54 @@ public class GetVouchersServler extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        int voucherId = Integer.parseInt(req.getParameter("voucherId"));
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
-        Integer userId = user.getId();
 
-        if (userId != null) {
-            VoucherDAO dao = new VoucherDAO();
-            boolean already = dao.userHasVoucher(userId, voucherId);
-            if (!already) {
-                dao.addVoucherToUser(userId, voucherId);
-                session.setAttribute("voucherMsg", "Nhận voucher thành công!");
-            } else {
-                session.setAttribute("voucherMsg", "Bạn đã nhận voucher này rồi.");
-            }
-        } else {
+        if (user == null) {
             session.setAttribute("voucherMsg", "Vui lòng đăng nhập để nhận voucher.");
+            redirectBack(req, resp);
+            return;
         }
 
-        // Quay lại trang chi tiết sản phẩm
+        int voucherId = Integer.parseInt(req.getParameter("voucherId"));
+        int userId = user.getId();
+
+        VoucherDAO dao = new VoucherDAO();
+        Voucher v = dao.getVoucherById(voucherId);
+
+        if (v == null) {
+            session.setAttribute("voucherMsg", "Voucher không tồn tại!");
+            redirectBack(req, resp);
+            return;
+        }
+
+        // Kiểm tra hạn & số lượng
+        java.util.Date now = new java.util.Date();
+        if (v.getExpiredAt().before(now)) {
+            session.setAttribute("voucherMsg", "Voucher đã hết hạn!");
+            redirectBack(req, resp);
+            return;
+        }
+
+        if (v.getQuantity() <= 0) {
+            session.setAttribute("voucherMsg", "Voucher đã hết số lượng!");
+            redirectBack(req, resp);
+            return;
+        }
+
+        // Kiểm tra user đã có voucher chưa
+        boolean already = dao.userHasVoucher(userId, voucherId);
+        if (!already) {
+            dao.addVoucherToUser(userId, voucherId);
+            session.setAttribute("voucherMsg", "Nhận voucher thành công!");
+        } else {
+            session.setAttribute("voucherMsg", "Bạn đã nhận voucher này rồi.");
+        }
+
+        redirectBack(req, resp);
+    }
+
+    private void redirectBack(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String referer = req.getHeader("referer");
         resp.sendRedirect(referer != null ? referer : "home.jsp");
     }
