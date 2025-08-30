@@ -10,14 +10,12 @@
     <!-- Filter theo loại sản phẩm -->
     <div>
         <label for="category" class="form-label">Danh mục</label>
-        <select name="categoryId" id="category" class="form-select" style="border-radius:12px;">
-            <option value="">Tất cả</option>
-            <c:forEach var="cat" items="${categories}">
-                <option value="${cat.categoryId}"
-                    <c:if test="${param.categoryId == cat.categoryId}">selected</c:if>
-                >${cat.name}</option>
-            </c:forEach>
-        </select>
+    <select name="categoryId" class="form-select">
+        <option value="">Tất cả danh mục</option>
+        <c:forEach var="cat" items="${categories}">
+            <option value="${cat.categoryId}">${cat.name}</option>
+        </c:forEach>
+    </select>
     </div>
     <!-- Filter theo mức giá -->
     <div>

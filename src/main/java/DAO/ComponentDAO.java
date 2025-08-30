@@ -19,7 +19,7 @@ import model.Component;
  *
  * @author Huynh Trong Nguyen - CE190356
  */
-public class ComponentDAO {
+public class ComponentDAO extends DBConnect {
 
     public ArrayList<Component> getAllComponents(String cateIdsParam) {
         ArrayList<Component> componentList = new ArrayList<>();

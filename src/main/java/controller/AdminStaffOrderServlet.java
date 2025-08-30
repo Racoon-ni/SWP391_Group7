@@ -62,14 +62,13 @@ public class AdminStaffOrderServlet extends HttpServlet {
                 orderDAO dao = new orderDAO();
                 boolean updated = dao.updateOrderStatus(orderId, newStatus);
 
-                HttpSession session = request.getSession();
                 if (updated) {
-                    session.setAttribute("message", "✅ Cập nhật trạng thái thành công!");
+                    request.setAttribute("message", "✅ Cập nhật trạng thái thành công!");
                 } else {
-                    session.setAttribute("error", "❌ Không thể cập nhật trạng thái đơn hàng.");
+                    request.setAttribute("error", "❌ Không thể cập nhật trạng thái đơn hàng.");
                 }
 
-                response.sendRedirect("order-detail-admin?id=" + orderId);
+                request.getRequestDispatcher("order-detail-admin?id=" + orderId).forward(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
                 response.sendRedirect("manage-orders?error=UpdateFailed");

@@ -11,6 +11,7 @@ import java.util.Date;
  * @author Huynh Trong Nguyen - CE190356
  */
 public class User {
+
     private int id;
     private String username;
     private String password;
@@ -22,6 +23,12 @@ public class User {
     private String gender;
     private String role;
     private boolean status;
+
+    private double totalSpent;
+
+
+    private String resetToken;
+    private java.sql.Timestamp tokenExpiry;
 
     public User() {
     }
@@ -48,7 +55,13 @@ public class User {
         this.password = password;
     }
 
-   
+    public double getTotalSpent() {
+        return totalSpent;
+    }
+
+    public void setTotalSpent(double totalSpent) {
+        this.totalSpent = totalSpent;
+    }
 
     public int getId() {
         return id;
@@ -130,5 +143,4 @@ public class User {
         this.status = status;
     }
 
-    
 }

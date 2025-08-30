@@ -4,10 +4,10 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.UUID;
 
 import model.Banner;
@@ -16,8 +16,8 @@ import DAO.BannerDAO;
 @WebServlet("/manage-banner")
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-        maxFileSize = 1024 * 1024 * 10, // 10MB
-        maxRequestSize = 1024 * 1024 * 50 // 50MB
+        maxFileSize = 1024 * 1024 * 10,      // 10MB
+        maxRequestSize = 1024 * 1024 * 50    // 50MB
 )
 public class ManageBannerServlet extends HttpServlet {
 
@@ -28,9 +28,7 @@ public class ManageBannerServlet extends HttpServlet {
             throws ServletException, IOException {
 
         BannerDAO bannerDAO = new BannerDAO();
-        List<Banner> banners = bannerDAO.getAllBanners();
-
-        req.setAttribute("banners", banners);
+        req.setAttribute("banners", bannerDAO.getAllBanners());
         req.getRequestDispatcher("/WEB-INF/include/banner.jsp").forward(req, resp);
     }
 
@@ -53,9 +51,9 @@ public class ManageBannerServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             Part filePart = req.getPart("bannerFile");
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileName = filePart != null ? Paths.get(filePart.getSubmittedFileName()).getFileName().toString() : null;
 
-            if (fileName == null || fileName.isEmpty()) {
+            if (filePart == null || fileName == null || fileName.isEmpty()) {
                 resp.sendRedirect("manage-banner?uploaded=false");
                 return;
             }
@@ -66,31 +64,47 @@ public class ManageBannerServlet extends HttpServlet {
                 return;
             }
 
-            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+            // ✅ Lấy Product ID (tùy chọn)
+            Integer productId = null;
+            String productIdStr = req.getParameter("productId");
+            if (productIdStr != null && !productIdStr.trim().isEmpty()) {
+                try {
+                    int pid = Integer.parseInt(productIdStr.trim());
+                    if (pid > 0) productId = pid;
+                } catch (NumberFormatException ignored) {}
+            }
 
+            // ✅ Lấy link đích (tùy chọn)
+            String linkUrl = req.getParameter("linkUrl");
+            if (linkUrl != null) linkUrl = linkUrl.trim();
+            if (linkUrl != null && linkUrl.isEmpty()) linkUrl = null;
+
+            // Lưu file
+            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
             String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
             File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
+            if (!uploadDir.exists()) uploadDir.mkdirs();
 
             String filePath = uploadPath + File.separator + uniqueFileName;
             filePart.write(filePath);
 
+            // Tạo đối tượng Banner
             Banner banner = new Banner();
             banner.setImageUrl("/assets/images/" + uniqueFileName);
             banner.setStatus(Integer.parseInt(req.getParameter("status")));
+            if (productId != null) banner.setProductId(productId);
+            if (linkUrl != null) banner.setTargetUrl(linkUrl);
 
+            // Lưu DB
             BannerDAO bannerDAO = new BannerDAO();
             boolean success = bannerDAO.insertBanner(banner);
 
             if (success) {
                 resp.sendRedirect("manage-banner?uploaded=true");
             } else {
+                // Rollback file nếu insert thất bại
                 File uploadedFile = new File(filePath);
-                if (uploadedFile.exists()) {
-                    uploadedFile.delete();
-                }
+                if (uploadedFile.exists()) uploadedFile.delete();
                 resp.sendRedirect("manage-banner?uploaded=false");
             }
 
@@ -102,11 +116,7 @@ public class ManageBannerServlet extends HttpServlet {
 
     private boolean isValidImageType(String extension) {
         String[] validTypes = {".jpg", ".jpeg", ".png", ".gif", ".webp"};
-        for (String type : validTypes) {
-            if (type.equals(extension)) {
-                return true;
-            }
-        }
+        for (String type : validTypes) if (type.equals(extension)) return true;
         return false;
     }
 
@@ -123,11 +133,7 @@ public class ManageBannerServlet extends HttpServlet {
             BannerDAO bannerDAO = new BannerDAO();
             boolean success = bannerDAO.updateBannerStatus(banner);
 
-            if (success) {
-                resp.sendRedirect("manage-banner?updated=true");
-            } else {
-                resp.sendRedirect("manage-banner?updated=false");
-            }
+            resp.sendRedirect("manage-banner?" + (success ? "updated=true" : "updated=false"));
         } catch (Exception e) {
             e.printStackTrace();
             resp.sendRedirect("manage-banner?error=true");

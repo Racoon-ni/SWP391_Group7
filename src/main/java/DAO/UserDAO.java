@@ -7,6 +7,7 @@ package DAO;
 import config.DBConnect;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,23 +22,6 @@ import model.User;
  * @author Huynh Trong Nguyen - CE190356
  */
 public class UserDAO extends DBConnect {
-
-    public boolean login(User user) {
-        String query = "select count(user_id) from users "
-                + "where username = ? "
-                + "and password_hash = ?";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(query)) {
-
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            //ps.setString(2, hashMd5(user.getPassword())); //Long chinh lai
-            ResultSet rs = ps.executeQuery();
-            return rs.next() && rs.getInt(1) == 1;
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
 
     public User getUser(String username, String password) {
 
@@ -110,7 +94,7 @@ public class UserDAO extends DBConnect {
         return null;
     }
 
-    public int updateUser(int userId, boolean status) {
+    public int banUser(int userId, boolean status) {
 
         String sql = " Update Users SET status = ? \n"
                 + "WHERE user_id = ?";
@@ -127,18 +111,23 @@ public class UserDAO extends DBConnect {
         return 0;
 
     }
-
-    // Lấy toàn bộ user (bao gồm ngày sinh)
-    public ArrayList<User> getAllUser() {
+    public ArrayList<User> getAllCustomers() {
         ArrayList<User> userList = new ArrayList<>();
         String sql = "SELECT u.user_id, u.username, u.email,\n"
-                + "  u.fullname, u.date_of_birth, u.address,\n"
-                + "  u.phone, u.gender, u.role, u.status\n"
-                + "  FROM Users u\n"
-                + "  WHERE u.role = 'Customer'";
+                + "u.fullname, u.date_of_birth, u.address, \n"
+                + "u.phone, u.gender, u.role, u.status, \n"
+                + "ISNULL(SUM(CASE \n"
+                + "WHEN os.payment_status = 'Paid' AND o.status != 'Canceled' \n"
+                + "THEN o.total_price ELSE 0 END), 0) AS total_spent\n"
+                + "FROM Users u \n"
+                + "LEFT JOIN Orders o ON u.user_id = o.user_id \n"
+                + "LEFT JOIN OrderShippingPayment os ON o.order_id = os.order_id\n"
+                + "WHERE u.role = 'Customer'\n"
+                + "GROUP BY u.user_id, u.username, u.email, \n"
+                + "u.fullname, u.date_of_birth, u.address, \n"
+                + "u.phone, u.gender, u.role, u.status;";
 
-        try (
-                 PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("user_id");
                 String name = rs.getString("username");
@@ -150,12 +139,17 @@ public class UserDAO extends DBConnect {
                 String gender = rs.getString("gender");
                 String role = rs.getString("role");
                 boolean status = rs.getBoolean("status");
+                double totalSpent = rs.getDouble("total_spent");
 
-                User user = new User(id, name, "", email, fullname, dateOfBirth, address, phone, gender, role, status);
+                User user = new User(id, name, "", email, fullname,
+                        dateOfBirth, address, phone, gender,
+                        role, status);
+                user.setTotalSpent(totalSpent);
+
                 userList.add(user);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return userList;
     }
@@ -215,8 +209,9 @@ public class UserDAO extends DBConnect {
         String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setString(1, username);
-            try ( ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,13 +223,24 @@ public class UserDAO extends DBConnect {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setString(1, email);
-            try ( ResultSet rs = ps.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+    public int deleteUser(int userId) {
+        String sql = "DELETE FROM Users WHERE user_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 
     public User getUserByIdForCheckout(int id) {
@@ -271,6 +277,31 @@ public class UserDAO extends DBConnect {
         return null;
     }
 
+    /** Lấy User theo email
+     * @param email
+     * @return  */
+    public User getUserIdByEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE email = ?";
+        try (Connection con = DBConnect.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("user_id"));
+                user.setFullname(rs.getString("fullname"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password_hash"));
+                return user;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public boolean phoneExists(String phone) {
         if (phone == null || phone.isEmpty()) {
             return false;
@@ -380,6 +411,8 @@ public class UserDAO extends DBConnect {
 
     /**
      * Xoá mềm: status = 0
+     * @param userId
+     * @return 
      */
     public int softDeleteUser(int userId) {
         String sql = "UPDATE Users SET status = 0 WHERE user_id = ?";
@@ -391,5 +424,17 @@ public class UserDAO extends DBConnect {
         }
         return 0;
     }
+    public boolean updatePassword(User user) {
+    String sql = "UPDATE Users SET password_hash = ? WHERE user_id = ?";
+    try (Connection con = DBConnect.getConnection(); 
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, user.getPassword());
+        ps.setInt(2, user.getId());
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 
 }

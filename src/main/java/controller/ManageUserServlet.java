@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import model.Order;
 import model.OrderDetail;
 import model.User;
 
@@ -54,7 +55,7 @@ public class ManageUserServlet extends HttpServlet {
 
                         UserDAO uDAO = new UserDAO();
 
-                        ArrayList<User> userList = uDAO.getAllUser();
+                        ArrayList<User> userList = uDAO.getAllCustomers();
 
                         request.setAttribute("userList", userList);
 
@@ -79,8 +80,10 @@ public class ManageUserServlet extends HttpServlet {
 
                         user = uDAO.getUserById(id);
                         List<OrderDetail> orderDetails = dao.getOrderDetailsByUserId(id);
-
+                        List<Order> orders = dao.getOrdersByUserId(id);
+                        
                         request.setAttribute("user", user);
+                        request.setAttribute("orders", orders);
                         request.setAttribute("orderDetails", orderDetails);
                         request.getRequestDispatcher("/WEB-INF/include/user-details.jsp").forward(request, response);
                         return;
@@ -120,7 +123,7 @@ public class ManageUserServlet extends HttpServlet {
                     int id = Integer.parseInt(request.getParameter("id"));
                     boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
-                    if (uDAO.updateUser(id, status) == 1) {
+                    if (uDAO.banUser(id, status) == 1) {
                         response.sendRedirect(request.getContextPath() + "/manage-user");
                     }
 
