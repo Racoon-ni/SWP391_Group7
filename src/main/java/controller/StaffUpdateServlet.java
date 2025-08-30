@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DAO.UserDAO;
 import model.User;
-import utils.ValidationUtils;
+import util.ValidationUtils;
 
 /**
  *

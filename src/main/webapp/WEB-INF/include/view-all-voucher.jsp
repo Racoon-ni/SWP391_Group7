@@ -43,6 +43,28 @@
 <% } else { %>
 <p class="text-gray-500">Hiện chưa có voucher nào khả dụng.</p>
 <% }%>
+<c:forEach var="v" items="${allVouchers}">
+    <div class="voucher-box">
+        <p>Mã: ${v.code}</p>
+        <p>Giảm: ${v.discountPercent}%</p>
+        <p>HSD: ${v.expiredAt}</p>
+        <p>Số lượng: ${v.quantity}</p>
+
+        <c:choose>
+            <c:when test="${v.expiredAt.time lt now.time || v.quantity <= 0}">
+                <!-- Voucher hết hạn hoặc hết số lượng -->
+                <button class="btn btn-secondary" disabled>Hết hạn / Hết số lượng</button>
+            </c:when>
+            <c:otherwise>
+                <!-- Voucher còn dùng được -->
+                <form action="GetVoucher" method="post">
+                    <input type="hidden" name="voucherId" value="${v.voucherId}">
+                    <button type="submit" class="btn btn-success">Nhận Voucher</button>
+                </form>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</c:forEach>
 
 
 

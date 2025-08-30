@@ -56,10 +56,10 @@ public class StaffDeleteServlet extends HttpServlet {
                 return;
             }
 
-            dao.softDeleteUser(id); // xoá mềm: status = 0
-            response.sendRedirect("StaffList?message=Đã khoá nhân viên!");
+            dao.deleteUser(id);
+            response.sendRedirect("StaffList?message=Employee deleted!");
         } catch (Exception e) {
-            response.sendRedirect("StaffList?error=Xoá nhân viên thất bại.");
+            response.sendRedirect("StaffList?error=Delete employee failed.");
         }
     }
 }
