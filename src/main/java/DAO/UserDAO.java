@@ -30,6 +30,7 @@ public class UserDAO extends DBConnect {
 
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
+            //ps.setString(2, hashMd5(user.getPassword())); //Long chinh lai
             ResultSet rs = ps.executeQuery();
             return rs.next() && rs.getInt(1) == 1;
         } catch (SQLException | ClassNotFoundException ex) {
@@ -127,24 +128,6 @@ public class UserDAO extends DBConnect {
 
     }
 
-    public int register(User user) {
-
-        String sql = "INSERT INTO Users (username, email, password_hash, role) \n"
-                + "VALUES (?, ?, ?, ?)";
-
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, hashMd5(user.getPassword()));
-            ps.setString(4, user.getRole());
-
-            return ps.executeUpdate(); // returns 1 if success
-        } catch (Exception ex) {
-            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
-    }
-
     // Lấy toàn bộ user (bao gồm ngày sinh)
     public ArrayList<User> getAllUser() {
         ArrayList<User> userList = new ArrayList<>();
@@ -176,7 +159,7 @@ public class UserDAO extends DBConnect {
         }
         return userList;
     }
-    
+
     // Lấy toàn bộ user (bao gồm ngày sinh)
     public ArrayList<User> getAllStaff() {
         ArrayList<User> userList = new ArrayList<>();
@@ -232,9 +215,8 @@ public class UserDAO extends DBConnect {
         String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,9 +228,8 @@ public class UserDAO extends DBConnect {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
             ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -256,58 +237,7 @@ public class UserDAO extends DBConnect {
         return false;
     }
 
-   public int updateStaff(User user) {
-    String sql = "UPDATE Users SET fullname = ?, email = ?, phone = ?, gender = ?, address = ?, date_of_birth = ?, role = ?, status = ? WHERE user_id = ?";
-    try (PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-        ps.setString(1, user.getFullname());
-        ps.setString(2, user.getEmail());
-        ps.setString(3, user.getPhone());
-        ps.setString(4, user.getGender());
-        ps.setString(5, user.getAddress());
-        ps.setDate(6, (java.sql.Date) user.getDateOfBirth()); // CẬP NHẬT NGÀY SINH!
-        ps.setString(7, user.getRole());
-        ps.setBoolean(8, user.isStatus());
-        ps.setInt(9, user.getId());
-        return ps.executeUpdate();
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
-    return 0;
-}
-// Thêm nhân viên mới (CÓ NGÀY SINH)
-
-    public int addStaff(User user) {
-        String sql = "INSERT INTO Users (username, email, password_hash, fullname, date_of_birth, phone, gender, address, role, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, hashMd5(user.getPassword()));
-            ps.setString(4, user.getFullname());
-            ps.setDate(5, (java.sql.Date) user.getDateOfBirth());
-            ps.setString(6, user.getPhone());
-            ps.setString(7, user.getGender());
-            ps.setString(8, user.getAddress());
-            ps.setString(9, user.getRole());
-            ps.setBoolean(10, user.isStatus());
-            return ps.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return 0;
-    }
-
-    public int deleteUser(int userId) {
-        String sql = "DELETE FROM Users WHERE user_id = ?";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            return ps.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return 0;
-    }
- public User getUserByIdForCheckout(int id) {
+    public User getUserByIdForCheckout(int id) {
         String sql = "SELECT user_id, username, email, password_hash, fullname, date_of_birth, "
                 + "address, phone, gender, role, status, created_at "
                 + "FROM Users WHERE user_id = ?";
@@ -328,10 +258,9 @@ public class UserDAO extends DBConnect {
                     String gender = rs.getString("gender");
                     String role = rs.getString("role");
                     boolean status = rs.getBoolean("status");
-                   
 
                     // Constructor đầy đủ của User
-                    return new User(userId, username,  password, email,fullname, dob, address, phone, gender, role, status);
+                    return new User(userId, username, password, email, fullname, dob, address, phone, gender, role, status);
                 }
             }
 
@@ -340,6 +269,127 @@ public class UserDAO extends DBConnect {
         }
 
         return null;
+    }
+
+    public boolean phoneExists(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean emailExistsForOther(String email, int excludeUserId) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ? AND user_id <> ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, excludeUserId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean phoneExistsForOther(String phone, int excludeUserId) {
+        if (phone == null || phone.isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ? AND user_id <> ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ps.setInt(2, excludeUserId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /* ====== CREATE / UPDATE / DELETE for staff ====== */
+    public int register(User user) {
+
+        String sql = "INSERT INTO Users (username, email, password_hash, role) \n"
+                + "VALUES (?, ?, ?, ?)";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, hashMd5(user.getPassword()));
+            ps.setString(4, user.getRole());
+
+            return ps.executeUpdate(); // returns 1 if success
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    // Thêm nhân viên mới (CÓ NGÀY SINH)
+
+    public int addStaff(User user) {
+        String sql = "INSERT INTO Users (username, email, password_hash, fullname, date_of_birth, phone, gender, address, role, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, hashMd5(user.getPassword()));
+            ps.setString(4, user.getFullname());
+            ps.setDate(5, (java.sql.Date) user.getDateOfBirth());
+            ps.setString(6, user.getPhone());
+            ps.setString(7, user.getGender());
+            ps.setString(8, user.getAddress());
+            ps.setString(9, user.getRole());
+            ps.setBoolean(10, user.isStatus());
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public int updateStaff(User user) {
+        String sql = "UPDATE Users SET fullname = ?, email = ?, phone = ?, gender = ?, address = ?, date_of_birth = ?, role = ?, status = ? WHERE user_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, user.getFullname());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPhone());
+            ps.setString(4, user.getGender());
+            ps.setString(5, user.getAddress());
+            ps.setDate(6, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
+            ps.setString(7, user.getRole());
+            ps.setBoolean(8, user.isStatus());
+            ps.setInt(9, user.getId());
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    /**
+     * Xoá mềm: status = 0
+     */
+    public int softDeleteUser(int userId) {
+        String sql = "UPDATE Users SET status = 0 WHERE user_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
 }

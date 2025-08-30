@@ -5,6 +5,9 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DAO.UserDAO;
 import model.User;
+import utils.ValidationUtils;
 
 /**
  *
@@ -61,57 +65,94 @@ public class StaffCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         String fullname = request.getParameter("fullname");
-        String dateOfBirthStr = request.getParameter("dateOfBirth");
-        String phone = request.getParameter("phone");
+        String dobStr = request.getParameter("dateOfBirth");
+        String phoneRaw = request.getParameter("phone");
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
 
-        java.sql.Date dateOfBirth = null;
+        String phone = ValidationUtils.normalizePhoneVN(phoneRaw);
+
+        Date dobSql = null;
         try {
-            if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
-                dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr); // yyyy-MM-dd
+            if (dobStr != null && !dobStr.isEmpty()) {
+                dobSql = Date.valueOf(dobStr);
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Ngày sinh không hợp lệ.");
-            request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);
-            return;
+            // sẽ gắn lỗi ở errors
         }
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setFullname(fullname);
-        user.setDateOfBirth(dateOfBirth);
-        user.setPhone(phone);
-        user.setGender(gender);
-        user.setAddress(address);
-        user.setRole("Staff");
-        user.setStatus(true);
-
+        Map<String, String> errors = new HashMap<>();
         UserDAO dao = new UserDAO();
 
-        // Kiểm tra username trùng
-        if (dao.usernameExists(username)) {
-            request.setAttribute("error", "Tên đăng nhập đã tồn tại. Vui lòng nhập tên khác.");
-            request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);
-            return;
+        // Required
+        if (username == null || username.trim().isEmpty()) {
+            errors.put("username", "Bắt buộc.");
         }
-        // Kiểm tra email trùng
-        if (dao.emailExists(email)) {
-            request.setAttribute("error", "Email đã tồn tại. Vui lòng nhập email khác.");
+        if (password == null || password.trim().isEmpty()) {
+            errors.put("password", "Bắt buộc.");
+        }
+
+        // Email
+        if (!ValidationUtils.isValidEmail(email)) {
+            errors.put("email", "Email không hợp lệ.");
+        } else if (dao.emailExists(email)) {
+            errors.put("email", "Email đã tồn tại.");
+        }
+
+        // Fullname
+        if (!ValidationUtils.isValidFullname(fullname)) {
+            errors.put("fullname", "Họ tên không chứa số/ký tự đặc biệt.");
+        }
+
+        // DOB & 18+
+        if (dobSql == null) {
+            errors.put("dateOfBirth", "Ngày sinh không hợp lệ.");
+        } else if (!ValidationUtils.isAdult(dobSql.toLocalDate())) {
+            errors.put("dateOfBirth", "Nhân viên phải từ 18 tuổi.");
+        }
+
+        // Phone VN + unique (nếu nhập)
+        if (!ValidationUtils.isValidVNPhoneOrEmpty(phone)) {
+            errors.put("phone", "SĐT phải là số di động VN hợp lệ (03/05/07/08/09 + 8 số).");
+        } else if (phone != null && !phone.isEmpty() && dao.phoneExists(phone)) {
+            errors.put("phone", "SĐT đã tồn tại.");
+        }
+
+        // Username unique
+        if (dao.usernameExists(username)) {
+            errors.put("username", "Tên đăng nhập đã tồn tại.");
+        }
+
+        if (!errors.isEmpty()) {
+            User form = new User();
+            form.setUsername(username);
+            form.setPassword(password);
+            form.setEmail(email);
+            form.setFullname(fullname);
+            form.setDateOfBirth(dobSql);
+            form.setPhone(phone);
+            form.setGender(gender);
+            form.setAddress(address);
+            form.setRole("Staff");
+            form.setStatus(true);
+
+            request.setAttribute("errors", errors);
+            request.setAttribute("formData", form);
             request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);
             return;
         }
 
+        // Create Staff account
+        User user = new User(0, username, password, email, fullname, dobSql, address, phone, gender, "Staff", true);
         if (dao.addStaff(user) == 1) {
-            // Gửi thông báo thành công qua query string (1 lần duy nhất)
-            response.sendRedirect("StaffList?message=add success!");
+            response.sendRedirect("StaffList?message=Thêm nhân viên & tạo account Staff thành công!");
         } else {
             request.setAttribute("error", "Lỗi thêm nhân viên.");
             request.getRequestDispatcher("/WEB-INF/include/staff-create.jsp").forward(request, response);

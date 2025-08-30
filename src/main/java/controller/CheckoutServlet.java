@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 import model.Cart;
 import model.User;
 import model.UserAddress;
@@ -27,22 +28,36 @@ public class CheckoutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+// 1) Kiểm tra login
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
         User sessionUser = (User) session.getAttribute("user");
         int userId = sessionUser.getId();
-
+// 2) Lấy danh sách buildProductIds từ form (long)
+        String[] buildIds = request.getParameterValues("buildProductIds"); //long
         String productIdParam = request.getParameter("productId");
         String[] selectedItemIds = request.getParameterValues("selectedItems");
 
         List<Cart> selectedItems = new ArrayList<>();
         CartDAO cartDAO = new CartDAO();
-
+//long
+        if (buildIds != null) {
+            for (String pidStr : buildIds) {
+                try {
+                    int pid = Integer.parseInt(pidStr);
+                    Cart item = cartDAO.getCartItemForBuyNow(pid);
+                    if (item != null) {
+                        selectedItems.add(item);
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        //end
         if (productIdParam != null) {
             // ✅ Mua ngay: chỉ lấy 1 sản phẩm
             try {
@@ -76,10 +91,10 @@ public class CheckoutServlet extends HttpServlet {
             // ✅ fallback: mua toàn bộ giỏ hàng
             selectedItems = cartDAO.getCartItemsByUserId(userId);
         }
-
+// 3) Tính tổng trước voucher
         double totalAmount = cartDAO.calculateTotal(selectedItems);
-        //Long
-        String voucherCode = request.getParameter("voucherCode");
+        //4) Xử lý apply voucher (chỉ voucher user đã claim) Long
+         String voucherCode = request.getParameter("voucherCode");
         String voucherMessage = null;
         double discountAmount = 0;
         Voucher appliedVoucher = null;
@@ -111,12 +126,13 @@ public class CheckoutServlet extends HttpServlet {
             }
         }
         //end
+        // 5) Lấy thông tin User & Address
         UserDAO userDAO = new UserDAO();
         User fullUser = userDAO.getUserByIdForCheckout(userId);
 
         UserAddressDAO addressDAO = new UserAddressDAO();
         List<UserAddress> addressList = addressDAO.getAddressesByUserId(userId);
-
+// 6) Set attributes và forward
         request.setAttribute("userInfo", fullUser);
         request.setAttribute("addressList", addressList);
         request.setAttribute("totalAmount", totalAmount);
@@ -133,5 +149,11 @@ public class CheckoutServlet extends HttpServlet {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/include/checkout.jsp");
         dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.sendRedirect(request.getContextPath() + "/BuildPC");
     }
 }

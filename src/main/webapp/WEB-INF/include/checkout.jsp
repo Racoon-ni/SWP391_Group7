@@ -1,26 +1,28 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="model.User" %>
-<%@ page import="model.Cart" %>
-<%@ page import="model.UserAddress" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="model.User, model.Cart, model.UserAddress" %>
+<%@ page import="java.util.List, java.text.DecimalFormat" %>
 <%@ include file="/WEB-INF/include/header.jsp" %>
-<!-- checkout-->
+
 <%
     DecimalFormat df = new DecimalFormat("#,###");
     List<Cart> cartItems = (List<Cart>) request.getAttribute("cartItems");
-    double totalAmount = (double) request.getAttribute("totalAmount");
+    double totalAmountInitial = (double) request.getAttribute("totalAmount");
+    String voucherMessage = (String) request.getAttribute("voucherMessage");
+    Double discountAmount = (Double) request.getAttribute("discountAmount");
+    Double finalAmount = (Double) request.getAttribute("finalAmount");
     User user = (User) request.getAttribute("userInfo");
-    List<UserAddress> addressList = (List<UserAddress>) new DAO.UserAddressDAO().getAddressesByUserId(user.getId());
+    List<UserAddress> addressList
+            = (List<UserAddress>) request.getAttribute("addressList");
 %>
 
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Thanh toán</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+        <title>Thanh toán </title>
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>
             body {
@@ -47,7 +49,6 @@
         </style>
     </head>
     <body>
-
         <div class="container checkout-container">
             <div class="row">
                 <!-- Thông tin khách hàng -->
@@ -69,7 +70,11 @@
                                 </c:forEach>
                             </select>
                         </div>
-
+                        <input
+                            type="hidden"
+                            name="discountAmount"
+                            id="discountAmountHidden"
+                            value="0" />
                         <input type="hidden" name="addressId" id="addressIdHidden">
 
                         <div class="mb-3">
@@ -104,53 +109,62 @@
                     </form>
                 </div>
 
-                <!-- Thông tin giỏ hàng -->
+                <!-- Giỏ hàng & Voucher -->
                 <div class="col-md-6">
-                    <h4 class="section-title mb-4">Giỏ hàng</h4>
-                    <div class="total-box">
+                    <div class="border p-3 rounded">
+                        <h5>Giỏ hàng</h5>
                         <c:forEach var="item" items="${cartItems}">
-                            <div class="d-flex justify-content-between mb-2">
+                            <div class="d-flex justify-content-between">
                                 <div>${item.productName} x ${item.quantity}</div>
-                                <div>${item.price * item.quantity} đ</div>
+                                <div>${item.price * item.quantity} ₫</div>
                             </div>
                         </c:forEach>
-                        <hr>
+                        <hr/>
+                        <!-- Tổng thành tiền -->
                         <div class="d-flex justify-content-between">
-                            <strong>Tổng thành tiền:</strong>
-                            <strong style="color: #dc3545; font-size: 1.2rem;"><%= df.format(totalAmount)%> đ</strong>
+                            <strong>Tổng:</strong>
+                            <strong style="color:#d33;" id="discountDisplay">
+                                <c:choose>
+                                    <c:when test="${discountAmount > 0}">
+                                        <%= df.format(finalAmount)%> ₫
+                                    </c:when>
+                                    <c:otherwise>
+                                        <%= df.format(totalAmountInitial)%> ₫
+                                    </c:otherwise>
+                                </c:choose>
+                            </strong>
                         </div>
-                        <div class="mt-3">
-                            <form method="post" action="${pageContext.request.contextPath}/checkout">
-                                <div class="input-group">
-                                    <input type="text" 
-                                           class="form-control" 
-                                           name="voucherCode" 
-                                           value="${param.voucherCode}" 
-                                           placeholder="Nhập mã khuyến mãi">
-                                    <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
-                                </div>
-                            </form>
-                            <c:if test="${not empty voucherMessage}">
-                                <div class="mt-2">
-                                    <small style="color: ${discountAmount > 0 ? 'green' : 'red'};">
-                                        ${voucherMessage}
-                                    </small>
-                                </div>
-                            </c:if>
-                            <!-- Nếu đã áp voucher, show finalAmount, còn không thì show totalAmount ban đầu -->
-                            <c:choose>
-                                <c:when test="${discountAmount > 0}">
-                                    <strong style="color: #dc3545; font-size: 1.2rem;">
-                                        <%= df.format((Double) request.getAttribute("finalAmount"))%> đ
-                                    </strong>
-                                </c:when>
-                                <c:otherwise>
-                                    <strong style="color: #dc3545; font-size: 1.2rem;">
-                                        <%= df.format(totalAmount)%> đ
-                                    </strong>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
+
+                        <!-- Form Apply Voucher -->
+                        <form method="post" action="${pageContext.request.contextPath}/Checkout" class="mt-3">
+                            <!-- giữ buildProductIds -->
+                            <c:forEach var="item" items="${cartItems}">
+                                <input type="hidden" name="buildProductIds" value="${item.productId}" />
+                            </c:forEach>
+
+                            <div class="input-group">
+                                <input type="text" name="voucherCode"
+                                       class="form-control"
+                                       placeholder="Nhập mã khuyến mãi"
+                                       value="${param.voucherCode}"/>
+                                <button class="btn btn-outline-primary" type="submit">Áp dụng</button>
+                            </div>
+                        </form>
+
+                        <!-- Thông báo voucher -->
+                        <c:if test="${not empty voucherMessage}">
+                            <div class="mt-2 text-${discountAmount > 0 ? 'success' : 'danger'}">
+                                ${voucherMessage}
+                            </div>
+                        </c:if>
+
+                        <!-- Nếu có chiết khấu, hiển thị tiết kiệm -->
+                        <c:if test="${discountAmount > 0}">
+                            <div class="mt-2 d-flex justify-content-between">
+                                <span>Tiết kiệm:</span>
+                                <span ><%= df.format(discountAmount)%> ₫</span>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -158,54 +172,58 @@
 
         <%@ include file="/WEB-INF/include/footer.jsp" %>
 
-        <!-- ✅ Script xác nhận và load địa chỉ -->
-        <script>
-            function confirmOrder() {
-                Swal.fire({
-                    title: 'Bạn có chắc muốn đặt hàng?',
-                    text: 'Đơn hàng sẽ được gửi đến địa chỉ bạn đã chọn!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Đặt hàng',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById("orderForm").submit();
-                    }
-                });
-            }
-
-            function updateReceiverFields() {
-                const select = document.getElementById("addressSelect");
-                const selectedOption = select.options[select.selectedIndex];
-
-                document.getElementById("receiverName").value = selectedOption.getAttribute("data-name");
-                document.getElementById("receiverPhone").value = selectedOption.getAttribute("data-phone");
-                document.getElementById("receiverAddress").value = selectedOption.getAttribute("data-address");
-                document.getElementById("addressIdHidden").value = selectedOption.value;
-            }
-
-            document.getElementById("addressSelect").addEventListener("change", updateReceiverFields);
-            window.addEventListener("load", updateReceiverFields);
-        </script>
-
-        <c:if test="${orderSuccess == true}">
-            <script>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Đặt hàng thành công!',
-                    text: 'Bạn sẽ được chuyển về trang chủ sau 5 giây...',
-                    timer: 5000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                });
-                setTimeout(() => {
-                    window.location.href = 'home.jsp';
-                }, 5000);
-            </script>
-        </c:if>
-
     </body>
 </html>
+<script>
+    function confirmOrder() {
+        Swal.fire({
+            title: 'Bạn có chắc muốn đặt hàng?',
+            text: 'Đơn hàng sẽ được gửi đến địa chỉ bạn đã chọn!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Đặt hàng',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const disp = document.getElementById('discountDisplay');
+                let raw = disp ? disp.innerText : '';
+                // 2) strip non-digits so you get "12345"
+                let digits = raw.replace(/\D+/g, '') || '0';
+                // 3) set the hidden input’s value
+                document.getElementById('discountAmountHidden').value = digits;
+                document.getElementById("orderForm").submit();
+            }
+        });
+    }
+
+    function updateReceiverFields() {
+        const select = document.getElementById("addressSelect");
+        const selectedOption = select.options[select.selectedIndex];
+
+        document.getElementById("receiverName").value = selectedOption.getAttribute("data-name");
+        document.getElementById("receiverPhone").value = selectedOption.getAttribute("data-phone");
+        document.getElementById("receiverAddress").value = selectedOption.getAttribute("data-address");
+        document.getElementById("addressIdHidden").value = selectedOption.value;
+    }
+
+    document.getElementById("addressSelect").addEventListener("change", updateReceiverFields);
+    window.addEventListener("load", updateReceiverFields);
+</script>
+
+<c:if test="${orderSuccess == true}">
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Đặt hàng thành công!',
+            text: 'Bạn sẽ được chuyển về trang chủ sau 5 giây...',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+        setTimeout(() => {
+            window.location.href = 'home.jsp';
+        }, 5000);
+    </script>
+</c:if>

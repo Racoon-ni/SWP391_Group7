@@ -16,17 +16,15 @@ public class CartDAO {
 //            ps.executeUpdate();
 //        }
 //    }
-
     public List<Cart> getCartByUserId(int userId) throws SQLException, ClassNotFoundException {
         List<Cart> cartItems = new ArrayList<>();
 
-        String sql = "SELECT ci.cart_item_id, p.product_id, p.name, p.image_url, p.price, ci.quantity, p.stock " +
-                     "FROM CartItems ci " +
-                     "JOIN Products p ON ci.product_id = p.product_id " +
-                     "WHERE ci.user_id = ?";
+        String sql = "SELECT ci.cart_item_id, p.product_id, p.name, p.image_url, p.price, ci.quantity, p.stock "
+                + "FROM CartItems ci "
+                + "JOIN Products p ON ci.product_id = p.product_id "
+                + "WHERE ci.user_id = ?";
 
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -34,17 +32,21 @@ public class CartDAO {
             while (rs.next()) {
                 int quantity = rs.getInt("quantity");
                 int stock = rs.getInt("stock");
-                if (quantity <= 0) quantity = 1;
-                if (stock <= 0) stock = 1;
+                if (quantity <= 0) {
+                    quantity = 1;
+                }
+                if (stock <= 0) {
+                    stock = 1;
+                }
 
                 Cart item = new Cart(
-                    rs.getInt("cart_item_id"),
-                    rs.getInt("product_id"),
-                    rs.getString("name"),
-                    rs.getString("image_url"),
-                    quantity,
-                    stock,
-                    rs.getDouble("price")
+                        rs.getInt("cart_item_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("image_url"),
+                        quantity,
+                        stock,
+                        rs.getDouble("price")
                 );
                 cartItems.add(item);
             }
@@ -66,7 +68,7 @@ public class CartDAO {
         String insertSql = "INSERT INTO CartItems (user_id, product_id, quantity) VALUES (?, ?, ?)";
         String updateSql = "UPDATE CartItems SET quantity = quantity + 1 WHERE user_id = ? AND product_id = ?";
 
-        try (Connection conn = DBConnect.connect()) {
+        try ( Connection conn = DBConnect.connect()) {
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setInt(1, userId);
             checkStmt.setInt(2, productId);
@@ -89,8 +91,7 @@ public class CartDAO {
 
     public void deleteCartItem(int cartItemId) throws Exception {
         String sql = "DELETE FROM CartItems WHERE cart_item_id = ?";
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, cartItemId);
             ps.executeUpdate();
         }
@@ -98,8 +99,7 @@ public class CartDAO {
 
     public void updateCartItemQuantity(int cartItemId, int quantity) throws SQLException, ClassNotFoundException {
         String sql = "UPDATE CartItems SET quantity = ? WHERE cart_item_id = ?";
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
             ps.setInt(2, cartItemId);
             ps.executeUpdate();
@@ -109,23 +109,22 @@ public class CartDAO {
     // Lấy tất cả sản phẩm trong giỏ hàng của người dùng44
     public List<Cart> getCartItemsByUserId(int userId) {
         List<Cart> cartItems = new ArrayList<>();
-        String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, c.quantity, p.price " +
-                     "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
+        String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, c.quantity, p.price "
+                + "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
 
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Cart item = new Cart(
-                    rs.getInt("cart_item_id"),
-                    rs.getInt("product_id"),
-                    rs.getString("name"),
-                    rs.getString("image_url"),
-                    rs.getInt("quantity"),
-                    rs.getDouble("price")
+                        rs.getInt("cart_item_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("image_url"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
                 );
                 cartItems.add(item);
             }
@@ -135,25 +134,24 @@ public class CartDAO {
 
         return cartItems;
     }
-    
+
     public List<Cart> getCartItemsByUserId2(int userId) {
         List<Cart> cartItems = new ArrayList<>();
-        String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, p.stock, c.quantity, p.price " +
-                     "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
-        try (Connection conn = DBConnect.connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT c.cart_item_id, c.product_id, p.name, p.image_url, p.stock, c.quantity, p.price "
+                + "FROM CartItems c JOIN Products p ON c.product_id = p.product_id WHERE c.user_id = ?";
+        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Cart item = new Cart(
-                    rs.getInt("cart_item_id"),
-                    rs.getInt("product_id"),
-                    rs.getString("name"),
-                    rs.getString("image_url"),
-                    rs.getInt("quantity"),
-                    rs.getInt("stock"),
-                    rs.getDouble("price")
+                        rs.getInt("cart_item_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("image_url"),
+                        rs.getInt("quantity"),
+                        rs.getInt("stock"),
+                        rs.getDouble("price")
                 );
                 cartItems.add(item);
             }
@@ -174,21 +172,20 @@ public class CartDAO {
     // ✅ Hỗ trợ "Mua ngay" 1 sản phẩm (không dùng CartItems table)
     public Cart getCartItemForBuyNow(int productId) {
         String sql = "SELECT product_id, name, image_url, price, stock FROM Products WHERE product_id = ?";
-        try (Connection con = DBConnect.connect();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try ( Connection con = DBConnect.connect();  PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 return new Cart(
-                    0, // cartItemId giả định
-                    rs.getInt("product_id"),
-                    rs.getString("name"),
-                    rs.getString("image_url"),
-                    1, // quantity mặc định
-                    rs.getInt("stock"),
-                    rs.getDouble("price")
+                        0, // cartItemId giả định
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("image_url"),
+                        1, // quantity mặc định
+                        rs.getInt("stock"),
+                        rs.getDouble("price")
                 );
             }
         } catch (Exception e) {
@@ -196,13 +193,11 @@ public class CartDAO {
         }
         return null;
     }
-   
 
     // Phương thức xóa tất cả sản phẩm trong giỏ hàng của người dùng
     public void clearCartByUserId(int userId) {
         String sql = "DELETE FROM CartItems WHERE user_id = ?";
-        try (Connection conn = DBConnect.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
             // Set userId cho câu lệnh SQL
             ps.setInt(1, userId);
             int affectedRows = ps.executeUpdate(); // Thực thi câu lệnh SQL
@@ -219,5 +214,39 @@ public class CartDAO {
             e.printStackTrace();
         }
     }
+// cua Long
+
+    public void addToCartWithQuantity(int userId, int productId, int quantity) throws Exception {
+    if (quantity < 1) quantity = 1;
+
+    String checkSql = "SELECT quantity FROM CartItems WHERE user_id = ? AND product_id = ?";
+    String insertSql = "INSERT INTO CartItems (user_id, product_id, quantity) VALUES (?, ?, ?)";
+    String updateSql = "UPDATE CartItems SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?";
+
+    try (Connection conn = DBConnect.connect()) {
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setInt(1, userId);
+            checkStmt.setInt(2, productId);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    try (PreparedStatement up = conn.prepareStatement(updateSql)) {
+                        up.setInt(1, quantity);
+                        up.setInt(2, userId);
+                        up.setInt(3, productId);
+                        up.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement ins = conn.prepareStatement(insertSql)) {
+                        ins.setInt(1, userId);
+                        ins.setInt(2, productId);
+                        ins.setInt(3, quantity);
+                        ins.executeUpdate();
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 }
