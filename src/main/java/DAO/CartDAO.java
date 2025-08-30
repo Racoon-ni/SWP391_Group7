@@ -318,4 +318,37 @@ public class CartDAO {
             e.printStackTrace();
         }
     }
+    // cua Long
+
+    public void addToCartWithQuantity(int userId, int productId, int quantity) throws Exception {
+    if (quantity < 1) quantity = 1;
+
+    String checkSql = "SELECT quantity FROM CartItems WHERE user_id = ? AND product_id = ?";
+    String insertSql = "INSERT INTO CartItems (user_id, product_id, quantity) VALUES (?, ?, ?)";
+    String updateSql = "UPDATE CartItems SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?";
+
+    try (Connection conn = DBConnect.connect()) {
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setInt(1, userId);
+            checkStmt.setInt(2, productId);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    try (PreparedStatement up = conn.prepareStatement(updateSql)) {
+                        up.setInt(1, quantity);
+                        up.setInt(2, userId);
+                        up.setInt(3, productId);
+                        up.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement ins = conn.prepareStatement(insertSql)) {
+                        ins.setInt(1, userId);
+                        ins.setInt(2, productId);
+                        ins.setInt(3, quantity);
+                        ins.executeUpdate();
+                    }
+                }
+            }
+        }
+    }
+}
 }

@@ -21,39 +21,52 @@
 
                                 <div class="mb-3">
                                     <label for="fullname" class="form-label">Họ tên</label>
-                                    <input type="text" class="form-control" id="fullname" name="fullname" value="${staff.fullname}" required>
+                                    <input type="text" class="form-control ${not empty errors.fullname ? 'is-invalid' : ''}"
+                                           id="fullname" name="fullname" value="${staff.fullname}" required>
+                                    <div class="invalid-feedback">${errors.fullname}</div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="${staff.email}" required>
+                                    <input type="email" class="form-control ${not empty errors.email ? 'is-invalid' : ''}"
+                                           id="email" name="email" value="${staff.email}" required>
+                                    <div class="invalid-feedback">${errors.email}</div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">SĐT</label>
-                                    <input type="text" class="form-control" id="phone" name="phone" value="${staff.phone}">
+                                    <input type="text" class="form-control ${not empty errors.phone ? 'is-invalid' : ''}"
+                                           id="phone" name="phone" value="${staff.phone}">
+                                    <div class="invalid-feedback">${errors.phone}</div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="gender" class="form-label">Giới tính</label>
                                     <select class="form-select" id="gender" name="gender" required>
-                                        <option value="Nam" ${staff.gender == 'Nam' ? 'selected' : ''}>Nam</option>
-                                        <option value="Nữ" ${staff.gender == 'Nữ' ? 'selected' : ''}>Nữ</option>
+                                        <option value="Nam"  ${staff.gender == 'Nam' ? 'selected' : ''}>Nam</option>
+                                        <option value="Nữ"   ${staff.gender == 'Nữ' ? 'selected' : ''}>Nữ</option>
                                         <option value="Khác" ${staff.gender == 'Khác' ? 'selected' : ''}>Khác</option>
                                     </select>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="dateOfBirth" class="form-label">Ngày sinh</label>
-                                    <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"
-                                        value="<fmt:formatDate value='${staff.dateOfBirth}' pattern='yyyy-MM-dd'/>" required>
+                                    <input type="date" class="form-control ${not empty errors.dateOfBirth ? 'is-invalid' : ''}"
+                                           id="dateOfBirth" name="dateOfBirth"
+                                           value="<fmt:formatDate value='${staff.dateOfBirth}' pattern='yyyy-MM-dd'/>" required>
+                                    <div class="invalid-feedback">${errors.dateOfBirth}</div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Địa chỉ</label>
                                     <input type="text" class="form-control" id="address" name="address" value="${staff.address}">
                                 </div>
+
                                 <div class="mb-4 form-check">
                                     <input class="form-check-input" type="checkbox" id="status" name="status" ${staff.status ? 'checked' : ''}>
-                                    <label class="form-check-label" for="status">
-                                        Đang hoạt động
-                                    </label>
+                                    <label class="form-check-label" for="status">Đang hoạt động</label>
                                 </div>
+
                                 <div class="d-flex justify-content-between">
                                     <button type="submit" class="btn btn-warning px-4">
                                         <i class="fa-solid fa-floppy-disk"></i> Lưu lại
@@ -63,6 +76,7 @@
                                     </a>
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </c:if>

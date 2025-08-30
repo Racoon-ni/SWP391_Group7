@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DAO.UserDAO;
 import model.User;
-import java.util.ArrayList;
 
 /**
  *
@@ -51,53 +49,18 @@ public class StaffDeleteServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             UserDAO dao = new UserDAO();
-            ArrayList<User> userList = dao.getAllCustomers();
-            User staff = null;
-            for (User u : userList) {
-                if (u.getId() == id && "staff".equalsIgnoreCase(u.getRole())) {
-                    staff = u;
-                    break;
-                }
-            }
-            if (staff == null) {
-                // Không tìm thấy -> chuyển về danh sách kèm thông báo lỗi
-                response.sendRedirect("StaffList?error=Không tìm thấy nhân viên hoặc bạn không có quyền xoá.");
+            User staff = dao.getUserById(id);
+
+            if (staff == null || !"staff".equalsIgnoreCase(staff.getRole())) {
+                response.sendRedirect("StaffList?error=Không tìm thấy nhân viên.");
                 return;
             }
-            // Xóa mềm
-            staff.setStatus(false);
-            dao.deleteUser(id);
 
-            // Xóa thành công, chuyển hướng về danh sách kèm thông báo thành công
-            response.sendRedirect("StaffList?message=Employee deleted successfully!");
+            dao.softDeleteUser(id); // xoá mềm: status = 0
+            response.sendRedirect("StaffList?message=Đã khoá nhân viên!");
         } catch (Exception e) {
-            // Có lỗi bất ngờ
             response.sendRedirect("StaffList?error=Xoá nhân viên thất bại.");
         }
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
+ 

@@ -5,15 +5,17 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DAO.UserDAO;
-import java.sql.Date;
 import model.User;
+import utils.ValidationUtils;
 
 /**
  *
@@ -70,20 +72,27 @@ public class StaffUpdateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
+
         int id = Integer.parseInt(request.getParameter("id"));
         String email = request.getParameter("email");
         String fullname = request.getParameter("fullname");
-        String phone = request.getParameter("phone");
+        String phoneRaw = request.getParameter("phone");
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
-        String dateOfBirthStr = request.getParameter("dateOfBirth");
+        String dobStr = request.getParameter("dateOfBirth");
         boolean status = "on".equals(request.getParameter("status"));
 
-        // Xử lý ngày sinh (có thể null)
-        Date dateOfBirth = null;
-        if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
-            dateOfBirth = Date.valueOf(dateOfBirthStr); // yyyy-MM-dd
+        String phone = ValidationUtils.normalizePhoneVN(phoneRaw);
+
+        Date dobSql = null;
+        try {
+            if (dobStr != null && !dobStr.isEmpty()) {
+                dobSql = Date.valueOf(dobStr);
+            }
+        } catch (Exception e) {
+            // sẽ báo lỗi
         }
 
         UserDAO dao = new UserDAO();
@@ -93,17 +102,52 @@ public class StaffUpdateServlet extends HttpServlet {
             return;
         }
 
+        Map<String, String> errors = new HashMap<>();
+
+        // Email
+        if (!ValidationUtils.isValidEmail(email)) {
+            errors.put("email", "Email không hợp lệ.");
+        } else if (dao.emailExistsForOther(email, id)) {
+            errors.put("email", "Email đã tồn tại.");
+        }
+
+        // Fullname
+        if (!ValidationUtils.isValidFullname(fullname)) {
+            errors.put("fullname", "Họ tên không chứa số/ký tự đặc biệt.");
+        }
+
+        // DOB >= 18
+        if (dobSql == null) {
+            errors.put("dateOfBirth", "Ngày sinh không hợp lệ.");
+        } else if (!ValidationUtils.isAdult(dobSql.toLocalDate())) {
+            errors.put("dateOfBirth", "Nhân viên phải từ 18 tuổi.");
+        }
+
+        // Phone VN + unique (trừ bản thân)
+        if (!ValidationUtils.isValidVNPhoneOrEmpty(phone)) {
+            errors.put("phone", "SĐT phải là số di động VN hợp lệ (03/05/07/08/09 + 8 số).");
+        } else if (dao.phoneExistsForOther(phone, id)) {
+            errors.put("phone", "SĐT đã tồn tại.");
+        }
+
+        // sticky & show errors nếu có
         staff.setEmail(email);
         staff.setFullname(fullname);
         staff.setPhone(phone);
         staff.setGender(gender);
         staff.setAddress(address);
-        staff.setDateOfBirth(dateOfBirth);
+        staff.setDateOfBirth(dobSql);
         staff.setStatus(status);
 
-        dao.updateStaff(staff);
+        if (!errors.isEmpty()) {
+            request.setAttribute("errors", errors);
+            request.setAttribute("staff", staff);
+            request.getRequestDispatcher("/WEB-INF/include/staff-update.jsp").forward(request, response);
+            return;
+        }
 
-        // Sau khi cập nhật thành công, chuyển về danh sách với message
+        // update
+        dao.updateStaff(staff);
         response.sendRedirect("StaffList?message=Employee update successful!");
     }
 
