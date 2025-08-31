@@ -109,7 +109,7 @@
 
       <c:choose>
         <c:when test="${completedCount == fn:length(components)}">
-          <form method="post" action="${pageContext.request.contextPath}/checkout" style="display:inline">
+          <form method="post" action="${pageContext.request.contextPath}/CheckoutBuild" style="display:inline">
             <c:forEach var="p" items="${build.values()}">
               <input type="hidden" name="buildProductIds" value="${p.productId}"/>
             </c:forEach>
