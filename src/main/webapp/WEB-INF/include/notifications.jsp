@@ -96,7 +96,7 @@
             <% if (notiList.isEmpty()) { %>
             <p class="empty">📭 Không có thông báo nào.</p>
             <% } else {
-            for (Notification noti : notiList) {%>
+                for (Notification noti : notiList) {%>
             <div class="notification-box <%= noti.isRead() ? "" : "notification-unread"%>">
                 <i class="fa-solid fa-bell notification-icon"></i>
                 <div class="notification-content">
@@ -106,14 +106,16 @@
                     </div>
                     <div class="notification-meta">
                         <% if (noti.getLink() != null && !noti.getLink().isEmpty()) {%>
-                        👉 <a href="<%= noti.getLink()%>">Xem chi tiết</a> |
+                        👉 <a href="<%= request.getContextPath() + noti.getLink()%>">Xem chi tiết</a> |
                         <% }%>
                         🕒 <%= noti.getCreatedAt()%>
                     </div>
+
+
                 </div>
             </div>
             <%  }
-            }%>
+                }%>
         </div>
     </body>
 </html>

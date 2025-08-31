@@ -225,6 +225,8 @@ public class ManagePCServlet extends HttpServlet {
                                     paDAO.addProductAttributeValue(productId, attrId, value);
                                 }
                             }
+                            NotificationDAO notiDAO = new NotificationDAO();
+                            notiDAO.sendProductUpdateToAllUsers(name, "pc", productId);
 
                             response.sendRedirect(request.getContextPath() + "/manage-pc");
                         } else {

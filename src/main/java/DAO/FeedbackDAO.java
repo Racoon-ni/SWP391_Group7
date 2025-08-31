@@ -8,7 +8,7 @@ import java.util.*;
 
 public class FeedbackDAO {
 
-    // ✅ Thêm phản hồi mới từ khách hàng
+    //  Thêm phản hồi mới từ khách hàng
     public int addFeedback(Feedback fb) {
         String sql = "INSERT INTO Feedbacks (user_id, title, message, status, created_at) VALUES (?, ?, ?, ?, ?)";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
@@ -24,7 +24,7 @@ public class FeedbackDAO {
         return 0;
     }
 
-    // ✅ Lấy danh sách phản hồi theo người dùng
+    //  Lấy danh sách phản hồi theo người dùng
     public List<Feedback> getFeedbacksByUser(int userId) {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT * FROM Feedbacks WHERE user_id = ?";
@@ -49,7 +49,7 @@ public class FeedbackDAO {
         }
         return list;
     }
-        // ✅ Xóa feedback nếu chưa được admin phản hồi (status = 'Pending')
+        //  Xóa feedback nếu chưa được admin phản hồi (status = 'Pending')
     public boolean deleteFeedbackIfPending(int feedbackId, int userId) {
         String sql = "DELETE FROM Feedbacks WHERE feedback_id = ? AND user_id = ? AND status = N'Pending'";
         try (Connection conn = DBConnect.getConnection();
@@ -65,7 +65,7 @@ public class FeedbackDAO {
     }
 
 
-    // ✅ Lấy toàn bộ phản hồi (cho admin)
+    //  Lấy toàn bộ phản hồi (cho admin)
     public List<Feedback> getAllFeedback() {
         List<Feedback> list = new ArrayList<>();
         String sql = "SELECT f.*, u.username FROM Feedbacks f LEFT JOIN Users u ON f.user_id = u.user_id ORDER BY f.created_at DESC";
@@ -90,7 +90,7 @@ public class FeedbackDAO {
         return list;
     }
 
-    // ✅ Lấy phản hồi theo ID (admin xem chi tiết để trả lời)
+    //  Lấy phản hồi theo ID (admin xem chi tiết để trả lời)
     public Feedback getFeedbackById(int id) {
         String sql = "SELECT f.*, u.username FROM Feedbacks f LEFT JOIN Users u ON f.user_id = u.user_id WHERE f.feedback_id = ?";
         try ( Connection conn = DBConnect.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -116,8 +116,8 @@ public class FeedbackDAO {
         return null;
     }
 
-    // ✅ Admin trả lời phản hồi và gửi thông báo cho khách
-    // ✅ Trả lời phản hồi và trả về user_id để gửi thông báo
+    //  Admin trả lời phản hồi và gửi thông báo cho khách
+    //  Trả lời phản hồi và trả về user_id để gửi thông báo
     public int replyToFeedback(int feedbackId, int adminId, String replyMessage) {
         String sql = "UPDATE Feedbacks SET reply_message = ?, reply_by = ?, reply_at = GETDATE(), status = N'Resolved' WHERE feedback_id = ?";
         String getUserSql = "SELECT user_id FROM Feedbacks WHERE feedback_id = ?";
@@ -129,7 +129,7 @@ public class FeedbackDAO {
         try {
             conn = DBConnect.getConnection();
 
-            // ✅ Trước tiên, lấy user_id để trả về sau
+            //  Trước tiên, lấy user_id để trả về sau
             psGetUser = conn.prepareStatement(getUserSql);
             psGetUser.setInt(1, feedbackId);
             rs = psGetUser.executeQuery();
@@ -141,7 +141,7 @@ public class FeedbackDAO {
                 return -1; // Không tìm thấy feedback
             }
 
-            // ✅ Cập nhật phản hồi
+            // Cập nhật phản hồi
             psUpdate = conn.prepareStatement(sql);
             psUpdate.setString(1, replyMessage);
             psUpdate.setInt(2, adminId);
@@ -182,7 +182,7 @@ public class FeedbackDAO {
         return -1;
     }
 
-    // ❌ Không dùng
+    //  Không dùng
     public void insertFeedback(Feedback fb) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -64,7 +64,7 @@
 
                                 <!-- ✅ Giá format kiểu Việt Nam -->
                                 <p class="text-pink-600 font-bold text-lg mt-2">
-                                    <fmt:formatNumber value="${product.price}" pattern="#,###"/> VNĐ
+                                    <fmt:formatNumber value="${product.price}" pattern="#,###"/> VND
                                 </p>
 
                                 <p class="text-gray-500 text-sm mt-1">Tồn kho: ${product.stock}</p>

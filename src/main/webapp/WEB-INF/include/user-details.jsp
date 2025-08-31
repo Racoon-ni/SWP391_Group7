@@ -460,14 +460,15 @@
                             </div>
                         </div>
                     </div>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-                    <script>
-                            // Smoothly bring an opened order into view
-                            document.addEventListener('shown.bs.collapse', function (e) {
-                                var el = e.target.closest('.border.rounded');
-                                if (el) {
-                                    el.scrollIntoView({behavior: 'smooth', block: 'start'});
-                                }
-                            });
-                    </script>
-                    </html>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                        // Smoothly bring an opened order into view
+                        document.addEventListener('shown.bs.collapse', function (e) {
+                            var el = e.target.closest('.border.rounded');
+                            if (el) {
+                                el.scrollIntoView({behavior: 'smooth', block: 'start'});
+                            }
+                        });
+                </script>
+                </html>

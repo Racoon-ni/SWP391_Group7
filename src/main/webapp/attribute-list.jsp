@@ -247,6 +247,21 @@
                 <i class="fas fa-cogs"></i>
                 Quản lý Thuộc tính
             </h1>
+            <!-- Form lọc theo danh mục -->
+        <form method="get" action="attributes" style="display:flex; gap:8px; align-items:center;">
+            <select name="categoryId" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+                <option value="">-- Tất cả danh mục --</option>
+                <c:forEach var="cat" items="${categories}">
+                    <option value="${cat.categoryId}" 
+                        <c:if test="${cat.categoryId == selectedCategoryId}">selected</c:if>>
+                        ${cat.name}
+                    </option>
+                </c:forEach>
+            </select>
+            <button type="submit" class="add-btn" style="background:#1e3c72;">
+                <i class="fas fa-filter"></i> Lọc
+            </button>
+        </form>
             <a href="attribute-create" class="add-btn">
                 <i class="fas fa-plus"></i>
                 Thêm mới

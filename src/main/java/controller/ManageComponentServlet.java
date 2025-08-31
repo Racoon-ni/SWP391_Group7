@@ -257,6 +257,8 @@ public class ManageComponentServlet extends HttpServlet {
                                     paDAO.addProductAttributeValue(productId, attrId, value);
                                 }
                             }
+                            NotificationDAO notiDAO = new NotificationDAO();
+                            notiDAO.sendProductUpdateToAllUsers(name, "component", productId);
 
                             response.sendRedirect(request.getContextPath() + "/manage-component");
                         } else {

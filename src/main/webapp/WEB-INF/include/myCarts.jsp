@@ -191,154 +191,144 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
-            // Fixed function for validating quantity
-            function validateQuantity(input) {
-                const maxQuantity = parseInt(input.dataset.max, 10);
-                const productName = input.dataset.product;
-                let currentValue = parseInt(input.value, 10);
+                                        // Fixed function for validating quantity
 
-                // Handle negative or NaN values
-                if (isNaN(currentValue) || currentValue < 1) {
-                    input.value = 1;
-                    currentValue = 1;
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Số lượng không hợp lệ!',
-                        text: 'Đã đặt về 1.',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                    return;
-                }
+                                        function validateQuantity(input) {
+                                            const maxQuantity = parseInt(input.dataset.max, 10);
+                                            const productName = input.dataset.product;
+                                            let currentValue = parseInt(input.value, 10);
 
-                // Check if value exceeds max
-                if (currentValue > maxQuantity) {
-                    // Set to max value
-                    input.value = maxQuantity;
+                                            // Handle negative or NaN values
+                                            if (isNaN(currentValue) || currentValue < 1) {
+                                                input.value = 1;
+                                                currentValue = 1;
+                                                alert("Số lượng không hợp lệ. Đã đặt về 1.");
+                                                return;
+                                            }
 
-                    // Show notification with better formatting
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Số lượng tối đa!',
-                        text: 'Sản phẩm "' + productName + '" chỉ còn ' + maxQuantity + ' trong kho.\nSố lượng đã được điều chỉnh tự động.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                }
+                                            // Check if value exceeds max
+                                            if (currentValue > maxQuantity) {
+                                                // Set to max value
+                                                input.value = maxQuantity;
 
-                // Submit the form after validation
-                setTimeout(() => {
-                    input.form.submit();
-                }, 300);
-            }
+                                                // Show notification with better formatting
+                                                alert("Số lượng tối đa!\nSản phẩm \"" + productName + "\" chỉ còn " + maxQuantity + " trong kho.\nSố lượng đã được điều chỉnh tự động.");
+                                            }
 
-            function confirmDelete(deleteUrl) {
-                Swal.fire({
-                    title: 'Bạn có chắc muốn xóa?',
-                    text: 'Sản phẩm sẽ bị xóa khỏi giỏ hàng!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Xóa',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Đã xóa sản phẩm!',
-                            showConfirmButton: false,
-                            timer: 1200
-                        });
-                        setTimeout(() => {
-                            window.location.href = deleteUrl;
-                        }, 1300);
-                    }
-                });
-            }
+                                            // Submit the form after validation
+                                            setTimeout(() => {
+                                                input.form.submit();
+                                            }, 300);
+                                        }
 
-            // Fixed function to properly format numbers with Vietnamese style (dot separator)
-            function vnd(n) {
-                const num = Number(n || 0);
-                // Format with Vietnamese locale, using dot as thousand separator
-                return num.toLocaleString('vi-VN', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                    useGrouping: true
-                }).replace(/,/g, '.') + ' đ';
-            }
+                                        function confirmDelete(deleteUrl) {
+                                            Swal.fire({
+                                                title: 'Bạn có chắc muốn xóa?',
+                                                text: 'Sản phẩm sẽ bị xóa khỏi giỏ hàng!',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#d33',
+                                                cancelButtonColor: '#6c757d',
+                                                confirmButtonText: 'Xóa',
+                                                cancelButtonText: 'Hủy'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Đã xóa sản phẩm!',
+                                                        showConfirmButton: false,
+                                                        timer: 1200
+                                                    });
+                                                    setTimeout(() => {
+                                                        window.location.href = deleteUrl;
+                                                    }, 1300);
+                                                }
+                                            });
+                                        }
 
-            // Format price elements on page load
-            document.querySelectorAll('.price-format').forEach(element => {
-                element.textContent = vnd(element.textContent);
-            });
+                                        // Fixed function to properly format numbers with Vietnamese style (dot separator)
+                                        function vnd(n) {
+                                            const num = Number(n || 0);
+                                            // Format with Vietnamese locale, using dot as thousand separator
+                                            return num.toLocaleString('vi-VN', {
+                                                minimumFractionDigits: 0,
+                                                maximumFractionDigits: 0,
+                                                useGrouping: true
+                                            }).replace(/,/g, '.') + ' đ';
+                                        }
 
-            function renderSummary() {
-                const list = document.getElementById('summaryList');
-                const totalEl = document.getElementById('totalAmount');
-                const checkoutBtn = document.getElementById('checkoutBtn');
-                const selectedItemsContainer = document.getElementById('selectedItemsContainer');
+                                        // Format price elements on page load
+                                        document.querySelectorAll('.price-format').forEach(element => {
+                                            element.textContent = vnd(element.textContent);
+                                        });
 
-                list.innerHTML = '';
-                selectedItemsContainer.innerHTML = '';
-                let total = 0, count = 0;
+                                        function renderSummary() {
+                                            const list = document.getElementById('summaryList');
+                                            const totalEl = document.getElementById('totalAmount');
+                                            const checkoutBtn = document.getElementById('checkoutBtn');
+                                            const selectedItemsContainer = document.getElementById('selectedItemsContainer');
 
-                document.querySelectorAll('.cart-checkbox').forEach(function (cb) {
-                    if (!cb.checked) return;
-                    const name = cb.dataset.name || 'Sản phẩm';
-                    const price = parseFloat(cb.dataset.price || '0');
-                    const qty = parseInt(cb.dataset.quantity || '0', 10);
-                    const line = price * qty;
-                    const id = cb.value;
+                                            list.innerHTML = '';
+                                            selectedItemsContainer.innerHTML = '';
+                                            let total = 0, count = 0;
 
-                    const row = document.createElement('div');
-                    row.className = 'sum-line';
-                    row.innerHTML = '<div>' + name + ' x ' + qty + '</div><div>' + vnd(line) + '</div>';
-                    list.appendChild(row);
+                                            document.querySelectorAll('.cart-checkbox').forEach(function (cb) {
+                                                if (!cb.checked)
+                                                    return;
+                                                const name = cb.dataset.name || 'Sản phẩm';
+                                                const price = parseFloat(cb.dataset.price || '0');
+                                                const qty = parseInt(cb.dataset.quantity || '0', 10);
+                                                const line = price * qty;
+                                                const id = cb.value;
 
-                    // Add hidden inputs for selected items to the checkout form
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = 'selectedItems';
-                    hiddenInput.value = id;
-                    selectedItemsContainer.appendChild(hiddenInput);
+                                                const row = document.createElement('div');
+                                                row.className = 'sum-line';
+                                                row.innerHTML = '<div>' + name + ' x ' + qty + '</div><div>' + vnd(line) + '</div>';
+                                                list.appendChild(row);
 
-                    total += line;
-                    count++;
-                });
+                                                // Add hidden inputs for selected items to the checkout form
+                                                const hiddenInput = document.createElement('input');
+                                                hiddenInput.type = 'hidden';
+                                                hiddenInput.name = 'selectedItems';
+                                                hiddenInput.value = id;
+                                                selectedItemsContainer.appendChild(hiddenInput);
 
-                totalEl.textContent = vnd(total);
-                checkoutBtn.disabled = (count === 0);
-            }
+                                                total += line;
+                                                count++;
+                                            });
 
-            function toggleAllCheckboxes(source) {
-                document.querySelectorAll('.cart-checkbox').forEach(function (cb) {
-                    cb.checked = source.checked;
-                });
-                renderSummary();
-            }
+                                            totalEl.textContent = vnd(total);
+                                            checkoutBtn.disabled = (count === 0);
+                                        }
 
-            function clearCart() {
-                Swal.fire({
-                    title: 'Bạn có chắc muốn xóa tất cả sản phẩm?',
-                    text: 'Tất cả các sản phẩm sẽ bị xóa khỏi giỏ hàng!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Xóa tất cả',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '${pageContext.request.contextPath}/clearCart';
-                    }
-                });
-            }
+                                        function toggleAllCheckboxes(source) {
+                                            document.querySelectorAll('.cart-checkbox').forEach(function (cb) {
+                                                cb.checked = source.checked;
+                                            });
+                                            renderSummary();
+                                        }
 
-            document.querySelectorAll('.cart-checkbox').forEach(function (cb) {
-                cb.addEventListener('change', renderSummary);
-            });
-            renderSummary();
+                                        function clearCart() {
+                                            Swal.fire({
+                                                title: 'Bạn có chắc muốn xóa tất cả sản phẩm?',
+                                                text: 'Tất cả các sản phẩm sẽ bị xóa khỏi giỏ hàng!',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#d33',
+                                                cancelButtonColor: '#6c757d',
+                                                confirmButtonText: 'Xóa tất cả',
+                                                cancelButtonText: 'Hủy'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = '${pageContext.request.contextPath}/clearCart';
+                                                }
+                                            });
+                                        }
+
+                                        document.querySelectorAll('.cart-checkbox').forEach(function (cb) {
+                                            cb.addEventListener('change', renderSummary);
+                                        });
+                                        renderSummary();
         </script>
 
         <%@ include file="/WEB-INF/include/footer.jsp" %>
