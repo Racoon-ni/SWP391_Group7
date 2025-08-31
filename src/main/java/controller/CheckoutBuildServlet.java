@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "CheckoutBuildServlet", urlPatterns = {"/CheckoutBuild"})
 public class CheckoutBuildServlet extends HttpServlet {
@@ -43,6 +44,9 @@ public class CheckoutBuildServlet extends HttpServlet {
 
         // 2) Lấy danh sách buildProductIds từ form
         String[] buildIds = request.getParameterValues("buildProductIds");
+        // Lấy qtyMap từ session
+@SuppressWarnings("unchecked")
+Map<String, Integer> qtyMap = (Map<String, Integer>) session.getAttribute("qtyMap");
         CartDAO cartDAO = new CartDAO();
         List<Cart> selectedItems = new ArrayList<>();
         if (buildIds != null) {
@@ -51,6 +55,23 @@ public class CheckoutBuildServlet extends HttpServlet {
                     int pid = Integer.parseInt(pidStr);
                     Cart item = cartDAO.getCartItemForBuyNow(pid);
                     if (item != null) {
+                                        // nếu có qtyMap thì cập nhật lại số lượng
+                if (qtyMap != null) {
+                    // xác định type theo build
+                    @SuppressWarnings("unchecked")
+                    Map<String, model.Product> build =
+                        (Map<String, model.Product>) session.getAttribute("currentBuild");
+
+                    if (build != null) {
+                        for (Map.Entry<String, model.Product> e : build.entrySet()) {
+                            if (e.getValue() != null && e.getValue().getProductId() == pid) {
+                                int q = qtyMap.getOrDefault(e.getKey(), 1);
+                                item.setQuantity(q);
+                                break;
+                            }
+                        }
+                    }
+                }
                         selectedItems.add(item);
                     }
                 } catch (NumberFormatException ignored) {

@@ -23,9 +23,9 @@ import model.ProductAttribute;
  *
  * @author Huynh Trong Nguyen - CE190356
  */
-public class ProductAttributeDAO {
+public class ProductAttributeDAO extends DBConnect{
 
-    public ArrayList<ProductAttribute> getAttributeByProductId(int p_id) {
+    public ArrayList<ProductAttribute> getAttributeByProductId(int pId) {
         ArrayList<ProductAttribute> pAttList = new ArrayList<>();
         String sql = "SELECT p.[attribute_id], a.name, [value] ,a.unit\n"
                 + "FROM [ProductAttributes] p\n"
@@ -34,7 +34,7 @@ public class ProductAttributeDAO {
 
         try (
                  PreparedStatement ps = DBConnect.prepareStatement(sql);) {
-            ps.setInt(1, p_id);
+            ps.setInt(1, pId);
             try ( ResultSet rs = ps.executeQuery();) {
                 while (rs.next()) {
                     int id = rs.getInt("attribute_id");
@@ -43,7 +43,7 @@ public class ProductAttributeDAO {
                     String unit = rs.getString("unit");
 
                     Attribute a = new Attribute(id, name, id, unit, "");
-                    ProductAttribute pAtt = new ProductAttribute(p_id, a, value);
+                    ProductAttribute pAtt = new ProductAttribute(pId, a, value);
 
                     pAttList.add(pAtt);
                 }
@@ -55,7 +55,7 @@ public class ProductAttributeDAO {
         return pAttList;
     }
 
-    public ArrayList<ProductAttribute> getAttributes(int c_id) {
+    public ArrayList<ProductAttribute> getAttributes(int cId) {
         ArrayList<ProductAttribute> pAttList = new ArrayList<>();
         String sql = "SELECT [attribute_id], a.[name], [unit]\n"
                 + "FROM [Attributes] a\n"
@@ -65,14 +65,14 @@ public class ProductAttributeDAO {
 
         try (
                  PreparedStatement ps = DBConnect.prepareStatement(sql);) {
-            ps.setInt(1, c_id);
+            ps.setInt(1, cId);
             try ( ResultSet rs = ps.executeQuery();) {
                 while (rs.next()) {
                     int id = rs.getInt("attribute_id");
                     String name = rs.getString("name");
                     String unit = rs.getString("unit");
 
-                    Attribute a = new Attribute(id, name, c_id, unit, "");
+                    Attribute a = new Attribute(id, name, cId, unit, "");
                     ProductAttribute pAtt = new ProductAttribute(0, a, "");
 
                     pAttList.add(pAtt);

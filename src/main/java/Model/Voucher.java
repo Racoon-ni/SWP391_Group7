@@ -19,17 +19,27 @@ public class Voucher {
     private double minOrderValue;
     private Date expiredAt;
     private int createdBy;
+    private int quantity;
 
     public Voucher() {
     }
 
-    public Voucher(int voucherId, String code, int discountPercent, double minOrderValue, Date expiredAt, int createdBy) {
+    public Voucher(int voucherId, String code, int discountPercent, double minOrderValue, Date expiredAt, int createdBy,int quantity ) {
         this.voucherId = voucherId;
         this.code = code;
         this.discountPercent = discountPercent;
         this.minOrderValue = minOrderValue;
         this.expiredAt = expiredAt;
         this.createdBy = createdBy;
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getVoucherId() {

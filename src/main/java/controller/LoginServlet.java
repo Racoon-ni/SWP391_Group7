@@ -36,21 +36,17 @@ public class LoginServlet extends HttpServlet {
         } else {
             session.setAttribute("user", user);
 
-            if (uDAO.login(user) && user.getRole().equalsIgnoreCase("Customer")) {
+            if (user.getRole().equalsIgnoreCase("Customer")) {
                 session.setAttribute("logged", true);
                 // ✅ Gọi lại HomeServlet để lấy banner
                 response.sendRedirect("home");
 
-            } else if (uDAO.login(user)
-                    && (user.getRole().equalsIgnoreCase("Admin") || user.getRole().equalsIgnoreCase("Staff"))) {
+            } else {
 
                 session.setAttribute("logged", true);
                 session.setAttribute("adminId", user.getId());
                 request.getRequestDispatcher("dash-board").forward(request, response);
 
-            } else {
-                request.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
-                request.getRequestDispatcher("/WEB-INF/include/login.jsp").forward(request, response);
             }
         }
     }

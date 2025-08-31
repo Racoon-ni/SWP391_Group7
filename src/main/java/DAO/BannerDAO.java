@@ -1,13 +1,5 @@
 package DAO;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-/**
- *
- * @author ADMIN
- */
 import config.DBConnect;
 import model.Banner;
 
@@ -21,16 +13,18 @@ public class BannerDAO {
         List<Banner> list = new ArrayList<>();
         String sql = "SELECT * FROM Banners ORDER BY banner_id ASC";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Banner b = new Banner();
                 b.setBannerId(rs.getInt("banner_id"));
-                b.setProductId(rs.getInt("product_id"));
+                b.setProductId(rs.getObject("product_id") == null ? 0 : rs.getInt("product_id"));
                 b.setImageUrl(rs.getString("image_url"));
                 b.setStatus(rs.getInt("status"));
                 b.setCreatedAt(rs.getTimestamp("created_at"));
-
+                b.setTargetUrl(rs.getString("target_url")); // ✅
                 list.add(b);
             }
 
@@ -41,21 +35,23 @@ public class BannerDAO {
         return list;
     }
 
-    // New method to get only active banners for home page display
+    // Chỉ lấy banner đang hiển thị (dùng ở trang Home)
     public List<Banner> getAllActiveBanners() {
         List<Banner> list = new ArrayList<>();
         String sql = "SELECT * FROM Banners WHERE status = 1 ORDER BY banner_id ASC";
 
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Banner b = new Banner();
                 b.setBannerId(rs.getInt("banner_id"));
-                b.setProductId(rs.getInt("product_id"));
+                b.setProductId(rs.getObject("product_id") == null ? 0 : rs.getInt("product_id"));
                 b.setImageUrl(rs.getString("image_url"));
                 b.setStatus(rs.getInt("status"));
                 b.setCreatedAt(rs.getTimestamp("created_at"));
-
+                b.setTargetUrl(rs.getString("target_url")); // ✅
                 list.add(b);
             }
 
@@ -66,10 +62,11 @@ public class BannerDAO {
         return list;
     }
 
-    // Updated method to only update status
+    // Cập nhật trạng thái
     public boolean updateBannerStatus(Banner b) {
         String sql = "UPDATE Banners SET status = ? WHERE banner_id = ?";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, b.getStatus());
             ps.setInt(2, b.getBannerId());
             return ps.executeUpdate() > 0;
@@ -79,13 +76,30 @@ public class BannerDAO {
         return false;
     }
 
-    // New method to insert banner
+    // Thêm mới banner (có product_id & target_url tuỳ chọn)
     public boolean insertBanner(Banner b) {
-        String sql = "INSERT INTO Banners (image_url, status, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)";
-        try ( Connection conn = DBConnect.connect();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, b.getImageUrl());
-            ps.setInt(2, b.getStatus());
+        String sql = "INSERT INTO Banners (product_id, image_url, status, target_url, created_at) " +
+                     "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        try (Connection conn = DBConnect.connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (b.getProductId() > 0) {
+                ps.setInt(1, b.getProductId());
+            } else {
+                ps.setNull(1, Types.INTEGER);
+            }
+
+            ps.setString(2, b.getImageUrl());
+            ps.setInt(3, b.getStatus());
+
+            if (b.getTargetUrl() != null && !b.getTargetUrl().trim().isEmpty()) {
+                ps.setString(4, b.getTargetUrl().trim());
+            } else {
+                ps.setNull(4, Types.NVARCHAR);
+            }
+
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
