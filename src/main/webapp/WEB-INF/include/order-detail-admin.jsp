@@ -239,7 +239,7 @@
                             <span class="badge badge-status badge-processing"><i class="bi bi-gear-fill"></i>Đang xử lý</span>
                             <% } else if ("Completed".equals(order.getStatus())) { %>
                             <span class="badge badge-status badge-completed"><i class="bi bi-check-circle-fill"></i>Hoàn thành</span>
-                            <% } else if ("Cancelled".equals(order.getStatus())) { %>
+                            <% } else if ("Canceled".equals(order.getStatus())) { %>
                             <span class="badge badge-status badge-cancelled"><i class="bi bi-x-circle-fill"></i>Đã hủy</span>
                             <% }%>
                         </div>
@@ -271,10 +271,10 @@
                         <input type="hidden" name="orderId" value="<%= order.getOrderId()%>" />
                         <div class="col-md-6 col-lg-4">
                             <select name="status" id="status" class="form-select">
-                                <option value="Pending" <%= "Pending".equals(order.getStatus()) ? "selected" : ""%>>Chờ xử lý</option>
+
                                 <option value="Processing" <%= "Processing".equals(order.getStatus()) ? "selected" : ""%>>Đang xử lý</option>
                                 <option value="Completed" <%= "Completed".equals(order.getStatus()) ? "selected" : ""%>>Hoàn thành</option>
-                                <option value="Cancelled" <%= "Cancelled".equals(order.getStatus()) ? "selected" : ""%>>Đã hủy</option>
+                                <option value="Canceled" <%= "Cancelled".equals(order.getStatus()) ? "selected" : ""%>>Đã hủy</option>
                             </select>
                         </div>
                         <div class="col-md-6 col-lg-4">

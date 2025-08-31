@@ -111,25 +111,6 @@ public class UserDAO extends DBConnect {
         return 0;
 
     }
-
-    public int register(User user) {
-
-        String sql = "INSERT INTO Users (username, email, password_hash, role) \n"
-                + "VALUES (?, ?, ?, ?)";
-
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, hashMd5(user.getPassword()));
-            ps.setString(4, user.getRole());
-
-            return ps.executeUpdate(); // returns 1 if success
-        } catch (Exception ex) {
-            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
-    }
-
     public ArrayList<User> getAllCustomers() {
         ArrayList<User> userList = new ArrayList<>();
         String sql = "SELECT u.user_id, u.username, u.email,\n"
@@ -251,48 +232,6 @@ public class UserDAO extends DBConnect {
         }
         return false;
     }
-
-    public int updateStaff(User user) {
-        String sql = "UPDATE Users SET fullname = ?, email = ?, phone = ?, gender = ?, address = ?, date_of_birth = ?, role = ?, status = ? WHERE user_id = ?";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getFullname());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPhone());
-            ps.setString(4, user.getGender());
-            ps.setString(5, user.getAddress());
-            ps.setDate(6, (java.sql.Date) user.getDateOfBirth()); // CẬP NHẬT NGÀY SINH!
-            ps.setString(7, user.getRole());
-            ps.setBoolean(8, user.isStatus());
-            ps.setInt(9, user.getId());
-            return ps.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return 0;
-    }
-// Thêm nhân viên mới (CÓ NGÀY SINH)
-
-    public int addStaff(User user) {
-        String sql = "INSERT INTO Users (username, email, password_hash, fullname, date_of_birth, phone, gender, address, role, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, hashMd5(user.getPassword()));
-            ps.setString(4, user.getFullname());
-            ps.setDate(5, (java.sql.Date) user.getDateOfBirth());
-            ps.setString(6, user.getPhone());
-            ps.setString(7, user.getGender());
-            ps.setString(8, user.getAddress());
-            ps.setString(9, user.getRole());
-            ps.setBoolean(10, user.isStatus());
-            return ps.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return 0;
-    }
-
     public int deleteUser(int userId) {
         String sql = "DELETE FROM Users WHERE user_id = ?";
         try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
@@ -363,4 +302,139 @@ public class UserDAO extends DBConnect {
         }
         return null;
     }
+    public boolean phoneExists(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean emailExistsForOther(String email, int excludeUserId) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ? AND user_id <> ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, excludeUserId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean phoneExistsForOther(String phone, int excludeUserId) {
+        if (phone == null || phone.isEmpty()) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ? AND user_id <> ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ps.setInt(2, excludeUserId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /* ====== CREATE / UPDATE / DELETE for staff ====== */
+    public int register(User user) {
+
+        String sql = "INSERT INTO Users (username, email, password_hash, role) \n"
+                + "VALUES (?, ?, ?, ?)";
+
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, hashMd5(user.getPassword()));
+            ps.setString(4, user.getRole());
+
+            return ps.executeUpdate(); // returns 1 if success
+        } catch (Exception ex) {
+            Logger.getLogger(pcDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    // Thêm nhân viên mới (CÓ NGÀY SINH)
+
+    public int addStaff(User user) {
+        String sql = "INSERT INTO Users (username, email, password_hash, fullname, date_of_birth, phone, gender, address, role, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, hashMd5(user.getPassword()));
+            ps.setString(4, user.getFullname());
+            ps.setDate(5, (java.sql.Date) user.getDateOfBirth());
+            ps.setString(6, user.getPhone());
+            ps.setString(7, user.getGender());
+            ps.setString(8, user.getAddress());
+            ps.setString(9, user.getRole());
+            ps.setBoolean(10, user.isStatus());
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public int updateStaff(User user) {
+        String sql = "UPDATE Users SET fullname = ?, email = ?, phone = ?, gender = ?, address = ?, date_of_birth = ?, role = ?, status = ? WHERE user_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setString(1, user.getFullname());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPhone());
+            ps.setString(4, user.getGender());
+            ps.setString(5, user.getAddress());
+            ps.setDate(6, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
+            ps.setString(7, user.getRole());
+            ps.setBoolean(8, user.isStatus());
+            ps.setInt(9, user.getId());
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    /**
+     * Xoá mềm: status = 0
+     * @param userId
+     * @return 
+     */
+    public int softDeleteUser(int userId) {
+        String sql = "UPDATE Users SET status = 0 WHERE user_id = ?";
+        try ( PreparedStatement ps = DBConnect.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    public boolean updatePassword(User user) {
+    String sql = "UPDATE Users SET password_hash = ? WHERE user_id = ?";
+    try (Connection con = DBConnect.getConnection(); 
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, user.getPassword());
+        ps.setInt(2, user.getId());
+        return ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
 }

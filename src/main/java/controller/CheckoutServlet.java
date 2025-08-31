@@ -4,6 +4,7 @@ import DAO.CartDAO;
 import DAO.UserAddressDAO;
 import DAO.UserDAO;
 import DAO.VoucherDAO;
+import DAO.orderDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
+
 import model.Cart;
 import model.User;
 import model.UserAddress;
@@ -20,13 +23,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.Order;
+import model.ShippingInfo;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
 
     private void loadAndForward(HttpServletRequest request, HttpServletResponse response, int userId)
             throws ServletException, IOException {
-
+// 1) Kiểm tra login
         HttpSession session = request.getSession(false);
 
         @SuppressWarnings("unchecked")
@@ -39,8 +44,9 @@ public class CheckoutServlet extends HttpServlet {
             }
         }
 
+// 3) Tính tổng trước voucher
         double totalAmount = cartDAO.calculateTotal(selectedItems);
-
+        //4) Xử lý apply voucher (chỉ voucher user đã claim) Long
         UserDAO userDAO = new UserDAO();
         User fullUser = userDAO.getUserByIdForCheckout(userId);
 
@@ -70,7 +76,9 @@ public class CheckoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User sessionUser = checkLoginOrRedirect(request, response);
-        if (sessionUser == null) return;
+        if (sessionUser == null) {
+            return;
+        }
 
         loadAndForward(request, response, sessionUser.getId());
     }
@@ -80,16 +88,32 @@ public class CheckoutServlet extends HttpServlet {
             throws ServletException, IOException {
 
         User sessionUser = checkLoginOrRedirect(request, response);
-        if (sessionUser == null) return;
+        if (sessionUser == null) {
+            return;
+        }
 
         int userId = sessionUser.getId();
-
+// 2) Lấy danh sách buildProductIds từ form (long)
+        String[] buildIds = request.getParameterValues("buildProductIds"); //long
         String productIdParam = request.getParameter("productId");
         String[] selectedItemIds = request.getParameterValues("selectedItems");
 
         List<Cart> selectedItems = new ArrayList<>();
         CartDAO cartDAO = new CartDAO();
-
+//long
+        if (buildIds != null) {
+            for (String pidStr : buildIds) {
+                try {
+                    int pid = Integer.parseInt(pidStr);
+                    Cart item = cartDAO.getCartItemForBuyNow(pid);
+                    if (item != null) {
+                        selectedItems.add(item);
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        //end
         if (productIdParam != null) {
             // ✅ Flow "Mua ngay"
             try {
@@ -110,8 +134,11 @@ public class CheckoutServlet extends HttpServlet {
                 }
 
                 Cart singleItem = cartDAO.getCartItemForBuyNow(productId);
-                if (singleItem != null) selectedItems.add(singleItem);
-            } catch (NumberFormatException ignored) {}
+                if (singleItem != null) {
+                    selectedItems.add(singleItem);
+                }
+            } catch (NumberFormatException ignored) {
+            }
         } else if (selectedItemIds != null && selectedItemIds.length > 0) {
             List<Cart> allItems = cartDAO.getCartItemsByUserId(userId);
             for (String idStr : selectedItemIds) {
@@ -123,7 +150,8 @@ public class CheckoutServlet extends HttpServlet {
                             break;
                         }
                     }
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         } else {
             selectedItems = cartDAO.getCartItemsByUserId(userId);
@@ -156,13 +184,51 @@ public class CheckoutServlet extends HttpServlet {
                         appliedVoucher.getDiscountPercent(), discountAmount);
             }
         }
+        double totalBeforeDiscount = cartDAO.calculateTotal(selectedItems);
+        double finalAmount = totalBeforeDiscount;
+        Integer voucherId = null;
+        if (voucherCode != null && !voucherCode.trim().isEmpty()) {
+            VoucherDAO voucherDAO = new VoucherDAO();
+            appliedVoucher = voucherDAO.getVoucherByCode(voucherCode.trim());
 
+            if (appliedVoucher == null) {
+                voucherMessage = "Mã voucher không tồn tại.";
+            } else if (!voucherDAO.userHasVoucher(userId, appliedVoucher.getVoucherId())) {
+                voucherMessage = "Bạn chưa lấy mã này.";
+            } else if (appliedVoucher.getExpiredAt().before(new Date())) {
+                voucherMessage = "Mã voucher đã hết hạn.";
+            } else if (totalBeforeDiscount < appliedVoucher.getMinOrderValue()) {
+                voucherMessage = String.format("Đơn hàng tối thiểu %,.0f₫ để sử dụng mã này.", appliedVoucher.getMinOrderValue());
+            } else {
+                discountAmount = totalBeforeDiscount * appliedVoucher.getDiscountPercent() / 100.0;
+                finalAmount = totalBeforeDiscount - discountAmount;
+                voucherId = appliedVoucher.getVoucherId();
+                voucherMessage = String.format("Áp dụng thành công: -%d%% (%,.0f₫)",
+                        appliedVoucher.getDiscountPercent(), discountAmount);
+            }
+        }
+
+// Tạo đối tượng Order
+        Order order = new Order(0, userId, "Pending", totalBeforeDiscount,
+                discountAmount, finalAmount, voucherId, new java.sql.Timestamp(new Date().getTime()));
+        order.setShippingInfo(new ShippingInfo(
+                request.getParameter("receiver_name"),
+                request.getParameter("phone"),
+                request.getParameter("shipping_address"),
+                request.getParameter("payment_method"),
+                "Unpaid"
+        ));
+
+// Gọi placeOrder
+        orderDAO dao = new orderDAO();
+        boolean success = dao.placeOrder(order, selectedItems);
+        // 5) Lấy thông tin User & Address
         UserDAO userDAO = new UserDAO();
         User fullUser = userDAO.getUserByIdForCheckout(userId);
 
         UserAddressDAO addressDAO = new UserAddressDAO();
         List<UserAddress> addressList = addressDAO.getAddressesByUserId(userId);
-
+// 6) Set attributes và forward
         request.setAttribute("userInfo", fullUser);
         request.setAttribute("addressList", addressList);
         request.setAttribute("cartItems", selectedItems);

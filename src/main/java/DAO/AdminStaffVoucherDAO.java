@@ -11,7 +11,7 @@ public class AdminStaffVoucherDAO {
     // Lấy tất cả các voucher với phân trang
     public ArrayList<AdminStaffVoucher> getAllVouchers(int page, int limit) {
         ArrayList<AdminStaffVoucher> vouchers = new ArrayList<>();
-        String sql = "SELECT v.voucher_id, v.code, v.discount_percent, v.min_order_value, v.expired_at \n"
+        String sql = "SELECT v.voucher_id, v.code, v.discount_percent, v.min_order_value, v.start_date, v.expired_at, v.quantity \n"
                 + "FROM Vouchers v\n"
                 + "ORDER BY v.voucher_id\n"
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -29,7 +29,9 @@ public class AdminStaffVoucherDAO {
                         rs.getString("code"),
                         rs.getInt("discount_percent"),
                         rs.getDouble("min_order_value"),
-                        rs.getString("expired_at")
+                        rs.getString("start_date"),
+                        rs.getString("expired_at"),
+                        rs.getInt("quantity")
                 );
                 vouchers.add(voucher);  // Thêm voucher vào danh sách
             }
@@ -42,13 +44,14 @@ public class AdminStaffVoucherDAO {
 
     // Thêm voucher mới
     public boolean addVoucher(AdminStaffVoucher voucher) {
-        String sql = "INSERT INTO Vouchers (code, discount_percent, min_order_value, expired_at) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Vouchers (code, discount_percent, min_order_value, start_date, expired_at, quantity) VALUES (?, ?, ?, ?, ?, ?)";
         try ( Connection con = DBConnect.connect();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, voucher.getCode());
             ps.setInt(2, voucher.getDiscountPercent());
             ps.setDouble(3, voucher.getMinOrderValue());
-            ps.setString(4, voucher.getExpiredAt());
-//            ps.setInt(5, voucher.getCreatedBy());  // Người tạo voucher
+            ps.setString(4, voucher.getStartDate());
+            ps.setString(5, voucher.getExpiredAt());
+            ps.setInt(6, voucher.getQuantity());
             return ps.executeUpdate() > 0;  // Kiểm tra xem có thành công không
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -58,14 +61,15 @@ public class AdminStaffVoucherDAO {
 
     // Cập nhật voucher
     public boolean updateVoucher(AdminStaffVoucher voucher) {
-        String sql = "UPDATE Vouchers SET code = ?, discount_percent = ?, min_order_value = ?, expired_at = ? WHERE voucher_id = ?";
+        String sql = "UPDATE Vouchers SET code = ?, discount_percent = ?, min_order_value = ?, start_date = ?, expired_at = ?, quantity = ? WHERE voucher_id = ?";
         try ( Connection con = DBConnect.connect();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, voucher.getCode());
             ps.setInt(2, voucher.getDiscountPercent());
             ps.setDouble(3, voucher.getMinOrderValue());
-            ps.setString(4, voucher.getExpiredAt());
-//            ps.setInt(5, voucher.getCreatedBy());  // Người tạo voucher
-            ps.setInt(5, voucher.getVoucherId());
+            ps.setString(4, voucher.getStartDate());
+            ps.setString(5, voucher.getExpiredAt());
+            ps.setInt(6, voucher.getQuantity());
+            ps.setInt(7, voucher.getVoucherId());
             return ps.executeUpdate() > 0;  // Kiểm tra xem có thành công không
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -87,7 +91,7 @@ public class AdminStaffVoucherDAO {
 
     // Lấy thông tin voucher theo ID
     public AdminStaffVoucher getVoucherById(int voucherId) {
-        String sql = "SELECT voucher_id, code, discount_percent, min_order_value, expired_at FROM Vouchers WHERE voucher_id = ?";
+        String sql = "SELECT voucher_id, code, discount_percent, min_order_value, start_date, expired_at, quantity FROM Vouchers WHERE voucher_id = ?";
         try ( Connection con = DBConnect.connect();  PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, voucherId);
             ResultSet rs = ps.executeQuery();
@@ -97,7 +101,9 @@ public class AdminStaffVoucherDAO {
                         rs.getString("code"),
                         rs.getInt("discount_percent"),
                         rs.getDouble("min_order_value"),
-                        rs.getString("expired_at")
+                        rs.getString("start_date"),
+                        rs.getString("expired_at"),
+                        rs.getInt("quantity")
                 );
             }
         } catch (SQLException | ClassNotFoundException e) {
