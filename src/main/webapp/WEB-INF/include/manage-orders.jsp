@@ -313,7 +313,7 @@
                                         <c:when test="${order.status == 'Completed'}">
                                             <span class="status status-completed"><i class="bi bi-check-circle-fill"></i> Hoàn thành</span>
                                         </c:when>
-                                        <c:when test="${order.status == 'Cancelled'}">
+                                        <c:when test="${order.status == 'Canceled'}">
                                             <span class="status status-cancelled"><i class="bi bi-x-octagon-fill"></i> Đã hủy</span>
                                         </c:when>
                                         <c:otherwise>

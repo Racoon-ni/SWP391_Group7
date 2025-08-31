@@ -312,12 +312,11 @@ public class orderDAO {
                 + "WHERE o.order_id = ?";
         String updateStatusSQL = "UPDATE Orders SET status = ? WHERE order_id = ?";
         String getOrderDetailsSQL = "SELECT product_id, quantity FROM [OrderItems] WHERE order_id = ?";
-        String reduceStockSQL = "UPDATE Products SET stock = stock - ? WHERE product_id = ?";
-        String increaseStockSQL = "UPDATE Products SET stock = stock + ? WHERE product_id = ?";
+        String reduceStockSQL = "UPDATE Products SET stock = stock + ? WHERE product_id = ?";
 
         try ( Connection conn = DBConnect.connect();  PreparedStatement psGetOrderInfo = conn.prepareStatement(getOrderInfoSQL)) {
 
-            conn.setAutoCommit(false); // bắt đầu transaction
+            conn.setAutoCommit(false);
 
             psGetOrderInfo.setInt(1, orderId);
             try ( ResultSet rs = psGetOrderInfo.executeQuery()) {
@@ -329,24 +328,24 @@ public class orderDAO {
                 String currentStatus = rs.getString("status").trim();
                 String paymentMethod = rs.getString("payment_method").trim();
 
-                // Kiểm tra luồng trạng thái hợp lệ
+                // Kiểm tra luồng trạng thái
                 if (!canTransition(currentStatus, newStatus)) {
                     conn.rollback();
-                    return false; // Không được phép cập nhật
+                    return false;
                 }
 
-                // 1. Cập nhật trạng thái đơn
+                // 1. Cập nhật trạng thái
                 try ( PreparedStatement psUpdateStatus = conn.prepareStatement(updateStatusSQL)) {
                     psUpdateStatus.setString(1, newStatus);
                     psUpdateStatus.setInt(2, orderId);
                     if (psUpdateStatus.executeUpdate() == 0) {
                         conn.rollback();
-                        return false; // Cập nhật thất bại
+                        return false;
                     }
                 }
 
-                // 2. Xử lý tồn kho khi Hoàn thành hoặc Đã huỷ
-                if ("Completed".equalsIgnoreCase(newStatus) || "Cancelled".equalsIgnoreCase(newStatus)) {
+                // 2. Nếu "Đang xử lý -> Đã huỷ" thì trừ kho
+                if ("Canceled".equalsIgnoreCase(newStatus)) {
                     try ( PreparedStatement psGetDetails = conn.prepareStatement(getOrderDetailsSQL)) {
                         psGetDetails.setInt(1, orderId);
                         try ( ResultSet rsDetails = psGetDetails.executeQuery()) {
@@ -354,8 +353,7 @@ public class orderDAO {
                                 int productId = rsDetails.getInt("product_id");
                                 int quantity = rsDetails.getInt("quantity");
 
-                                String stockSQL = "Completed".equalsIgnoreCase(newStatus) ? reduceStockSQL : increaseStockSQL;
-                                try ( PreparedStatement psStockUpdate = conn.prepareStatement(stockSQL)) {
+                                try ( PreparedStatement psStockUpdate = conn.prepareStatement(reduceStockSQL)) {
                                     psStockUpdate.setInt(1, quantity);
                                     psStockUpdate.setInt(2, productId);
                                     psStockUpdate.executeUpdate();
@@ -365,21 +363,16 @@ public class orderDAO {
                     }
                 }
 
-                // 3. Cập nhật trạng thái thanh toán nếu COD
-                if (("Shipped".equalsIgnoreCase(newStatus) || "Completed".equalsIgnoreCase(newStatus))
-                        && "COD".equalsIgnoreCase(paymentMethod)) {
-
-                    String sqlUpdatePayment = "UPDATE OrderShippingPayment SET payment_status = 'Paid'"
-                            + ("Shipped".equalsIgnoreCase(newStatus) ? ", shippedDate = GETDATE()" : "")
-                            + " WHERE order_id = ?";
-
+                // 3. Nếu COD + Hoàn thành → cập nhật thanh toán
+                if ("Completed".equalsIgnoreCase(newStatus) && "COD".equalsIgnoreCase(paymentMethod)) {
+                    String sqlUpdatePayment = "UPDATE OrderShippingPayment SET payment_status = N'Paid' WHERE order_id = ?";
                     try ( PreparedStatement psUpdatePayment = conn.prepareStatement(sqlUpdatePayment)) {
                         psUpdatePayment.setInt(1, orderId);
                         psUpdatePayment.executeUpdate();
                     }
                 }
 
-                // 4. Gửi thông báo bằng tiếng Việt
+                // 4. Gửi thông báo tiếng Việt
                 NotificationDAO dao = new NotificationDAO();
                 dao.sendNotification(
                         userId,
@@ -388,7 +381,7 @@ public class orderDAO {
                         "/order-details?order_id=" + orderId
                 );
 
-                conn.commit(); // xác nhận transaction
+                conn.commit();
                 return true;
             }
 
@@ -398,7 +391,11 @@ public class orderDAO {
         }
     }
 
-// Hàm kiểm tra luồng trạng thái hợp lệ
+    /**
+     * Luồng hợp lệ: - Chờ xử lý -> Đang xử lý 
+     * - Đang xử lý -> Hoàn thành 
+     * - Đang xử lý -> Đã huỷ
+     */
     private boolean canTransition(String currentStatus, String newStatus) {
         currentStatus = currentStatus.trim();
         newStatus = newStatus.trim();
@@ -414,10 +411,10 @@ public class orderDAO {
         switch (currentStatus) {
             case "Pending": // Chờ xử lý
                 return "Processing".equalsIgnoreCase(newStatus)
-                        || "Cancelled".equalsIgnoreCase(newStatus);
+                        || "Canceled".equalsIgnoreCase(newStatus);
             case "Processing": // Đang xử lý
                 return "Completed".equalsIgnoreCase(newStatus)
-                        || "Cancelled".equalsIgnoreCase(newStatus);
+                        || "Canceled".equalsIgnoreCase(newStatus);
             default:
                 return false;
         }
